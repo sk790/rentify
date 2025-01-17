@@ -34,3 +34,7 @@ export interface ApiResponse {
   msg: string;
   product: Product;
 }
+export interface Location {
+  latitude: number;
+  longitude: number;
+}

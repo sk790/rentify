@@ -15,27 +15,16 @@ import ProductDetailPageHeader from "@/components/ProductDetailPageHeader";
 import { Colors } from "@/constants/Colors";
 import { BASE_URL } from "@env";
 import { Product } from "@/types";
+import { useProducts } from "@/context/ProductContext";
 
 export default function productDetail() {
   const { productId } = useLocalSearchParams();
   const [product, setProduct] = useState<Product>();
   const [loading, setLoading] = useState(false);
-
+  const { products } = useProducts();
   useEffect(() => {
-    try {
-      setLoading(true);
-      const getProductDetails = async () => {
-        const res = await fetch(`${BASE_URL}/api/product/${productId}`);
-        const data = await res.json();
-        // console.log(data);
-        setLoading(false);
-        setProduct(data.product);
-      };
-      getProductDetails();
-    } catch (error) {
-      setLoading(false);
-      console.log(error);
-    }
+    const p = products.find((p) => p._id === productId);
+    setProduct(p);
   }, [productId]);
   if (loading) {
     return (

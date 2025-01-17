@@ -5,17 +5,21 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, router, Stack } from "expo-router";
 import Header from "@/components/Header";
 import CategoryCard from "@/components/CategoryCard";
 import HomeProductCard from "@/components/HomeProductCard";
 import { BASE_URL } from "@env";
-import { Product } from "@/types";
+import { Location, Product } from "@/types";
+import { useProducts } from "@/context/ProductContext";
+import { useLocation } from "@/context/LocationContext";
 
 export default function HomeScreen() {
-  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
+  const { products, setProducts } = useProducts();
+  const { location } = useLocation();
+
   useEffect(() => {
     try {
       setLoading(true);
@@ -23,7 +27,6 @@ export default function HomeScreen() {
         const res = await fetch(`${BASE_URL}/api/product/products`);
         const data = await res.json();
         setLoading(false);
-        // console.log(data);
         if (res.ok) {
           setLoading(false);
           setProducts(data.products);

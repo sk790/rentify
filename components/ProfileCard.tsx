@@ -1,14 +1,17 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { useFormateDate } from "@/hooks/useFormateDate";
-import { User } from "@/types";
+import { Location, User } from "@/types";
+import { useLocation } from "@/context/LocationContext";
 type userProps = {
   user: User | undefined;
   me?: boolean;
 };
 export default function ProfileCard({ user, me }: userProps) {
+  const { location } = useLocation();
+
   return (
     <View
       style={{
@@ -26,7 +29,7 @@ export default function ProfileCard({ user, me }: userProps) {
           style={{ width: 90, height: 90, borderRadius: 50 }}
         />
         <Text style={{ fontWeight: "bold", fontSize: 20, flex: 1 }}>
-          {user?.name}
+          {location.longitude}
         </Text>
         <TouchableOpacity
           style={[
@@ -83,7 +86,7 @@ export default function ProfileCard({ user, me }: userProps) {
         }}
       >
         <Ionicons name="mail" size={24} color="black" />
-        <Text>{user?.description || "No description"}</Text>
+        <Text>{location.latitude || "No description"}</Text>
       </View>
 
       <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>

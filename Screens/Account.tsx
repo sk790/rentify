@@ -18,6 +18,7 @@ export default function Account({ navigation }: { navigation: any }) {
   const [user, setUser] = useState<User>();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     const getUser = async () => {
       try {

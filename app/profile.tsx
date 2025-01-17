@@ -1,37 +1,22 @@
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
-import { Colors } from "@/constants/Colors";
+
 import HorizontalProductCard from "@/components/HorizontalProductCard";
 import ProfileCard from "@/components/ProfileCard";
 import { useLocalSearchParams } from "expo-router";
 import { Product, User } from "@/types";
-import { BASE_URL } from "@env";
+import { useProducts } from "@/context/ProductContext";
 
 export default function profile() {
   const { userId } = useLocalSearchParams();
-  const [user, setUser] = useState<User>();
-  const [userProducts, setUserProducts] = useState();
+  const [user, setUser] = useState<User | undefined>(undefined);
+  const [userProducts, setUserProducts] = useState<Product[] | undefined>([]);
+  const { products } = useProducts();
   useEffect(() => {
-    try {
-      const getUser = async () => {
-        const res = await fetch(`${BASE_URL}/api/auth/${userId}`);
-        const data = await res.json();
-        // console.log(data);
-        setUser(data.user);
-        setUserProducts(data.user.products);
-      };
-      getUser();
-    } catch (error) {
-      console.log(error);
-    }
+    const userProducts = products.filter((p) => p.user._id === userId);
+    const user = products.find((p) => p.user._id.toString() === userId);
+    setUser(user?.user);
+    setUserProducts(userProducts);
   }, [userId]);
 
   return (
@@ -41,5 +26,3 @@ export default function profile() {
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({});

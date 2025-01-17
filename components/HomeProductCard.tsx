@@ -2,8 +2,8 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
-import { useLocalSearchParams } from "expo-router";
 import { Product } from "@/types";
+import { useFormateDate } from "@/hooks/useFormateDate";
 
 export default function HomeProductCard({ product }: { product: Product }) {
   return (
@@ -29,21 +29,32 @@ export default function HomeProductCard({ product }: { product: Product }) {
         />
       </View>
       <View style={{ marginTop: 10 }}>
-        <Text style={{ fontSize: 16, fontWeight: "600" }}>
+        <Text style={{ fontSize: 14, fontWeight: "600" }}>
           ₹ {product.price}/{product.timePeriod}
         </Text>
         <Text>{product.productName}</Text>
         <View
           style={{
             flexDirection: "row",
-            width: "100%",
+            justifyContent: "space-between",
             alignItems: "center",
-            marginTop: 5,
+            width: "100%",
           }}
         >
-          <Ionicons name="location-outline" size={16} color="gray" />
-          <Text style={{ fontSize: 12, color: Colors.gray }}>
-            {product.address}
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginTop: 5,
+            }}
+          >
+            <Ionicons name="location-outline" size={16} color="gray" />
+            <Text style={{ fontSize: 12, color: Colors.gray }}>
+              {product.address}
+            </Text>
+          </View>
+          <Text style={{ fontSize: 12, color: Colors.gray, fontWeight: "600" }}>
+            {useFormateDate(product.createdAt)}
           </Text>
         </View>
       </View>

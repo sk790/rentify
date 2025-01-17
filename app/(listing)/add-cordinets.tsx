@@ -8,12 +8,12 @@ import {
 import React, { useEffect, useState } from "react";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { Colors } from "@/constants/Colors";
-import { useLocation } from "@/hooks/useGetLocation";
+import { useGetLocation } from "@/hooks/GetLocation";
 
 export default function addcordinets() {
   const { formData } = useLocalSearchParams();
   const data = JSON.parse(formData as string);
-  const { fetchLocation, location } = useLocation();
+  const { fetchLocation, location } = useGetLocation();
   const [btnStyle, setBtnStyle] = useState("");
   const [locationBtnLoading, setLocationBtnLoading] = useState(false);
 

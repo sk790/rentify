@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useAuth } from "../context/AuthContext"; // Adjust path
@@ -11,6 +11,7 @@ import Signup from "@/Screens/Signup";
 import AuthStack from "@/Screens/AuthStack";
 import { Ionicons } from "@expo/vector-icons";
 import Create from "@/Screens/Create";
+import { useLocation } from "@/context/LocationContext";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -68,6 +69,10 @@ function AppTabs() {
 }
 
 export default function RootNavigator() {
+  const { fetchLocation } = useLocation();
+  useEffect(() => {
+    fetchLocation();
+  }, []);
   const { auth } = useAuth(); // Get auth state from context
 
   return auth ? <AppTabs /> : <AuthStackk />;

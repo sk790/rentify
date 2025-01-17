@@ -1,7 +1,7 @@
 import { useState } from "react";
 import * as Location from "expo-location";
 
-export const useLocation = () => {
+export const useGetLocation = () => {
   const [location, setLocation] = useState({ latitude: 0, longitude: 0 });
 
   const fetchLocation = async () => {
@@ -12,10 +12,8 @@ export const useLocation = () => {
         return;
       }
       const loc = await Location.getCurrentPositionAsync({});
-      setLocation({
-        latitude: loc.coords.latitude,
-        longitude: loc.coords.longitude,
-      });
+      setLocation(loc.coords);
+      // AsyncStorage.setItem("user_location", JSON.stringify(loc.coords));
     } catch (error) {
       console.error("Error fetching location:", error);
     }

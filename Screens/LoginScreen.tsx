@@ -35,7 +35,6 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
         body: JSON.stringify({ password, phone }),
       });
       const data = await res.json();
-      console.log(data);
 
       setLoading(false);
       alert(data.msg);
