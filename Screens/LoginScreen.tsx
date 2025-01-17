@@ -13,6 +13,7 @@ import SocialLoginBottons from "@/components/SocialLoginBottons";
 import LoginInputFields from "@/components/LoginInputFields";
 import { Colors } from "@/constants/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { BASE_URL } from "@env";
 
 export default function LoginScreen({ navigation }: { navigation: any }) {
   const { setAuth } = useAuth();
@@ -21,9 +22,31 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    if (phone || password) {
-      await AsyncStorage.setItem("token", "token");
-      setAuth(true);
+    if (!phone || !password) {
+      alert("Please enter phone and password");
+    }
+    try {
+      setLoading(true);
+      const res = await fetch(`${BASE_URL}/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ password, phone }),
+      });
+      const data = await res.json();
+      console.log(data);
+
+      setLoading(false);
+      alert(data.msg);
+      if (res.ok) {
+        await AsyncStorage.setItem("token", data.token);
+        setAuth(true);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
     }
   };
 

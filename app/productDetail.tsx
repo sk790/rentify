@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Image,
   ScrollView,
   StyleSheet,
@@ -6,111 +7,48 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Navigator, router, Stack, useLocalSearchParams } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import ProductDetailPageHeader from "@/components/ProductDetailPageHeader";
 import { Colors } from "@/constants/Colors";
+import { BASE_URL } from "@env";
+import { Product } from "@/types";
 
 export default function productDetail() {
   const { productId } = useLocalSearchParams();
-  const data = [
-    {
-      id: 1,
-      name: "Yamaha R15 V4",
-      images: [
-        "https://cdn.bikedekho.com/processedimages/yamaha/r15-v4/source/r15-v466e5433ef20f5.jpg",
-      ],
-      price: 3999,
-      period: "Month",
-      uploadAt: 5,
-      description: "this is a description",
-      title: "this is a title",
-      category: "Vehicle",
-      address: "this is an address",
-    },
-    {
-      id: 2,
-      name: "Yamaha R15 V4",
-      images: [
-        "https://cdn.bikedekho.com/processedimages/yamaha/r15-v4/source/r15-v466e5433ef20f5.jpg",
-      ],
-      price: 3999,
-      period: "Month",
-      uploadAt: 5,
-      description: "this is a description",
-      title: "this is a title",
-      category: "Vehicle",
-      address: "this is an address",
-    },
-    {
-      id: 3,
-      name: "Yamaha R15 V4",
-      images: [
-        "https://cdn.bikedekho.com/processedimages/yamaha/r15-v4/source/r15-v466e5433ef20f5.jpg",
-      ],
-      price: 3999,
-      period: "Month",
-      uploadAt: 5,
-      description: "this is a description",
-      title: "this is a title",
-      category: "Vehicle",
-      address: "this is an address",
-    },
-    {
-      id: 4,
-      name: "Yamaha R15 V4ih hihinninknhnbihgibkbk hih ",
-      images: [
-        "https://cdn.bikedekho.com/processedimages/yamaha/r15-v4/source/r15-v466e5433ef20f5.jpg",
-      ],
-      price: 3999,
-      period: "Month",
-      uploadAt: 5,
-      description: "this is a description",
-      title: "this is a title",
-      category: "Vehicle",
-      address: "this is an addresvuuvjuvhjjvjvjvs",
-    },
-    {
-      id: 5,
-      name: "Yamaha R15 V4ih hihinninknhnbihgibkbk hih ",
-      images: [
-        "https://cdn.bikedekho.com/processedimages/yamaha/r15-v4/source/r15-v466e5433ef20f5.jpg",
-      ],
-      price: 3999,
-      period: "Month",
-      uploadAt: 5,
-      description: "this is a description",
-      title: "this is a title",
-      category: "Vehicle",
-      address: "this is an addresvuuvjuvhjjvjvjvs",
-    },
-    {
-      id: 6,
-      name: "Yamaha R15 V4ih hihinninknhnbihgibkbk hih ",
-      images: [
-        "https://cdn.bikedekho.com/processedimages/yamaha/r15-v4/source/r15-v466e5433ef20f5.jpg",
-      ],
-      price: 3999,
-      period: "Month",
-      uploadAt: 5,
-      description: "this is a description",
-      title: "this is a title",
-      category: "Vehicle",
-      address: "this is an addresvuuvjuvhjjvjvjvs",
-    },
-  ];
-  const product = data.find((item) => item.id.toString() == productId);
-  if (!product) {
+  const [product, setProduct] = useState<Product>();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    try {
+      setLoading(true);
+      const getProductDetails = async () => {
+        const res = await fetch(`${BASE_URL}/api/product/${productId}`);
+        const data = await res.json();
+        // console.log(data);
+        setLoading(false);
+        setProduct(data.product);
+      };
+      getProductDetails();
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  }, [productId]);
+  if (loading) {
     return (
-      <View>
-        <Text>Product not found</Text>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color={Colors.primary} />
       </View>
     );
   }
   const userProfile = (userId: string) => {
-    router.push({ pathname: "/profile", params: { userId } });
+    router.push({
+      pathname: "/profile",
+      params: { userId },
+    });
   };
   return (
     <>
@@ -123,7 +61,11 @@ export default function productDetail() {
       <ScrollView style={{}}>
         <View>
           <Image
-            source={{ uri: product?.images[0] }}
+            source={{
+              uri:
+                product?.images[0] ||
+                "https://cdn.bikedekho.com/processedimages/yamaha/r15-v4/source/r15-v466e5433ef20f5.jpg",
+            }}
             style={{ height: 300, width: "100%" }}
           />
           <View style={{ marginHorizontal: 15, marginTop: 10 }}>
@@ -136,7 +78,7 @@ export default function productDetail() {
               }}
             >
               <Text style={{ fontSize: 20, fontWeight: "600" }}>
-                ₹ {product?.price} / {product?.period}
+                ₹ {product?.price} / {product?.timePeriod}
               </Text>
               <Ionicons name="heart-outline" size={28} color="black" />
             </View>
@@ -162,7 +104,7 @@ export default function productDetail() {
             <Text style={{ fontSize: 16, fontWeight: "600" }}>Details</Text>
             <Text style={{ fontSize: 14, marginTop: 10 }}>
               <Text style={{ fontWeight: "600" }}>Product</Text>
-              <Text style={{ color: Colors.gray }}> {product?.name}</Text>
+              <Text style={{ color: Colors.gray }}>{product?.productName}</Text>
             </Text>
           </View>
           <View
@@ -185,8 +127,7 @@ export default function productDetail() {
               borderWidth: StyleSheet.hairlineWidth,
             }}
           />
-          <TouchableOpacity onPress={() => userProfile("1")}>
-            {/* Replace '1' with the desired user ID */}
+          <TouchableOpacity onPress={() => userProfile(product?.user?._id!)}>
             <View
               style={{
                 margin: 10,
@@ -202,11 +143,15 @@ export default function productDetail() {
                 style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
               >
                 <Image
-                  source={{ uri: product?.images[0] }}
+                  source={{
+                    uri:
+                      product?.images[0] ||
+                      "https://cdn.bikedekho.com/processedimages/yamaha/r15-v4/source/r15-v466e5433ef20f5.jpg",
+                  }}
                   style={{ height: 50, width: 50, borderRadius: 50 }}
                 />
                 <Text style={{ fontWeight: "600", fontSize: 20 }}>
-                  {"User"}
+                  {product?.user?.name}
                 </Text>
               </View>
               <Ionicons
@@ -219,7 +164,11 @@ export default function productDetail() {
 
           <View>
             <Image
-              source={{ uri: product?.images[0] }}
+              source={{
+                uri:
+                  product?.images[0] ||
+                  "https://cdn.bikedekho.com/processedimages/yamaha/r15-v4/source/r15-v466e5433ef20f5.jpg",
+              }}
               style={{ height: 300, width: "100%" }}
             />
           </View>

@@ -3,19 +3,9 @@ import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { useLocalSearchParams } from "expo-router";
+import { Product } from "@/types";
 
-type Props = {
-  id: number;
-  name: string;
-  price: number;
-  images: string[];
-  description: string;
-  category: string;
-  address: string;
-  uploadAt: number;
-  period: string;
-};
-export default function HomeProductCard({ product }: { product: Props }) {
+export default function HomeProductCard({ product }: { product: Product }) {
   return (
     <View
       style={{
@@ -40,9 +30,9 @@ export default function HomeProductCard({ product }: { product: Props }) {
       </View>
       <View style={{ marginTop: 10 }}>
         <Text style={{ fontSize: 16, fontWeight: "600" }}>
-          ₹ {product.price}/{product.period}
+          ₹ {product.price}/{product.timePeriod}
         </Text>
-        <Text>{product.name}</Text>
+        <Text>{product.productName}</Text>
         <View
           style={{
             flexDirection: "row",

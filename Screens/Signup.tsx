@@ -14,6 +14,7 @@ import SocialLoginBottons from "@/components/SocialLoginBottons";
 import { Colors } from "@/constants/Colors";
 import { useAuth } from "@/context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { BASE_URL } from "@env";
 
 export default function Signup({ navigation }: { navigation: any }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -34,9 +35,28 @@ export default function Signup({ navigation }: { navigation: any }) {
   };
   const handleOtp = async () => {};
   const handleVerifyOtp = async () => {
-    if (otp.length === 4) {
-      await AsyncStorage.setItem("token", "otp");
-      setAuth(true);
+    if (otp.length !== 4) {
+      return alert("Please enter 4 digit otp");
+    }
+    try {
+      setIsLoading(true);
+      const res = await fetch(`${BASE_URL}/api/auth/signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      setIsLoading(false);
+      console.log(data);
+
+      if (res.ok) {
+        await AsyncStorage.setItem("token", data.token);
+        setAuth(true);
+      }
+    } catch (error) {
+      alert(error);
     }
   };
   return (
@@ -111,11 +131,11 @@ export default function Signup({ navigation }: { navigation: any }) {
 
           <TouchableOpacity style={styles.btn} onPress={handleVerifyOtp}>
             <Text style={styles.btnText}>
-              {/* {loading ? (
+              {isLoading ? (
                 <ActivityIndicator size="small" color={Colors.white} />
               ) : (
                 "Sign Up"
-              )} */}
+              )}
               SignUp
             </Text>
           </TouchableOpacity>

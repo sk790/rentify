@@ -5,33 +5,40 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, router, Stack } from "expo-router";
 import Header from "@/components/Header";
 import CategoryCard from "@/components/CategoryCard";
 import HomeProductCard from "@/components/HomeProductCard";
+import { BASE_URL } from "@env";
+import { Product } from "@/types";
 
 export default function HomeScreen() {
-  const data = [
-    {
-      id: 1,
-      name: "Yamaha R15 V4",
-      images: [
-        "https://cdn.bikedekho.com/processedimages/yamaha/r15-v4/source/r15-v466e5433ef20f5.jpg",
-      ],
-      price: 3999,
-      period: "Month",
-      uploadAt: 5,
-      description: "this is a description",
-      title: "this is a title",
-      category: "Vehicle",
-      address: "this is an address",
-    },
-    // More products...
-  ];
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    try {
+      setLoading(true);
+      const getAllProducts = async () => {
+        const res = await fetch(`${BASE_URL}/api/product/products`);
+        const data = await res.json();
+        setLoading(false);
+        // console.log(data);
+        if (res.ok) {
+          setLoading(false);
+          setProducts(data.products);
+        }
+      };
+      getAllProducts();
+    } catch (error) {
+      setLoading(false);
+      alert(error);
+    }
+  }, []);
+
   const category = [
     "Vehicle",
-    "Electronics",
+    "Painter",
     "Furniture",
     "Clothing",
     "Accessories",
@@ -44,7 +51,7 @@ export default function HomeScreen() {
     "Gaming",
     "Gadgets",
   ];
-  const getProductDetails = (productId: number) => {
+  const getProductDetails = (productId: string) => {
     router.push({ pathname: "/productDetail", params: { productId } });
   };
   const getProductsByCategory = (category: string) => {
@@ -68,10 +75,10 @@ export default function HomeScreen() {
         <View style={styles.productContainer}>
           <Text style={styles.sectionTitle}>Near by You</Text>
           <View style={styles.productList}>
-            {data.map((item, index) => (
+            {products.map((item, index) => (
               <TouchableOpacity
                 style={styles.productCard}
-                onPress={() => getProductDetails(item.id)}
+                onPress={() => getProductDetails(item._id)}
                 key={index}
               >
                 <HomeProductCard product={item} />

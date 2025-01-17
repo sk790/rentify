@@ -3,8 +3,11 @@ import React from "react";
 import { router } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
+import { useFormateDate } from "@/hooks/useFormateDate";
 
 export default function HorizontalProductCard({ products }: any) {
+  console.log({ products });
+
   const getProductDetails = (productId: number) => {
     router.push({ pathname: "/productDetail", params: { productId } });
   };
@@ -12,7 +15,7 @@ export default function HorizontalProductCard({ products }: any) {
     <>
       {products?.map((product: any, index: number) => (
         <TouchableOpacity
-          onPress={() => getProductDetails(product.id)}
+          onPress={() => getProductDetails(product._id)}
           key={index}
         >
           <View
@@ -48,7 +51,7 @@ export default function HorizontalProductCard({ products }: any) {
                 }}
               >
                 <Text style={{ fontSize: 16, fontWeight: "600" }}>
-                  ₹ 3999/{product.period}
+                  ₹ {product.price}/{product.timePeriod}
                 </Text>
                 <Text
                   numberOfLines={2}
@@ -84,7 +87,9 @@ export default function HorizontalProductCard({ products }: any) {
               }}
             >
               <Ionicons name="heart-outline" size={28} color="black" />
-              <Text>{product.uploadAt} day</Text>
+              <Text style={{ fontSize: 12, fontWeight: "600" }}>
+                {useFormateDate(product.createdAt)}
+              </Text>
             </View>
           </View>
         </TouchableOpacity>

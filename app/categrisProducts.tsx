@@ -7,103 +7,37 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import ProductDetailPageHeader from "@/components/ProductDetailPageHeader";
 import Header from "@/components/Header";
 import HorizontalProductCard from "@/components/HorizontalProductCard";
+import { BASE_URL } from "@env";
+import { Product } from "@/types";
+console.log(BASE_URL);
 
 export default function categrisProducts() {
   const { category } = useLocalSearchParams();
-  const data = [
-    {
-      id: 1,
-      name: "Yamaha R15 V4",
-      images: [
-        "https://cdn.bikedekho.com/processedimages/yamaha/r15-v4/source/r15-v466e5433ef20f5.jpg",
-      ],
-      price: 3999,
-      period: "Month",
-      uploadAt: 5,
-      description: "this is a description",
-      title: "this is a title",
-      category: "Vehicle",
-      address: "this is an address",
-    },
-    {
-      id: 2,
-      name: "Yamaha R15 V4",
-      images: [
-        "https://cdn.bikedekho.com/processedimages/yamaha/r15-v4/source/r15-v466e5433ef20f5.jpg",
-      ],
-      price: 3999,
-      period: "Month",
-      uploadAt: 5,
-      description: "this is a description",
-      title: "this is a title",
-      category: "Vehicle",
-      address: "this is an address",
-    },
-    {
-      id: 3,
-      name: "Yamaha R15 V4",
-      images: [
-        "https://cdn.bikedekho.com/processedimages/yamaha/r15-v4/source/r15-v466e5433ef20f5.jpg",
-      ],
-      price: 3999,
-      period: "Month",
-      uploadAt: 5,
-      description: "this is a description",
-      title: "this is a title",
-      category: "Vehicle",
-      address: "this is an address",
-    },
-    {
-      id: 4,
-      name: "Yamaha R15 V4ih hihinninknhnbihgibkbk hih ",
-      images: [
-        "https://cdn.bikedekho.com/processedimages/yamaha/r15-v4/source/r15-v466e5433ef20f5.jpg",
-      ],
-      price: 3999,
-      period: "Month",
-      uploadAt: 5,
-      description: "this is a description",
-      title: "this is a title",
-      category: "Vehicle",
-      address: "this is an addresvuuvjuvhjjvjvjvs",
-    },
-    {
-      id: 5,
-      name: "Yamaha R15 V4ih hihinninknhnbihgibkbk hih ",
-      images: [
-        "https://cdn.bikedekho.com/processedimages/yamaha/r15-v4/source/r15-v466e5433ef20f5.jpg",
-      ],
-      price: 3999,
-      period: "Month",
-      uploadAt: 5,
-      description: "this is a description",
-      title: "this is a title",
-      category: "Vehicle",
-      address: "this is an addresvuuvjuvhjjvjvjvs",
-    },
-    {
-      id: 6,
-      name: "Yamaha R15 V4ih hihinninknhnbihgibkbk hih ",
-      images: [
-        "https://cdn.bikedekho.com/processedimages/yamaha/r15-v4/source/r15-v466e5433ef20f5.jpg",
-      ],
-      price: 3999,
-      period: "Month",
-      uploadAt: 5,
-      description: "this is a description",
-      title: "this is a title",
-      category: "Vehicle",
-      address: "this is an addresvuuvjuvhjjvjvjvs",
-    },
-  ];
-  const products = data.filter((item) => item.category === category);
+  const encodedCategory = encodeURIComponent(category as string);
+
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    console.log(category);
+
+    const getProductsByCategory = async () => {
+      const res = await fetch(
+        `${BASE_URL}/api/product/products?category=${encodedCategory.toLowerCase()}&limit=20`
+      );
+      const data = await res.json();
+      console.log({ data });
+
+      setProducts(data.products);
+    };
+    getProductsByCategory();
+  }, [category]);
 
   return (
     <>

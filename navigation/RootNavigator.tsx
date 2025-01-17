@@ -10,6 +10,7 @@ import Account from "@/Screens/Account";
 import Signup from "@/Screens/Signup";
 import AuthStack from "@/Screens/AuthStack";
 import { Ionicons } from "@expo/vector-icons";
+import Create from "@/Screens/Create";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -45,6 +46,8 @@ function AppTabs() {
             iconName = "list-outline"; // Ionicons name for list
           } else if (route.name === "Account") {
             iconName = "person-outline"; // Ionicons name for profile
+          } else if (route.name === "Create") {
+            iconName = "create-outline"; // Ionicons name for profile
           }
 
           // You can return any component here (Icon, Image, etc.)
@@ -57,6 +60,7 @@ function AppTabs() {
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Chat" component={Chat} />
+      <Tab.Screen name="Create" component={Create} />
       <Tab.Screen name="My Ads" component={MyAds} />
       <Tab.Screen name="Account" component={Account} />
     </Tab.Navigator>
