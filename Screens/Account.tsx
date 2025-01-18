@@ -7,39 +7,40 @@ import {
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useAuth } from "@/context/AuthContext";
 import ProfileCard from "@/components/ProfileCard";
-import HorizontalProductCard from "@/components/HorizontalProductCard";
 import { BASE_URL } from "@env";
 import { Colors } from "@/constants/Colors";
-import { User } from "@/types";
+import { Product, User } from "@/types";
+import { Ionicons } from "@expo/vector-icons";
+import MyButton from "@/components/ui/MyButton";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Account({ navigation }: { navigation: any }) {
   const [user, setUser] = useState<User>();
-  const [products, setProducts] = useState([]);
+  const { setAuth } = useAuth();
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        setLoading(true);
-        const res = await fetch(`${BASE_URL}/api/auth/me`);
-        const data = await res.json();
-        setLoading(false);
-        console.log(data);
+  const getUser = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(`${BASE_URL}/api/auth/me`);
+      const data = await res.json();
+      setLoading(false);
 
-        if (res.ok) {
-          setLoading(false);
-          setUser(data.user);
-          setProducts(data.user.products);
-        }
-      } catch (error) {
+      if (res.ok) {
         setLoading(false);
-        console.error("Failed to retrieve token:", error);
+        setUser(data.user);
       }
-    };
+    } catch (error) {
+      setLoading(false);
+      console.error("Failed to retrieve token:", error);
+    }
+  };
+  useEffect(() => {
     getUser();
   }, []);
+
   const goToListing = () => {
     navigation.navigate("Create");
   };
@@ -51,42 +52,103 @@ export default function Account({ navigation }: { navigation: any }) {
       </View>
     );
   }
+  const handleLogout = async () => {
+    setAuth(false);
+    await AsyncStorage.removeItem("token");
+  };
   return (
     <ScrollView>
       <ProfileCard user={user} me />
-      {products?.length > 0 ? (
-        <HorizontalProductCard products={products} />
-      ) : (
+      <View
+        style={{
+          margin: 10,
+          padding: 10,
+          backgroundColor: "white",
+          borderRadius: 10,
+          alignItems: "center",
+          height: "100%",
+        }}
+      >
         <View
           style={{
-            height: "100%",
-            backgroundColor: Colors.white,
-            padding: 10,
-            marginHorizontal: 10,
-            borderRadius: 10,
-            justifyContent: "center",
+            flexDirection: "row",
+            alignItems: "center",
             gap: 10,
+            width: "100%",
+            marginVertical: 10,
           }}
         >
-          <Text style={{ textAlign: "center", fontWeight: "bold" }}>
-            No Product Found
-          </Text>
-          <TouchableOpacity
-            style={{
-              backgroundColor: Colors.light,
-              padding: 10,
-              borderRadius: 10,
-              width: "50%",
-              alignSelf: "center",
-            }}
-            onPress={goToListing}
-          >
-            <Text style={{ textAlign: "center", fontWeight: "bold" }}>
-              Add Product
-            </Text>
-          </TouchableOpacity>
+          <Ionicons name="create-outline" size={24} color="black" />
+          <Text style={{ fontWeight: "bold", fontSize: 18 }}>My Ads</Text>
+          <Ionicons
+            name="arrow-forward-circle-sharp"
+            size={24}
+            color="black"
+            style={{ position: "absolute", right: 0 }}
+          />
         </View>
-      )}
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 10,
+            width: "100%",
+            marginVertical: 10,
+          }}
+        >
+          <Ionicons name="create-outline" size={24} color="black" />
+          <Text style={{ fontWeight: "bold", fontSize: 18 }}>My Ads</Text>
+          <Ionicons
+            name="arrow-forward-circle-sharp"
+            size={24}
+            color="black"
+            style={{ position: "absolute", right: 0 }}
+          />
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 10,
+            width: "100%",
+            marginVertical: 10,
+          }}
+        >
+          <Ionicons name="create-outline" size={24} color="black" />
+          <Text style={{ fontWeight: "bold", fontSize: 18 }}>My Ads</Text>
+          <Ionicons
+            name="arrow-forward-circle-sharp"
+            size={24}
+            color="black"
+            style={{ position: "absolute", right: 0 }}
+          />
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 10,
+            width: "100%",
+            marginVertical: 10,
+          }}
+        >
+          <Ionicons name="create-outline" size={24} color="black" />
+          <Text style={{ fontWeight: "bold", fontSize: 18 }}>My Ads</Text>
+          <Ionicons
+            name="arrow-forward-circle-sharp"
+            size={24}
+            color="black"
+            style={{ position: "absolute", right: 0 }}
+          />
+        </View>
+        <MyButton
+          label="Logout"
+          bgColor={Colors.light}
+          color="black"
+          length="100%"
+          onClick={handleLogout}
+        />
+      </View>
     </ScrollView>
   );
 }

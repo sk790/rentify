@@ -16,7 +16,6 @@ import Header from "@/components/Header";
 import HorizontalProductCard from "@/components/HorizontalProductCard";
 import { BASE_URL } from "@env";
 import { Product } from "@/types";
-console.log(BASE_URL);
 
 export default function categrisProducts() {
   const { category } = useLocalSearchParams();
@@ -25,14 +24,11 @@ export default function categrisProducts() {
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    console.log(category);
-
     const getProductsByCategory = async () => {
       const res = await fetch(
         `${BASE_URL}/api/product/products?category=${encodedCategory.toLowerCase()}&limit=20`
       );
       const data = await res.json();
-      console.log({ data });
 
       setProducts(data.products);
     };

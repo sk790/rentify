@@ -18,25 +18,43 @@ import { useLocation } from "@/context/LocationContext";
 export default function HomeScreen() {
   const [loading, setLoading] = useState(false);
   const { products, setProducts } = useProducts();
+  const { favoriteProducts, setFavoriteProducts } = useProducts();
+  const [distances, setDistances] = useState<number[]>([]);
   const { location } = useLocation();
-
-  useEffect(() => {
+  const stringLocation = JSON.stringify(location);
+  const getUser = async () => {
     try {
-      setLoading(true);
-      const getAllProducts = async () => {
-        const res = await fetch(`${BASE_URL}/api/product/products`);
-        const data = await res.json();
+      const res = await fetch(`${BASE_URL}/api/auth/me`);
+      const data = await res.json();
+      if (res.ok) {
+        setFavoriteProducts(data.user.favorites);
+      }
+    } catch (error) {
+      console.error("Failed to retrieve token:", error);
+    }
+  };
+  const getAllProducts = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(
+        `${BASE_URL}/api/product/products?userCoords=${stringLocation}&areaRange=1000`
+      );
+      const data = await res.json();
+      setLoading(false);
+
+      if (res.ok) {
         setLoading(false);
-        if (res.ok) {
-          setLoading(false);
-          setProducts(data.products);
-        }
-      };
-      getAllProducts();
+        setProducts(data.products);
+        setDistances(data.distances);
+      }
     } catch (error) {
       setLoading(false);
       alert(error);
     }
+  };
+  useEffect(() => {
+    getAllProducts();
+    getUser();
   }, []);
 
   const category = [
@@ -60,6 +78,15 @@ export default function HomeScreen() {
   const getProductsByCategory = (category: string) => {
     router.push({ pathname: "/categrisProducts", params: { category } });
   };
+  //toggle favorite for real time
+  const toggleFavorite = (productId: any) => {
+    if (favoriteProducts.includes(productId)) {
+      setFavoriteProducts(favoriteProducts.filter((p) => p !== productId));
+    } else {
+      setFavoriteProducts([...favoriteProducts, productId]);
+    }
+  };
+
   return (
     <>
       <Stack.Screen options={{ headerShown: true, header: () => <Header /> }} />
@@ -78,13 +105,18 @@ export default function HomeScreen() {
         <View style={styles.productContainer}>
           <Text style={styles.sectionTitle}>Near by You</Text>
           <View style={styles.productList}>
-            {products.map((item, index) => (
+            {products.map((item: any, index) => (
               <TouchableOpacity
                 style={styles.productCard}
                 onPress={() => getProductDetails(item._id)}
                 key={index}
               >
-                <HomeProductCard product={item} />
+                <HomeProductCard
+                  product={item}
+                  distance={distances[index]}
+                  isFavorite={favoriteProducts.includes(item._id)}
+                  addToFavorite={toggleFavorite}
+                />
               </TouchableOpacity>
             ))}
           </View>

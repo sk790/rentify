@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { Link, Stack } from "expo-router";
+import { Stack } from "expo-router";
 import SocialLoginBottons from "@/components/SocialLoginBottons";
 import LoginInputFields from "@/components/LoginInputFields";
 import { Colors } from "@/constants/Colors";
@@ -45,7 +45,6 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
       }
     } catch (error) {
       setLoading(false);
-      console.log(error);
     }
   };
 

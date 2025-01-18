@@ -1,0 +1,98 @@
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React from "react";
+import { Ionicons } from "@expo/vector-icons";
+import { Product } from "@/types";
+import { Colors } from "@/constants/Colors";
+import { BASE_URL } from "@env";
+
+type Props = {
+  product: Product;
+  onDelete: (productId: string) => void;
+  onEdit: (productId: Product) => void;
+};
+export default function MyAdCard({ product, onDelete, onEdit }: Props) {
+  const handleDelete = async (prductId: string) => {
+    if (!product._id) return;
+    try {
+      const res = await fetch(`${BASE_URL}/api/product/${prductId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        alert(data.msg);
+        onDelete(prductId);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        justifyContent: "space-between",
+        width: "100%",
+        backgroundColor: "white",
+        borderRadius: 10,
+        padding: 10,
+      }}
+    >
+      <View style={{ flexDirection: "row", gap: 10 }}>
+        <Image
+          source={{
+            uri: "https://cdn.bikedekho.com/processedimages/yamaha/r15-v4/source/r15-v466e5433ef20f5.jpg",
+          }}
+          style={{ width: 100, height: 100, borderRadius: 10 }}
+        />
+        <View
+          style={{ flexDirection: "column", justifyContent: "space-between" }}
+        >
+          <View>
+            <Text style={{ fontWeight: "500" }}>{product.title}</Text>
+            <Text>Rs {product.price}</Text>
+          </View>
+          <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Ionicons name="eye-outline" size={16} color="#f50" />
+              <Text
+                style={{ fontWeight: "600", fontSize: 12, color: Colors.gray }}
+              >
+                25
+              </Text>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Ionicons name="heart" size={16} color="#f55" />
+              <Text
+                style={{ fontWeight: "600", fontSize: 12, color: Colors.gray }}
+              >
+                123
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
+      <View
+        style={{
+          flexDirection: "column",
+          justifyContent: "space-between",
+          paddingRight: 10,
+        }}
+      >
+        <Ionicons
+          name="pencil-outline"
+          size={20}
+          color="black"
+          onPress={() => onEdit(product)}
+        />
+        <TouchableOpacity onPress={() => handleDelete(product._id)}>
+          <Ionicons name="trash-outline" size={20} color="red" />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({});

@@ -1,11 +1,38 @@
-import { Image, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { Product } from "@/types";
 import { useFormateDate } from "@/hooks/useFormateDate";
+import { BASE_URL } from "@env";
 
-export default function HomeProductCard({ product }: { product: Product }) {
+export default function HomeProductCard({
+  product,
+  distance,
+  isFavorite,
+  addToFavorite,
+}: {
+  product: Product;
+  distance: number;
+  isFavorite?: any;
+  addToFavorite: (productId: string) => void;
+}) {
+  const toggleFavorite = async (productId: string) => {
+    try {
+      const res = await fetch(`${BASE_URL}/api/product/favorite/${productId}`, {
+        method: "PUT",
+      });
+      const data = await res.json();
+      if (res.ok) {
+        addToFavorite(product._id);
+      } else {
+        alert(data.msg);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <View
       style={{
@@ -15,11 +42,18 @@ export default function HomeProductCard({ product }: { product: Product }) {
         padding: 5,
       }}
     >
-      <Ionicons
-        name="heart-outline"
-        size={28}
+      <TouchableOpacity
         style={{ position: "absolute", top: 5, right: 5, zIndex: 1 }}
-      />
+        onPress={() => {
+          toggleFavorite(product._id);
+        }}
+      >
+        <Ionicons
+          name={isFavorite ? "heart" : "heart-outline"}
+          color={isFavorite ? "red" : "black"}
+          size={28}
+        />
+      </TouchableOpacity>
       <View style={{ alignItems: "center" }}>
         <Image
           source={{
@@ -54,7 +88,17 @@ export default function HomeProductCard({ product }: { product: Product }) {
             </Text>
           </View>
           <Text style={{ fontSize: 12, color: Colors.gray, fontWeight: "600" }}>
-            {useFormateDate(product.createdAt)}
+            {new Date(product.createdAt).toDateString() ===
+            new Date().toDateString()
+              ? "Today"
+              : useFormateDate(product.createdAt)}
+          </Text>
+        </View>
+        <View
+          style={{ flexDirection: "row", alignItems: "center", width: "100%" }}
+        >
+          <Text style={{ fontSize: 12, color: Colors.gray, fontWeight: "600" }}>
+            {distance} km
           </Text>
         </View>
       </View>

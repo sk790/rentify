@@ -18,7 +18,8 @@ export default function addcordinets() {
   const [locationBtnLoading, setLocationBtnLoading] = useState(false);
 
   useEffect(() => {
-    data.cordinets = location;
+    data.cordinets.latitude = location.latitude;
+    data.cordinets.longitude = location.longitude;
     if (data.cordinets.latitude > 0 && data.cordinets.longitude > 0) {
       setBtnStyle("green");
     } else {

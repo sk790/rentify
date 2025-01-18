@@ -5,6 +5,7 @@ import { Colors } from "@/constants/Colors";
 import { useFormateDate } from "@/hooks/useFormateDate";
 import { Location, User } from "@/types";
 import { useLocation } from "@/context/LocationContext";
+import MyButton from "./ui/MyButton";
 type userProps = {
   user: User | undefined;
   me?: boolean;
@@ -29,7 +30,7 @@ export default function ProfileCard({ user, me }: userProps) {
           style={{ width: 90, height: 90, borderRadius: 50 }}
         />
         <Text style={{ fontWeight: "bold", fontSize: 20, flex: 1 }}>
-          {location.longitude}
+          {user?.name}
         </Text>
         <TouchableOpacity
           style={[
@@ -75,6 +76,7 @@ export default function ProfileCard({ user, me }: userProps) {
       <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
         <Ionicons name="calendar" size={24} color="black" />
         <Text>Member since {useFormateDate(user?.createdAt)}</Text>
+        {/* <MyButton color="white" bgColor="gray" label="Edit" /> */}
       </View>
 
       <View
@@ -86,7 +88,7 @@ export default function ProfileCard({ user, me }: userProps) {
         }}
       >
         <Ionicons name="mail" size={24} color="black" />
-        <Text>{location.latitude || "No description"}</Text>
+        <Text>{user?.description || "No description"}</Text>
       </View>
 
       <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>

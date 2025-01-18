@@ -6,8 +6,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { useFormateDate } from "@/hooks/useFormateDate";
 
 export default function HorizontalProductCard({ products }: any) {
-  console.log({ products });
-
   const getProductDetails = (productId: number) => {
     router.push({ pathname: "/productDetail", params: { productId } });
   };

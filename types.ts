@@ -27,6 +27,7 @@ export interface Product {
   availability: boolean;
   address: string;
   createdAt: string;
+  productCordinates: Location;
   __v: number;
 }
 
