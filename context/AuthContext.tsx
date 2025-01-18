@@ -1,3 +1,4 @@
+import { User } from "@/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, {
   createContext,
@@ -10,12 +11,19 @@ import React, {
 interface AuthContextType {
   auth: boolean; // Represents if the user is authenticated
   setAuth: (authState: boolean) => void; // Updates the authentication state
+  user: User | undefined;
+  setUser: (user: User) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [auth, setAuth] = useState<boolean>(false); // Default authentication state is false
+  const [user, setUserState] = useState<User | undefined>(undefined);
+
+  const setUser = (newUser: User) => {
+    setUserState(newUser);
+  };
 
   useEffect(() => {
     const initializeAuth = async () => {
@@ -31,7 +39,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ auth, setAuth }}>
+    <AuthContext.Provider value={{ auth, setAuth, setUser, user }}>
       {children}
     </AuthContext.Provider>
   );

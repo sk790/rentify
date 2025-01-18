@@ -10,11 +10,8 @@ export default function Chat() {
     await AsyncStorage.removeItem("token");
   };
   return (
-    <View>
-      <Text>Chat</Text>
-      <TouchableOpacity onPress={handleLogout}>
-        <Text>Logout</Text>
-      </TouchableOpacity>
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Text>Available soon</Text>
     </View>
   );
 }

@@ -15,7 +15,7 @@ export default function HomeProductCard({
   product: Product;
   distance: number;
   isFavorite?: any;
-  addToFavorite: (productId: string) => void;
+  addToFavorite: (productId: Product) => void;
 }) {
   const toggleFavorite = async (productId: string) => {
     try {
@@ -24,7 +24,8 @@ export default function HomeProductCard({
       });
       const data = await res.json();
       if (res.ok) {
-        addToFavorite(product._id);
+        // console.log({ data });
+        addToFavorite(product);
       } else {
         alert(data.msg);
       }
@@ -50,7 +51,7 @@ export default function HomeProductCard({
       >
         <Ionicons
           name={isFavorite ? "heart" : "heart-outline"}
-          color={isFavorite ? "red" : "black"}
+          color={isFavorite ? "#f458" : "black"}
           size={28}
         />
       </TouchableOpacity>

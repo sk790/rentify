@@ -11,6 +11,7 @@ export interface User {
   updatedAt: string;
   description: string;
   address: string;
+  favorites: Product[];
   __v: number;
 }
 
@@ -28,6 +29,7 @@ export interface Product {
   address: string;
   createdAt: string;
   productCordinates: Location;
+  isFavorite: boolean;
   __v: number;
 }
 

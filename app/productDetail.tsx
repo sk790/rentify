@@ -22,6 +22,8 @@ export default function productDetail() {
   const [product, setProduct] = useState<Product>();
   const [loading, setLoading] = useState(false);
   const { products } = useProducts();
+  console.log(product);
+
   useEffect(() => {
     const p = products.find((p) => p._id === productId);
     setProduct(p);

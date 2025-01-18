@@ -14,25 +14,36 @@ import { BASE_URL } from "@env";
 import { Location, Product } from "@/types";
 import { useProducts } from "@/context/ProductContext";
 import { useLocation } from "@/context/LocationContext";
+import { useAuth } from "@/context/AuthContext";
 
 export default function HomeScreen() {
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
-  const { products, setProducts } = useProducts();
-  const { favoriteProducts, setFavoriteProducts } = useProducts();
+  const {
+    products,
+    setProducts,
+    setMyAds,
+    setFavoriteProducts,
+    favoriteProducts,
+  } = useProducts();
   const [distances, setDistances] = useState<number[]>([]);
   const { location } = useLocation();
   const stringLocation = JSON.stringify(location);
-  const getUser = async () => {
-    try {
+  const { setUser } = useAuth();
+
+  useEffect(() => {
+    const getUser = async () => {
       const res = await fetch(`${BASE_URL}/api/auth/me`);
       const data = await res.json();
+      // console.log(data);
       if (res.ok) {
         setFavoriteProducts(data.user.favorites);
+        setMyAds(data.user.products);
+        setUser(data.user);
       }
-    } catch (error) {
-      console.error("Failed to retrieve token:", error);
-    }
-  };
+    };
+    getUser();
+  }, []);
   const getAllProducts = async () => {
     setLoading(true);
     try {
@@ -41,9 +52,12 @@ export default function HomeScreen() {
       );
       const data = await res.json();
       setLoading(false);
+      console.log(data, "data");
 
       if (res.ok) {
         setLoading(false);
+        // console.log(data.products, "data");
+
         setProducts(data.products);
         setDistances(data.distances);
       }
@@ -54,7 +68,6 @@ export default function HomeScreen() {
   };
   useEffect(() => {
     getAllProducts();
-    getUser();
   }, []);
 
   const category = [
@@ -78,12 +91,14 @@ export default function HomeScreen() {
   const getProductsByCategory = (category: string) => {
     router.push({ pathname: "/categrisProducts", params: { category } });
   };
-  //toggle favorite for real time
-  const toggleFavorite = (productId: any) => {
-    if (favoriteProducts.includes(productId)) {
-      setFavoriteProducts(favoriteProducts.filter((p) => p !== productId));
+
+  const toggleFavorite = (product: Product) => {
+    if (favoriteProducts.some((fav: Product) => fav._id === product._id)) {
+      setFavoriteProducts(
+        favoriteProducts.filter((fav: Product) => fav._id !== product._id)
+      );
     } else {
-      setFavoriteProducts([...favoriteProducts, productId]);
+      setFavoriteProducts([...favoriteProducts, { ...product }]);
     }
   };
 
@@ -105,7 +120,7 @@ export default function HomeScreen() {
         <View style={styles.productContainer}>
           <Text style={styles.sectionTitle}>Near by You</Text>
           <View style={styles.productList}>
-            {products.map((item: any, index) => (
+            {products.map((item: Product, index) => (
               <TouchableOpacity
                 style={styles.productCard}
                 onPress={() => getProductDetails(item._id)}
@@ -114,7 +129,9 @@ export default function HomeScreen() {
                 <HomeProductCard
                   product={item}
                   distance={distances[index]}
-                  isFavorite={favoriteProducts.includes(item._id)}
+                  isFavorite={favoriteProducts.some(
+                    (fav: Product) => fav._id === item._id
+                  )}
                   addToFavorite={toggleFavorite}
                 />
               </TouchableOpacity>

@@ -6,44 +6,21 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ProfileCard from "@/components/ProfileCard";
-import { BASE_URL } from "@env";
 import { Colors } from "@/constants/Colors";
-import { Product, User } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import MyButton from "@/components/ui/MyButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "@/context/AuthContext";
+import { useProducts } from "@/context/ProductContext";
 
 export default function Account({ navigation }: { navigation: any }) {
-  const [user, setUser] = useState<User>();
   const { setAuth } = useAuth();
   const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
 
-  const getUser = async () => {
-    try {
-      setLoading(true);
-      const res = await fetch(`${BASE_URL}/api/auth/me`);
-      const data = await res.json();
-      setLoading(false);
-
-      if (res.ok) {
-        setLoading(false);
-        setUser(data.user);
-      }
-    } catch (error) {
-      setLoading(false);
-      console.error("Failed to retrieve token:", error);
-    }
-  };
-  useEffect(() => {
-    getUser();
-  }, []);
-
-  const goToListing = () => {
-    navigation.navigate("Create");
-  };
+  const { favoriteProducts, myAds, products } = useProducts();
 
   if (loading) {
     return (
