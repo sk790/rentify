@@ -9,7 +9,7 @@ import {
 import React, { useState } from "react";
 import { router, Stack } from "expo-router";
 import { Colors } from "@/constants/Colors";
-import MyDropdown from "@/components/MyDropdown";
+// import MyDropdown from "@/components/MyDropdown";
 import { Ionicons } from "@expo/vector-icons";
 
 type inputProps = {
@@ -142,12 +142,12 @@ export default function Create() {
             Provide details about the service you're offering.
           </Text>
           <View style={{ marginTop: 10 }}>
-            <MyDropdown
+            {/* <MyDropdown
               onChange={handleCategoryChange}
               data={category}
               label="Select Category"
               required
-            />
+            /> */}
             <InputField
               label="Product Name"
               placeholder="Product name....."
@@ -166,12 +166,12 @@ export default function Create() {
               onChange={(value) => handleInputChange("description", value)}
               value={formData.description}
             />
-            <MyDropdown
+            {/* <MyDropdown
               label="Select Period"
               required
               data={period}
               onChange={handlePeriodChange}
-            />
+            /> */}
             <InputField
               label="Price"
               placeholder="Enter Price....."

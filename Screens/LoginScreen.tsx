@@ -20,6 +20,7 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  console.log(BASE_URL);
 
   const handleSubmit = async () => {
     if (!phone || !password) {
