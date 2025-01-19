@@ -8,4 +8,6 @@ export const Colors = {
   highlight: "#F4CE14",
   light: "#F4F4F4",
   dark: "#333",
+  favorite: "#FF0000",
+  unFavorite: "#333",
 };

@@ -33,11 +33,10 @@ export default function Signup({ navigation }: { navigation: any }) {
       [key]: value,
     }));
   };
-  const handleOtp = async () => {};
+  const handleOtp = async () => {
+    alert("Not available yet");
+  };
   const handleVerifyOtp = async () => {
-    if (otp.length !== 4) {
-      return alert("Please enter 4 digit otp");
-    }
     try {
       setIsLoading(true);
       const res = await fetch(`${BASE_URL}/api/auth/signup`, {
@@ -49,7 +48,7 @@ export default function Signup({ navigation }: { navigation: any }) {
       });
       const data = await res.json();
       setIsLoading(false);
-
+      alert(data.msg);
       if (res.ok) {
         await AsyncStorage.setItem("token", data.token);
         setAuth(true);
@@ -81,9 +80,8 @@ export default function Signup({ navigation }: { navigation: any }) {
             onChangeText={(value) => handleInputChange("password", value)}
           />
           <LoginInputFields
-            placeholder="confirm Password"
+            placeholder="Confirm Password"
             placeholderTextColor={Colors.gray}
-            keyboardType="number-pad"
             value={formData.confirmPassword}
             secureTextEntry={true}
             onChangeText={(value) =>
@@ -135,7 +133,6 @@ export default function Signup({ navigation }: { navigation: any }) {
               ) : (
                 "Sign Up"
               )}
-              SignUp
             </Text>
           </TouchableOpacity>
           <View style={styles.text}>

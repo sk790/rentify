@@ -1,9 +1,11 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
+type Props = {
+  image: string;
+  label: string;
+};
 
-export default function CategoryCard({ item }: any) {
-  const image =
-    "https://cdn.bikedekho.com/processedimages/yamaha/r15-v4/source/r15-v466e5433ef20f5.jpg";
+export default function CategoryCard({ image, label }: Props) {
   return (
     <View
       style={{
@@ -17,7 +19,7 @@ export default function CategoryCard({ item }: any) {
         source={{ uri: image }}
         style={{ width: 70, height: 70, borderRadius: 10, marginTop: 10 }}
       />
-      <Text style={{ fontSize: 12 }}>{item}</Text>
+      <Text style={{ fontSize: 12 }}>{label}</Text>
     </View>
   );
 }

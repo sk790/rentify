@@ -5,27 +5,29 @@ import { Colors } from "@/constants/Colors";
 import { Product } from "@/types";
 import { useFormateDate } from "@/hooks/useFormateDate";
 import { BASE_URL } from "@env";
+import { useProducts } from "@/context/ProductContext";
 
 export default function HomeProductCard({
   product,
   distance,
   isFavorite,
-  addToFavorite,
 }: {
   product: Product;
   distance: number;
   isFavorite?: any;
-  addToFavorite: (productId: Product) => void;
 }) {
-  const toggleFavorite = async (productId: string) => {
+  const { updateFavorite } = useProducts();
+  const toggleFavorite = async (product: Product) => {
     try {
-      const res = await fetch(`${BASE_URL}/api/product/favorite/${productId}`, {
-        method: "PUT",
-      });
+      const res = await fetch(
+        `${BASE_URL}/api/product/favorite/${product._id}`,
+        {
+          method: "PUT",
+        }
+      );
       const data = await res.json();
       if (res.ok) {
-        // console.log({ data });
-        addToFavorite(product);
+        updateFavorite(product);
       } else {
         alert(data.msg);
       }
@@ -46,12 +48,12 @@ export default function HomeProductCard({
       <TouchableOpacity
         style={{ position: "absolute", top: 5, right: 5, zIndex: 1 }}
         onPress={() => {
-          toggleFavorite(product._id);
+          toggleFavorite(product);
         }}
       >
         <Ionicons
           name={isFavorite ? "heart" : "heart-outline"}
-          color={isFavorite ? "#f458" : "black"}
+          color={isFavorite ? Colors.favorite : Colors.unFavorite}
           size={28}
         />
       </TouchableOpacity>
@@ -60,7 +62,7 @@ export default function HomeProductCard({
           source={{
             uri: product.images[0],
           }}
-          style={{ width: "80%", height: 125, borderRadius: 10 }}
+          style={{ width: "100%", height: 150, borderRadius: 10 }}
         />
       </View>
       <View style={{ marginTop: 10 }}>

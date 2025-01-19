@@ -16,18 +16,41 @@ import { Colors } from "@/constants/Colors";
 import { BASE_URL } from "@env";
 import { Product } from "@/types";
 import { useProducts } from "@/context/ProductContext";
+import { useAuth } from "@/context/AuthContext";
 
 export default function productDetail() {
   const { productId } = useLocalSearchParams();
   const [product, setProduct] = useState<Product>();
   const [loading, setLoading] = useState(false);
-  const { products } = useProducts();
-  console.log(product);
-
+  const { products, favoriteProducts, updateFavorite } = useProducts();
+  const { user } = useAuth();
+  const [like, setLike] = useState(false);
   useEffect(() => {
     const p = products.find((p) => p._id === productId);
+    const isLiked = favoriteProducts.find((p: Product) => p._id === productId);
+
     setProduct(p);
-  }, [productId]);
+    setLike(isLiked ? true : false);
+  }, [user?.favorites, productId, products]);
+
+  const handleFavorite = async (product: Product | undefined) => {
+    try {
+      setLike(!like);
+      const res = await fetch(
+        `${BASE_URL}/api/product/favorite/${product?._id}`,
+        {
+          method: "PUT",
+        }
+      );
+      if (res.ok) {
+        setLike(!like);
+        updateFavorite(product!);
+      }
+    } catch (error) {
+      alert(error);
+    }
+  };
+
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -71,7 +94,13 @@ export default function productDetail() {
               <Text style={{ fontSize: 20, fontWeight: "600" }}>
                 ₹ {product?.price} / {product?.timePeriod}
               </Text>
-              <Ionicons name="heart-outline" size={28} color="black" />
+              <TouchableOpacity onPress={() => handleFavorite(product)}>
+                <Ionicons
+                  name={like ? "heart" : "heart-outline"}
+                  size={30}
+                  color="#F54"
+                />
+              </TouchableOpacity>
             </View>
             <Text style={{ fontSize: 16, fontWeight: "600" }}>
               {product?.title}

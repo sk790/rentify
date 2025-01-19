@@ -55,7 +55,7 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
         <View style={styles.container}>
           <Text style={styles.title}>Login to your account</Text>
           <LoginInputFields
-            placeholder="phone...."
+            placeholder="Phone Number"
             placeholderTextColor={Colors.gray}
             maxLength={10}
             keyboardType="number-pad"
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   btn: {
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.lightGray,
     paddingVertical: 14,
     paddingHorizontal: 18,
     alignSelf: "stretch",

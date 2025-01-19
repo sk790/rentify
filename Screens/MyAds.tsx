@@ -67,8 +67,6 @@ export default function MyAds({ navigation }: { navigation: any }) {
       </View>
     );
   }
-  console.log(favoriteProducts);
-
   return (
     <View style={{ marginVertical: 10 }}>
       <View style={styles.tabContainer}>

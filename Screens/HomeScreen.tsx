@@ -85,6 +85,8 @@ export default function HomeScreen() {
     "Gaming",
     "Gadgets",
   ];
+  const image =
+    "https://cdn.bikedekho.com/processedimages/yamaha/r15-v4/source/r15-v466e5433ef20f5.jpg";
   const getProductDetails = (productId: string) => {
     router.push({ pathname: "/productDetail", params: { productId } });
   };
@@ -92,6 +94,7 @@ export default function HomeScreen() {
     router.push({ pathname: "/categrisProducts", params: { category } });
   };
 
+  //toggle favorite for real time in favoriteProduct hook not user.favorite
   const toggleFavorite = (product: Product) => {
     if (favoriteProducts.some((fav: Product) => fav._id === product._id)) {
       setFavoriteProducts(
@@ -113,7 +116,7 @@ export default function HomeScreen() {
               style={styles.categoryCard}
               onPress={() => getProductsByCategory(category)}
             >
-              <CategoryCard item={category} />
+              <CategoryCard image={image} label={category} />
             </TouchableOpacity>
           ))}
         </View>

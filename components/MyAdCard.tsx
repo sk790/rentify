@@ -4,8 +4,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { Product } from "@/types";
 import { Colors } from "@/constants/Colors";
 import { BASE_URL } from "@env";
-import { useAuth } from "@/context/AuthContext";
 import { router } from "expo-router";
+import { useProducts } from "@/context/ProductContext";
 
 type Props = {
   product: Product;
@@ -14,14 +14,8 @@ type Props = {
   onRemoveFavorite?: (productId: Product) => void;
   myAds?: boolean;
 };
-export default function MyAdCard({
-  product,
-  onDelete,
-  onEdit,
-  myAds,
-  onRemoveFavorite,
-}: Props) {
-  const { user } = useAuth();
+export default function MyAdCard({ product, onDelete, onEdit, myAds }: Props) {
+  const { updateFavorite } = useProducts();
   const handleDelete = async (prductId: string) => {
     if (!product._id) return;
     try {
@@ -40,18 +34,19 @@ export default function MyAdCard({
       console.log(error);
     }
   };
-  const handleRemoveFavorite = async (prductId: string) => {
-    console.log(prductId);
-
+  const handleRemoveFavorite = async (prduct: Product) => {
     try {
-      const res = await fetch(`${BASE_URL}/api/product/favorite/${prductId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const res = await fetch(
+        `${BASE_URL}/api/product/favorite/${prduct._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       if (res.ok) {
-        onRemoveFavorite?.(product);
+        updateFavorite(product);
       }
     } catch (error) {
       console.log(error);
@@ -141,8 +136,8 @@ export default function MyAdCard({
               </TouchableOpacity>
             </>
           ) : (
-            <TouchableOpacity onPress={() => handleRemoveFavorite(product._id)}>
-              <Ionicons name="heart" size={25} color="#f458" />
+            <TouchableOpacity onPress={() => handleRemoveFavorite(product)}>
+              <Ionicons name="heart" size={30} color={Colors.favorite} />
             </TouchableOpacity>
           )}
         </View>

@@ -8,6 +8,7 @@ interface ProductContextType {
   setFavoriteProducts: (products: Product[]) => void;
   myAds: Product[];
   setMyAds: (products: Product[]) => void;
+  updateFavorite: (product: Product) => void;
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -29,9 +30,15 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
     setFavoriteProductsState(newFavoriteProducts);
   };
 
-  // const updateMyAds = (product: Product) => {
-  //   setMyAds((prevMyAds: Product[]) => [...prevMyAds, product]); // Fix applied here
-  // };
+  const updateFavorite = (product: Product) => {
+    if (favoriteProducts.some((fav: Product) => fav._id === product._id)) {
+      setFavoriteProducts(
+        favoriteProducts.filter((fav: Product) => fav._id !== product._id)
+      );
+    } else {
+      setFavoriteProducts([...favoriteProducts, { ...product }]);
+    }
+  };
 
   return (
     <ProductContext.Provider
@@ -42,6 +49,7 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
         setFavoriteProducts,
         myAds,
         setMyAds,
+        updateFavorite,
       }}
     >
       {children}
