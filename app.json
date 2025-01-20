@@ -2,6 +2,7 @@
   "expo": {
     "name": "frontend",
     "slug": "frontend",
+
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -16,7 +17,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.sk_nagar790.frontend"
+      "package": "com.sk_nagar790.frontend",
+      "permissions": ["INTERNET"]
     },
     "web": {
       "bundler": "metro",
@@ -40,13 +42,8 @@
     },
     "extra": {
       "eas": {
-        "projectId": "6fe22034-a92c-4f1b-97aa-aa6c4ce8ae7a"
+        "projectId": "9a091191-28c0-4e8d-bba7-51f0378f5924"
       }
-    }
-  },
-  "extra": {
-    "eas": {
-      "projectId": "6fe22034-a92c-4f1b-97aa-aa6c4ce8ae7a"
     }
   }
 }

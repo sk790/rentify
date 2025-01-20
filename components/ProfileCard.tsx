@@ -11,7 +11,7 @@ type userProps = {
   me?: boolean;
 };
 export default function ProfileCard({ user, me }: userProps) {
-  const { location } = useLocation();
+  console.log(user);
 
   return (
     <View

@@ -2,7 +2,6 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import { Colors } from "@/constants/Colors";
 import Animated, { FadeInLeft, FadeInRight } from "react-native-reanimated";
-import { Href, Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 // import Google from "@/assets/images/google-logo.svg";
 

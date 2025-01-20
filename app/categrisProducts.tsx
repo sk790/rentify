@@ -29,6 +29,7 @@ export default function categrisProducts() {
         `${BASE_URL}/api/product/products?category=${encodedCategory.toLowerCase()}&limit=20`
       );
       const data = await res.json();
+      console.log(data);
 
       setProducts(data.products);
     };

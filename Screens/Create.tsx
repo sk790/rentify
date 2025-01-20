@@ -9,61 +9,12 @@ import {
 import React, { useState } from "react";
 import { router, Stack } from "expo-router";
 import { Colors } from "@/constants/Colors";
-// import MyDropdown from "@/components/MyDropdown";
+import MyDropdown from "@/components/MyDropdown";
 import { Ionicons } from "@expo/vector-icons";
+import InputField from "@/components/ui/InputField";
+import { category, period } from "@/constants/Data";
 
-type inputProps = {
-  placeholder: string;
-  label: string;
-  onChange: (text: string) => void;
-  name: string;
-  value: string;
-  line?: number;
-  multiline?: boolean;
-  required?: boolean;
-};
-
-function InputField({
-  placeholder,
-  label,
-  onChange,
-  name,
-  value,
-  line,
-  multiline,
-  required,
-}: inputProps) {
-  return (
-    <>
-      <View style={{ marginVertical: 10 }}>
-        <Text style={[{ fontWeight: "600", fontSize: 16, marginVertical: 5 }]}>
-          {label}
-          {required && <Text style={{ color: "red", fontSize: 12 }}>*</Text>}
-        </Text>
-        <TextInput
-          placeholder={placeholder}
-          onChangeText={onChange}
-          value={value}
-          numberOfLines={line}
-          multiline={multiline}
-          textAlignVertical="top"
-          style={[
-            {
-              borderWidth: StyleSheet.hairlineWidth,
-              borderRadius: 5,
-              paddingHorizontal: 15,
-              fontWeight: 600,
-              fontSize: 12,
-            },
-            multiline && { height: line ? line * 20 : 100 },
-          ]}
-        />
-      </View>
-    </>
-  );
-}
-
-export default function Create() {
+export default function Create({ route }: any) {
   const [formData, setFormData] = useState({
     productName: "",
     title: "",
@@ -77,7 +28,9 @@ export default function Create() {
       longitude: 0,
     },
   });
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  // const { product } = route.params;
+
+  const [selectedCategory, setSelectedCategory] = useState<string | null>();
   const [selectedPeriod, setSelectedPeriod] = useState<string | null>(null);
 
   const handleInputChange = (key: string, value: string) => {
@@ -94,25 +47,7 @@ export default function Create() {
     setSelectedPeriod(value);
     formData.period = value as string;
   };
-  const category = [
-    { label: "Vehicle", value: "1" },
-    { label: "Furniture", value: "2" },
-    { label: "Clothing", value: "3" },
-    { label: "Accessories", value: "4" },
-    { label: "Jewellery", value: "5" },
-    { label: "Fashion", value: "7" },
-    { label: "Sports", value: "8" },
-    { label: "Music", value: "9" },
-    { label: "Gaming", value: "10" },
-    { label: "Gadgets", value: "11" },
-    { label: "Beauty", value: "12" },
-  ];
-  const period = [
-    { label: "Yearly", value: "1" },
-    { label: "Monthly", value: "2" },
-    { label: "Weakly", value: "3" },
-    { label: "Daily", value: "4" },
-  ];
+
   const handleNextPage = () => {
     if (
       !formData.category ||
@@ -142,12 +77,16 @@ export default function Create() {
             Provide details about the service you're offering.
           </Text>
           <View style={{ marginTop: 10 }}>
-            {/* <MyDropdown
+            <MyDropdown
               onChange={handleCategoryChange}
               data={category}
+              // Updatevalue={
+              //   product.category.charAt(0).toUpperCase() +
+              //   product.category.slice(1)
+              // }
               label="Select Category"
               required
-            /> */}
+            />
             <InputField
               label="Product Name"
               placeholder="Product name....."
@@ -166,18 +105,19 @@ export default function Create() {
               onChange={(value) => handleInputChange("description", value)}
               value={formData.description}
             />
-            {/* <MyDropdown
+            <MyDropdown
               label="Select Period"
               required
               data={period}
               onChange={handlePeriodChange}
-            /> */}
+            />
             <InputField
               label="Price"
               placeholder="Enter Price....."
               name="price"
               onChange={(value) => handleInputChange("price", value)}
               value={formData.price}
+              type="number-pad"
               required
             />
             <InputField

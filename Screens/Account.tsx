@@ -14,6 +14,7 @@ import MyButton from "@/components/ui/MyButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "@/context/AuthContext";
 import { useProducts } from "@/context/ProductContext";
+import { BASE_URL } from "@env";
 
 export default function Account({ navigation }: { navigation: any }) {
   const { setAuth } = useAuth();
@@ -30,8 +31,17 @@ export default function Account({ navigation }: { navigation: any }) {
     );
   }
   const handleLogout = async () => {
-    setAuth(false);
-    await AsyncStorage.removeItem("token");
+    try {
+      const res = await fetch(`${BASE_URL}/api/auth/logout`);
+      const data = await res.json();
+      console.log(data);
+      if (res.ok) {
+        setAuth(false);
+        await AsyncStorage.removeItem("token");
+      }
+    } catch (error) {
+      alert(error);
+    }
   };
   return (
     <ScrollView>

@@ -42,6 +42,9 @@ export default function productDetail() {
           method: "PUT",
         }
       );
+      const data = await res.json();
+      // console.log(data);
+
       if (res.ok) {
         setLike(!like);
         updateFavorite(product!);

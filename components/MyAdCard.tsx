@@ -15,7 +15,8 @@ type Props = {
   myAds?: boolean;
 };
 export default function MyAdCard({ product, onDelete, onEdit, myAds }: Props) {
-  const { updateFavorite } = useProducts();
+  const { updateFavorite, setProducts } = useProducts();
+
   const handleDelete = async (prductId: string) => {
     if (!product._id) return;
     try {
@@ -26,7 +27,13 @@ export default function MyAdCard({ product, onDelete, onEdit, myAds }: Props) {
         },
       });
       const data = await res.json();
+      console.log(data);
+
       if (res.ok) {
+        updateFavorite(product);
+        setProducts((prev: Product[]) =>
+          prev.filter((p: Product) => p._id !== prductId)
+        );
         alert(data.msg);
         onDelete?.(prductId);
       }
@@ -45,6 +52,8 @@ export default function MyAdCard({ product, onDelete, onEdit, myAds }: Props) {
           },
         }
       );
+      const data = await res.json();
+      console.log(data);
       if (res.ok) {
         updateFavorite(product);
       }

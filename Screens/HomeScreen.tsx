@@ -35,7 +35,7 @@ export default function HomeScreen() {
     const getUser = async () => {
       const res = await fetch(`${BASE_URL}/api/auth/me`);
       const data = await res.json();
-      // console.log(data);
+      console.log(data);
       if (res.ok) {
         setFavoriteProducts(data.user.favorites);
         setMyAds(data.user.products);
@@ -52,7 +52,7 @@ export default function HomeScreen() {
       );
       const data = await res.json();
       setLoading(false);
-      console.log(data, "data");
+      // console.log(data, "data");
 
       if (res.ok) {
         setLoading(false);
@@ -94,17 +94,6 @@ export default function HomeScreen() {
     router.push({ pathname: "/categrisProducts", params: { category } });
   };
 
-  //toggle favorite for real time in favoriteProduct hook not user.favorite
-  const toggleFavorite = (product: Product) => {
-    if (favoriteProducts.some((fav: Product) => fav._id === product._id)) {
-      setFavoriteProducts(
-        favoriteProducts.filter((fav: Product) => fav._id !== product._id)
-      );
-    } else {
-      setFavoriteProducts([...favoriteProducts, { ...product }]);
-    }
-  };
-
   return (
     <>
       <Stack.Screen options={{ headerShown: true, header: () => <Header /> }} />
@@ -135,7 +124,6 @@ export default function HomeScreen() {
                   isFavorite={favoriteProducts.some(
                     (fav: Product) => fav._id === item._id
                   )}
-                  addToFavorite={toggleFavorite}
                 />
               </TouchableOpacity>
             ))}

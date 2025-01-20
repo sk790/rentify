@@ -10,17 +10,16 @@ import React, { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { Stack } from "expo-router";
 import SocialLoginBottons from "@/components/SocialLoginBottons";
-import LoginInputFields from "@/components/LoginInputFields";
 import { Colors } from "@/constants/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "@env";
+import MyInputField from "@/components/ui/MyInput";
 
 export default function LoginScreen({ navigation }: { navigation: any }) {
   const { setAuth } = useAuth();
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  console.log(BASE_URL);
 
   const handleSubmit = async () => {
     if (!phone || !password) {
@@ -36,13 +35,15 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
         body: JSON.stringify({ password, phone }),
       });
       const data = await res.json();
+      console.log(data);
 
       setLoading(false);
-      alert(data.msg);
       if (res.ok) {
         await AsyncStorage.setItem("token", data.token);
         setAuth(true);
         setLoading(false);
+      } else {
+        alert(data.msg);
       }
     } catch (error) {
       setLoading(false);
@@ -55,15 +56,15 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
         <Stack.Screen options={{ headerTitle: "Sign In" }} />
         <View style={styles.container}>
           <Text style={styles.title}>Login to your account</Text>
-          <LoginInputFields
-            placeholder="Phone Number"
+          <MyInputField
+            placeholder="Mobile Number"
             placeholderTextColor={Colors.gray}
             maxLength={10}
             keyboardType="number-pad"
             value={phone}
             onChangeText={(text) => setPhone(text)}
           />
-          <LoginInputFields
+          <MyInputField
             placeholder="Password"
             placeholderTextColor={Colors.gray}
             autoCapitalize="none"
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   btn: {
-    backgroundColor: Colors.lightGray,
+    backgroundColor: Colors.primary,
     paddingVertical: 14,
     paddingHorizontal: 18,
     alignSelf: "stretch",

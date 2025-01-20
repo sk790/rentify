@@ -18,9 +18,10 @@ export default function reviewProduct({ navigation }: any) {
         body: JSON.stringify(FormData),
       });
       const data = await res.json();
+      // console.log(data);
+
       alert(data.msg);
       if (res.ok) {
-        alert(data.msg);
         router.push("/");
         router.reload();
       }

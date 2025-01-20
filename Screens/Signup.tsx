@@ -9,12 +9,13 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { Stack } from "expo-router";
-import LoginInputFields from "@/components/LoginInputFields";
+// import LoginInputFields from "@/components/LoginInputFields";
 import SocialLoginBottons from "@/components/SocialLoginBottons";
 import { Colors } from "@/constants/Colors";
 import { useAuth } from "@/context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "@env";
+import MyInputField from "@/components/ui/MyInput";
 
 export default function Signup({ navigation }: { navigation: any }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -48,10 +49,11 @@ export default function Signup({ navigation }: { navigation: any }) {
       });
       const data = await res.json();
       setIsLoading(false);
-      alert(data.msg);
       if (res.ok) {
         await AsyncStorage.setItem("token", data.token);
         setAuth(true);
+      } else {
+        alert(data.msg);
       }
     } catch (error) {
       alert(error);
@@ -64,14 +66,14 @@ export default function Signup({ navigation }: { navigation: any }) {
         <View style={styles.container}>
           <Text style={styles.title}>Create an accont</Text>
 
-          <LoginInputFields
+          <MyInputField
             placeholder={"Phone Number"}
             placeholderTextColor={Colors.gray}
             value={formData.phone}
             keyboardType="number-pad"
             onChangeText={(value) => handleInputChange("phone", value)}
           />
-          <LoginInputFields
+          <MyInputField
             placeholder="Password"
             placeholderTextColor={Colors.gray}
             autoCapitalize="none"
@@ -79,7 +81,7 @@ export default function Signup({ navigation }: { navigation: any }) {
             secureTextEntry={true}
             onChangeText={(value) => handleInputChange("password", value)}
           />
-          <LoginInputFields
+          <MyInputField
             placeholder="Confirm Password"
             placeholderTextColor={Colors.gray}
             value={formData.confirmPassword}
@@ -94,13 +96,15 @@ export default function Signup({ navigation }: { navigation: any }) {
               marginBottom: 10,
             }}
           >
-            <TextInput
+            <MyInputField
               style={{
                 flex: 1,
                 backgroundColor: "white",
                 borderTopLeftRadius: 5,
                 borderBottomLeftRadius: 5,
                 paddingHorizontal: 12,
+                height: 50,
+                paddingVertical: 10,
               }}
               placeholder="OTP"
               placeholderTextColor={Colors.gray}

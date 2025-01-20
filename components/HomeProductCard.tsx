@@ -6,7 +6,7 @@ import { Product } from "@/types";
 import { useFormateDate } from "@/hooks/useFormateDate";
 import { BASE_URL } from "@env";
 import { useProducts } from "@/context/ProductContext";
-
+import { useAuth } from "@/context/AuthContext";
 export default function HomeProductCard({
   product,
   distance,
@@ -17,8 +17,16 @@ export default function HomeProductCard({
   isFavorite?: any;
 }) {
   const { updateFavorite } = useProducts();
+  const { user } = useAuth();
+
+  //this login for real time like state updation
+  const [like, setLike] = useState(false);
+  useEffect(() => {
+    setLike(isFavorite);
+  }, [isFavorite]);
   const toggleFavorite = async (product: Product) => {
     try {
+      setLike(!like);
       const res = await fetch(
         `${BASE_URL}/api/product/favorite/${product._id}`,
         {
@@ -29,9 +37,12 @@ export default function HomeProductCard({
       if (res.ok) {
         updateFavorite(product);
       } else {
+        setLike(!like);
         alert(data.msg);
+        console.log(data.msg, "error in toggle favorite");
       }
     } catch (error) {
+      setLike(!like);
       console.log(error);
     }
   };
@@ -52,8 +63,8 @@ export default function HomeProductCard({
         }}
       >
         <Ionicons
-          name={isFavorite ? "heart" : "heart-outline"}
-          color={isFavorite ? Colors.favorite : Colors.unFavorite}
+          name={like ? "heart" : "heart-outline"}
+          color={like ? Colors.favorite : Colors.unFavorite}
           size={28}
         />
       </TouchableOpacity>

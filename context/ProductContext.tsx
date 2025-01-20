@@ -32,6 +32,7 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
 
   const updateFavorite = (product: Product) => {
     if (favoriteProducts.some((fav: Product) => fav._id === product._id)) {
+      //fav._id is the id of the product which is stored in users favorite list not favorite schema
       setFavoriteProducts(
         favoriteProducts.filter((fav: Product) => fav._id !== product._id)
       );
