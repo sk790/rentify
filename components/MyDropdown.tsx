@@ -15,7 +15,7 @@ export default function MyDropdown({ onChange, data, label, required }: Props) {
 
   const handleChange = (item: { label: string; value: string }) => {
     setValue(item.value); // Update local state with the selected value.
-    onChange(item.value); // Pass the selected value to the parent.
+    onChange(item.label); // Pass the selected value to the parent.
     setIsFocus(false); // Close the dropdown.
   };
 

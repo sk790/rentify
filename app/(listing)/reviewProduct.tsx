@@ -1,62 +1,151 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Image,
+  ScrollView,
+  ScrollViewBase,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React from "react";
-import { router, useLocalSearchParams } from "expo-router";
-import { Colors } from "@/constants/Colors";
+import { router, Stack, useLocalSearchParams } from "expo-router";
 import { BASE_URL } from "@env";
+import { ThemedText } from "@/defaultComponents/ThemedText";
+import { ThemedButton } from "@/defaultComponents/ThemedButton";
+import { ThemedView } from "@/defaultComponents/ThemedView";
+import Divider from "@/components/ui/Divider";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function reviewProduct({ navigation }: any) {
-  const { formData } = useLocalSearchParams();
-  const FormData = JSON.parse(formData as string);
+  const { data } = useLocalSearchParams();
+  const FormData = JSON.parse(data as string);
+  const { formData, images: imageData } = FormData;
 
   const handleSubmit = async () => {
     try {
-      const res = await fetch(`${BASE_URL}/api/product/listing`, {
+      const response = await fetch(`${BASE_URL}/api/product/listing`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(FormData),
       });
-      const data = await res.json();
-      // console.log(data);
 
-      alert(data.msg);
-      if (res.ok) {
+      const responseData = await response.json();
+      // console.log("Response data:", responseData);
+
+      if (response.ok) {
         router.push("/");
+        Alert.alert("Success", "Your data has been saved.");
         router.reload();
+      } else {
+        console.error("Error saving data:", responseData);
+        Alert.alert("Error", "There was an issue saving your data.");
       }
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   return (
     <>
-      <View style={{ backgroundColor: "white", padding: 10 }}>
-        <View>
-          <Text>Category : {FormData.category}</Text>
-          <Text>Title : {FormData.title}</Text>
-          <Text>Description : {FormData.description}</Text>
-          <Text>Price : {FormData.price}</Text>
-          <Text>Address : {FormData.address}</Text>
-          <Text>Period : {FormData.period}</Text>
-          <Text>Product Name : {FormData.productName}</Text>
-        </View>
-        <TouchableOpacity
-          onPress={handleSubmit}
-          style={{
-            marginTop: 20,
-            padding: 10,
-            borderRadius: 10,
-            backgroundColor: Colors.light,
-            marginHorizontal: 10,
-            width: "50%",
-            alignSelf: "center",
-          }}
-        >
-          <Text style={{ textAlign: "center" }}>Final Submit</Text>
-        </TouchableOpacity>
-      </View>
+      <Stack.Screen options={{ title: "Review Product" }} />
+      <ScrollView>
+        <ThemedView style={{ margin: 10, borderRadius: 5, padding: 10 }}>
+          <ThemedView>
+            <ThemedText type="defaultSemiBold">Category</ThemedText>
+            <ThemedText style={{ color: "tomato", fontSize: 15 }}>
+              {formData.category}
+            </ThemedText>
+          </ThemedView>
+          <Divider />
+          <ThemedView>
+            <ThemedText type="defaultSemiBold">Title</ThemedText>
+            <ThemedText style={{ color: "tomato", fontSize: 15 }}>
+              {formData.title}
+            </ThemedText>
+          </ThemedView>
+          <Divider />
+          <ThemedView>
+            <ThemedText type="defaultSemiBold">Product Name</ThemedText>
+            <ThemedText style={{ color: "tomato", fontSize: 15 }}>
+              {formData.productName}
+            </ThemedText>
+          </ThemedView>
+          <Divider />
+          <ThemedView>
+            <ThemedText type="defaultSemiBold">Price</ThemedText>
+            <ThemedText style={{ color: "tomato", fontSize: 15 }}>
+              {formData.price}
+            </ThemedText>
+          </ThemedView>
+          <Divider />
+          <ThemedView>
+            <ThemedText type="defaultSemiBold">Address</ThemedText>
+            <ThemedText style={{ color: "tomato", fontSize: 15 }}>
+              {formData.address}
+            </ThemedText>
+          </ThemedView>
+          <Divider />
+          <ThemedView>
+            <ThemedText type="defaultSemiBold">Period</ThemedText>
+            <ThemedText style={{ color: "tomato", fontSize: 15 }}>
+              {formData.period}
+            </ThemedText>
+          </ThemedView>
+          <Divider />
+          <ThemedView>
+            <ThemedText type="defaultSemiBold">Description</ThemedText>
+            <ThemedText style={{ color: "tomato", fontSize: 15 }}>
+              {formData.description}
+            </ThemedText>
+          </ThemedView>
+          <Divider />
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: 10,
+            }}
+          >
+            {imageData.map((image: any, index: number) => (
+              <Image
+                key={index}
+                source={{ uri: image }}
+                style={{
+                  width: 150,
+                  height: 150,
+                  borderRadius: 5,
+                  backgroundColor: "#F2F2F2",
+                }}
+              />
+            ))}
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              gap: 10,
+              margin: 10,
+            }}
+          >
+            <ThemedButton
+              title="Back"
+              onPress={() => router.back()}
+              icon="arrow-back"
+              position="left"
+              style={{ alignSelf: "center", flex: 1 }}
+            />
+            <ThemedButton
+              title="Submit"
+              icon="arrow-forward"
+              position="right"
+              onPress={handleSubmit}
+              style={{ alignSelf: "center", flex: 1 }}
+            />
+          </View>
+        </ThemedView>
+      </ScrollView>
     </>
   );
 }

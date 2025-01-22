@@ -1,8 +1,9 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
+import { ThemedText } from "@/defaultComponents/ThemedText";
 type Props = {
-  image: string;
   label: string;
+  image: string;
 };
 
 export default function CategoryCard({ image, label }: Props) {
@@ -19,7 +20,9 @@ export default function CategoryCard({ image, label }: Props) {
         source={{ uri: image }}
         style={{ width: 70, height: 70, borderRadius: 10, marginTop: 10 }}
       />
-      <Text style={{ fontSize: 12 }}>{label}</Text>
+      <ThemedText type="defaultSemiBold" style={{ fontSize: 10 }}>
+        {label}
+      </ThemedText>
     </View>
   );
 }

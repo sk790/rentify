@@ -12,6 +12,8 @@ import AuthStack from "@/Screens/AuthStack";
 import { Ionicons } from "@expo/vector-icons";
 import Create from "@/Screens/Create";
 import { useLocation } from "@/context/LocationContext";
+import { useColorScheme } from "react-native";
+import { Colors } from "@/constants/Colors";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -34,6 +36,7 @@ function AuthStackk() {
   );
 }
 function AppTabs() {
+  const theme = useColorScheme();
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -52,18 +55,38 @@ function AppTabs() {
           }
 
           // You can return any component here (Icon, Image, etc.)
-          return <Ionicons name={iconName} size={size} color={color} />;
+          return <Ionicons name={iconName} size={size} color={Colors.tomato} />;
         },
-        tabBarActiveTintColor: "blue",
+        tabBarActiveTintColor: Colors.tomato,
         tabBarInactiveTintColor: "gray",
         tabBarStyle: { paddingBottom: 5, height: 60 }, // Custom styling
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Chat" component={Chat} />
-      <Tab.Screen name="Create" component={Create} />
-      <Tab.Screen name="My Ads" component={MyAds} />
-      <Tab.Screen name="Account" component={Account} />
+      <Tab.Screen
+        name="Home"
+        options={{ headerShown: false }}
+        component={HomeScreen}
+      />
+      <Tab.Screen
+        name="Chat"
+        options={{ headerShown: false }}
+        component={Chat}
+      />
+      <Tab.Screen
+        name="Create"
+        options={{ headerShown: false }}
+        component={Create}
+      />
+      <Tab.Screen
+        name="My Ads"
+        options={{ headerShown: false }}
+        component={MyAds}
+      />
+      <Tab.Screen
+        name="Account"
+        options={{ headerShown: false }}
+        component={Account}
+      />
     </Tab.Navigator>
   );
 }

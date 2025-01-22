@@ -9,24 +9,28 @@ export const Colors = {
   white: "#fff",
   background: "#F4F4F4",
   highlight: "#F4CE14",
-  light: "#F4F4F4",
-  dark: "#333",
   favorite: "#FF0000",
   unFavorite: "#333",
-  light2: {
-    text: "#11181C",
+  light: {
+    text: "#000",
     background: "#fff",
-    tint: tintColorLight,
-    icon: "#687076",
-    tabIconDefault: "#687076",
-    tabIconSelected: tintColorLight,
+    tint: "#2f95dc",
+    icon: "#ccc",
+    tabIconDefault: "#ccc",
+    tabIconSelected: "#2f95dc",
+    border: "#ccc", // Add border color for light mode
+    placeholder: "#aaa",
   },
-  dark2: {
-    text: "#ECEDEE",
-    background: "#151718",
-    tint: tintColorDark,
-    icon: "#9BA1A6",
-    tabIconDefault: "#9BA1A6",
-    tabIconSelected: tintColorDark,
+  dark: {
+    text: "#fff",
+    background: "#000",
+    tint: "#2f95dc",
+    icon: "#fff",
+    tabIconDefault: "#ccc",
+    tabIconSelected: "#2f95dc",
+    border: "#555", // Add border color for dark mode
+    placeholder: "#666",
   },
+  tomato: "#FF6347",
+  lightTomato: "#FF7F70",
 };

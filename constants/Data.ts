@@ -1,3 +1,47 @@
+export const homeCategoryData = [
+  {
+    label: "Vehicle",
+    image:
+      "https://cdn.iconscout.com/icon-pack/preview-mockup/vehicle-icon-pack-download-in-svg-png-gif-file-formats--transport-travel-truck-car-trailer-icons-1456.png?f=webp&h=240&modified_at=1582347296",
+  },
+  {
+    label: "Furniture",
+    image: "https://cdn-icons-png.freepik.com/512/10001/10001869.png",
+  },
+  {
+    label: "Clothing",
+    image: "https://cdn-icons-png.flaticon.com/512/6165/6165574.png",
+  },
+  {
+    label: "Accessories",
+    image:
+      "https://static.vecteezy.com/system/resources/thumbnails/000/151/879/small/phone-accessories-icon-pack.jpg",
+  },
+  {
+    label: "Jewellery",
+    image:
+      "https://img.freepik.com/free-vector/jewelry-icons-collection_1111-160.jpg",
+  },
+  {
+    label: "Fashion",
+    image: "https://thumbs.dreamstime.com/b/fashion-icon-17238277.jpg",
+  },
+  {
+    label: "Sports",
+    image: "https://unblast.com/wp-content/uploads/2018/07/Sport-Icons-5.jpg",
+  },
+
+  {
+    label: "Gadgets",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoX8ZfKgbVM8hfDnsX6-olkzyIY8r9GbTvtA&s",
+  },
+  {
+    label: "See all",
+    image: "https://cdn-icons-png.flaticon.com/512/3502/3502688.png",
+  },
+];
+
 export const category = [
   { label: "Vehicle", value: "1" },
   { label: "Furniture", value: "2" },

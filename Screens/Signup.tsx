@@ -48,6 +48,7 @@ export default function Signup({ navigation }: { navigation: any }) {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
+      // console.log(data);
       setIsLoading(false);
       if (res.ok) {
         await AsyncStorage.setItem("token", data.token);

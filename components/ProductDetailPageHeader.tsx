@@ -3,6 +3,7 @@ import React from "react";
 import { router, Stack } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import { Colors } from "@/constants/Colors";
 
 export default function ProductDetailPageHeader() {
   const inset = useSafeAreaInsets();
@@ -26,12 +27,12 @@ export default function ProductDetailPageHeader() {
                 <Ionicons
                   name="arrow-back"
                   size={28}
-                  color="black"
+                  color={Colors.tomato}
                   style={{ marginLeft: 10 }}
                 />
               </TouchableOpacity>
               <TouchableOpacity>
-                <Ionicons name="share-social" size={28} color="black" />
+                <Ionicons name="share-social" size={28} color={Colors.tomato} />
               </TouchableOpacity>
             </View>
           ),

@@ -12,6 +12,10 @@ import { router } from "expo-router";
 import { Product } from "@/types";
 import MyAdCard from "@/components/MyAdCard";
 import { useProducts } from "@/context/ProductContext";
+import ParallaxScrollView from "@/defaultComponents/ParallaxScrollView";
+import { Colors } from "@/constants/Colors";
+import { ThemedView } from "@/defaultComponents/ThemedView";
+import { ThemedText } from "@/defaultComponents/ThemedText";
 
 export default function MyAds({ navigation }: { navigation: any }) {
   const [selectedTab, setSelectedTab] = useState("myads");
@@ -68,35 +72,36 @@ export default function MyAds({ navigation }: { navigation: any }) {
     );
   }
   return (
-    <View style={{ marginVertical: 10 }}>
-      <View style={styles.tabContainer}>
+    <ParallaxScrollView
+      headerBackgroundColor={{
+        dark: Colors.lightGray,
+        light: Colors.lightGray,
+      }}
+    >
+      <ThemedView style={styles.tabContainer}>
         <TouchableOpacity
           style={styles.tab}
           onPress={() => handleTabPress("myads")}
         >
-          <Text
-            style={[
-              styles.tabText,
-              selectedTab === "myads" && styles.activeTabText,
-            ]}
+          <ThemedText
+            type="subtitle"
+            style={[selectedTab === "myads" && styles.activeTabText]}
           >
             My Ads
-          </Text>
+          </ThemedText>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.tab}
           onPress={() => handleTabPress("favorite")}
         >
-          <Text
-            style={[
-              styles.tabText,
-              selectedTab === "favorite" && styles.activeTabText,
-            ]}
+          <ThemedText
+            type="subtitle"
+            style={[selectedTab === "favorite" && styles.activeTabText]}
           >
             Favorite
-          </Text>
+          </ThemedText>
         </TouchableOpacity>
-      </View>
+      </ThemedView>
       {/* Animated Underline */}
       <Animated.View style={[styles.underline, { left: underlinePosition }]} />
       <ScrollView style={styles.contentContainer}>
@@ -120,7 +125,9 @@ export default function MyAds({ navigation }: { navigation: any }) {
             ))
           ) : (
             <TouchableOpacity onPress={goToListing}>
-              <Text style={styles.noProductsText}>No products.</Text>
+              <ThemedText type="subtitle" style={{ textAlign: "center" }}>
+                No products.
+              </ThemedText>
             </TouchableOpacity>
           ))}
         {selectedTab === "favorite" ? (
@@ -134,11 +141,13 @@ export default function MyAds({ navigation }: { navigation: any }) {
               />
             ))
           ) : (
-            <Text style={styles.noProductsText}>No favorite products</Text>
+            <ThemedText type="subtitle" style={{ textAlign: "center" }}>
+              No favorite products
+            </ThemedText>
           )
         ) : null}
       </ScrollView>
-    </View>
+    </ParallaxScrollView>
   );
 }
 

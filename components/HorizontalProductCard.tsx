@@ -4,11 +4,16 @@ import { router } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useFormateDate } from "@/hooks/useFormateDate";
+import { ThemedText } from "@/defaultComponents/ThemedText";
+import { useProducts } from "@/context/ProductContext";
+import { Product } from "@/types";
+import { ThemedButton } from "@/defaultComponents/ThemedButton";
 
 export default function HorizontalProductCard({ products }: any) {
   const getProductDetails = (productId: number) => {
     router.push({ pathname: "/productDetail", params: { productId } });
   };
+  const { updateFavorite, favoriteProducts } = useProducts();
   return (
     <>
       {products?.map((product: any, index: number) => (
@@ -20,10 +25,11 @@ export default function HorizontalProductCard({ products }: any) {
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
-              backgroundColor: Colors.white,
               padding: 10,
               borderRadius: 10,
-              margin: 10,
+              marginHorizontal: 5,
+              borderWidth: 1,
+              borderColor: Colors.gray,
             }}
           >
             <View
@@ -48,32 +54,41 @@ export default function HorizontalProductCard({ products }: any) {
                   width: 150,
                 }}
               >
-                <Text style={{ fontSize: 16, fontWeight: "600" }}>
-                  ₹ {product.price}/{product.timePeriod}
-                </Text>
-                <Text
+                <ThemedText
+                  type="defaultSemiBold"
+                  style={{
+                    alignItems: "center",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Image
+                    source={require("@/assets/images/rupee-indian.png")}
+                    style={{ width: 13, height: 13 }}
+                  />
+                  {product.price}/{product.timePeriod}
+                </ThemedText>
+                <ThemedText
+                  type="default"
                   numberOfLines={2}
                   style={{ fontSize: 14, fontWeight: "500" }}
                 >
                   {product.title}
-                </Text>
+                </ThemedText>
                 <View
                   style={{
                     flexDirection: "row",
                   }}
                 >
                   <Ionicons name="location-outline" size={20} color="black" />
-                  <Text
+                  <ThemedText
                     numberOfLines={1}
                     ellipsizeMode="tail"
-                    style={{
-                      fontSize: 12,
-                      fontWeight: "600",
-                      color: Colors.gray,
-                    }}
+                    type="default"
+                    style={{ fontSize: 12, color: Colors.gray }}
                   >
                     {product.address}
-                  </Text>
+                  </ThemedText>
                 </View>
               </View>
             </View>
@@ -84,7 +99,18 @@ export default function HorizontalProductCard({ products }: any) {
                 alignItems: "flex-end",
               }}
             >
-              <Ionicons name="heart-outline" size={28} color="black" />
+              <Ionicons
+                name={
+                  favoriteProducts.some(
+                    (fav: Product) => fav._id === product._id
+                  )
+                    ? "heart"
+                    : "heart-outline"
+                }
+                size={28}
+                color={Colors.favorite}
+                onPress={() => updateFavorite(product)}
+              />
               <Text style={{ fontSize: 12, fontWeight: "600" }}>
                 {useFormateDate(product.createdAt)}
               </Text>

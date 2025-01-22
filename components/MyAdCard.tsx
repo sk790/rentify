@@ -41,26 +41,7 @@ export default function MyAdCard({ product, onDelete, onEdit, myAds }: Props) {
       console.log(error);
     }
   };
-  const handleRemoveFavorite = async (prduct: Product) => {
-    try {
-      const res = await fetch(
-        `${BASE_URL}/api/product/favorite/${prduct._id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const data = await res.json();
-      console.log(data);
-      if (res.ok) {
-        updateFavorite(product);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
   return (
     <TouchableOpacity
       onPress={() =>
@@ -82,9 +63,7 @@ export default function MyAdCard({ product, onDelete, onEdit, myAds }: Props) {
       >
         <View style={{ flexDirection: "row", gap: 10 }}>
           <Image
-            source={{
-              uri: "https://cdn.bikedekho.com/processedimages/yamaha/r15-v4/source/r15-v466e5433ef20f5.jpg",
-            }}
+            source={{ uri: product.images[0] }}
             style={{ width: 100, height: 100, borderRadius: 10 }}
           />
           <View
@@ -145,7 +124,7 @@ export default function MyAdCard({ product, onDelete, onEdit, myAds }: Props) {
               </TouchableOpacity>
             </>
           ) : (
-            <TouchableOpacity onPress={() => handleRemoveFavorite(product)}>
+            <TouchableOpacity onPress={() => updateFavorite(product)}>
               <Ionicons name="heart" size={30} color={Colors.favorite} />
             </TouchableOpacity>
           )}

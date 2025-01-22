@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, ReactNode } from "react";
 import { Product } from "@/types";
+import { BASE_URL } from "@env";
 
 interface ProductContextType {
   products: Product[];
@@ -30,14 +31,29 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
     setFavoriteProductsState(newFavoriteProducts);
   };
 
-  const updateFavorite = (product: Product) => {
-    if (favoriteProducts.some((fav: Product) => fav._id === product._id)) {
-      //fav._id is the id of the product which is stored in users favorite list not favorite schema
-      setFavoriteProducts(
-        favoriteProducts.filter((fav: Product) => fav._id !== product._id)
+  const updateFavorite = async (product: Product) => {
+    try {
+      const res = await fetch(
+        `${BASE_URL}/api/product/favorite/${product._id}`,
+        {
+          method: "PUT",
+        }
       );
-    } else {
-      setFavoriteProducts([...favoriteProducts, { ...product }]);
+
+      const data = await res.json();
+      // console.log(data);
+      if (res.ok) {
+        if (favoriteProducts.some((fav: Product) => fav._id === product._id)) {
+          //fav._id is the id of the product which is stored in users favorite list not favorite schema
+          setFavoriteProducts(
+            favoriteProducts.filter((fav: Product) => fav._id !== product._id)
+          );
+        } else {
+          setFavoriteProducts([...favoriteProducts, { ...product }]);
+        }
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 

@@ -5,7 +5,7 @@ export interface User {
   gender: string;
   password: string;
   phone: string;
-  image: string;
+  avatar: string;
   products: string[]; // Array of product IDs
   createdAt: string;
   updatedAt: string;

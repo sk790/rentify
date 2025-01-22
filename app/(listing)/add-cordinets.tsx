@@ -9,6 +9,9 @@ import React, { useEffect, useState } from "react";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import { useGetLocation } from "@/hooks/GetLocation";
+import { ThemedButton } from "@/defaultComponents/ThemedButton";
+import ParallaxScrollView from "@/defaultComponents/ParallaxScrollView";
+import ImagePicker from "@/components/ui/ImagePicker";
 
 export default function addcordinets() {
   const { formData } = useLocalSearchParams();
@@ -23,7 +26,7 @@ export default function addcordinets() {
     if (data.cordinets.latitude > 0 && data.cordinets.longitude > 0) {
       setBtnStyle("green");
     } else {
-      setBtnStyle("red");
+      setBtnStyle(Colors.tomato);
     }
   }, [fetchLocation]);
   const getLocation = async () => {
@@ -32,55 +35,25 @@ export default function addcordinets() {
     setLocationBtnLoading(false);
   };
 
-  const hendleNext = () => {
-    router.push({
-      pathname: "/(listing)/reviewProduct",
-      params: { formData: JSON.stringify(data) },
-    });
-  };
-
   return (
     <>
       <Stack.Screen options={{ title: "Add Location" }} />
-      <View style={{ backgroundColor: "white", flex: 1 }}>
-        <TouchableOpacity
-          style={[
-            {
-              width: "50%",
-              alignSelf: "center",
-              padding: 15,
-              borderRadius: 10,
-              marginTop: 20,
-            },
-            { backgroundColor: btnStyle },
-          ]}
+      <ParallaxScrollView
+        headerBackgroundColor={{
+          dark: Colors.dark.background,
+          light: Colors.light.background,
+        }}
+      >
+        <ThemedButton
+          title={btnStyle === "green" ? "Done" : "Get Location"}
           onPress={getLocation}
-        >
-          <Text
-            style={{ textAlign: "center", fontWeight: "600", color: "white" }}
-          >
-            {locationBtnLoading ? (
-              <ActivityIndicator size={"small"} />
-            ) : (
-              "Get Location"
-            )}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            backgroundColor: Colors.light,
-            width: "50%",
-            alignSelf: "center",
-            padding: 15,
-            borderRadius: 10,
-            marginTop: 20,
-          }}
-          onPress={hendleNext}
-          disabled={btnStyle !== "green"}
-        >
-          <Text style={{ textAlign: "center" }}>Next</Text>
-        </TouchableOpacity>
-      </View>
+          loading={locationBtnLoading}
+          disabled={locationBtnLoading}
+          style={{ backgroundColor: btnStyle }}
+        />
+
+        <ImagePicker formData={data} />
+      </ParallaxScrollView>
     </>
   );
 }

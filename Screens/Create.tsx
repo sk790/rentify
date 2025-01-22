@@ -1,18 +1,14 @@
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, StyleSheet } from "react-native";
 import React, { useState } from "react";
 import { router, Stack } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import MyDropdown from "@/components/MyDropdown";
-import { Ionicons } from "@expo/vector-icons";
 import InputField from "@/components/ui/InputField";
 import { category, period } from "@/constants/Data";
+import ParallaxScrollView from "@/defaultComponents/ParallaxScrollView";
+import { ThemedView } from "@/defaultComponents/ThemedView";
+import { ThemedText } from "@/defaultComponents/ThemedText";
+import { ThemedButton } from "@/defaultComponents/ThemedButton";
 
 export default function Create({ route }: any) {
   const [formData, setFormData] = useState({
@@ -28,7 +24,6 @@ export default function Create({ route }: any) {
       longitude: 0,
     },
   });
-  // const { product } = route.params;
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>();
   const [selectedPeriod, setSelectedPeriod] = useState<string | null>(null);
@@ -51,15 +46,15 @@ export default function Create({ route }: any) {
   const handleNextPage = () => {
     if (
       !formData.category ||
+      !formData.productName ||
       !formData.description ||
-      !formData.title ||
       !formData.price ||
       !formData.address ||
-      !formData.period ||
-      !formData.productName
+      !formData.period
     ) {
-      return alert("Please fill all the fields");
+      return Alert.alert("Error", "Please fill all the fields.");
     }
+
     router.push({
       pathname: "/(listing)/add-cordinets",
       params: { formData: JSON.stringify(formData) },
@@ -67,23 +62,25 @@ export default function Create({ route }: any) {
   };
   return (
     <>
-      <Stack.Screen options={{ headerShown: true, title: "Listing" }} />
-      <ScrollView>
-        <View style={{ padding: 5, margin: 5, backgroundColor: Colors.white }}>
-          <Text style={{ fontWeight: "600", fontSize: 20 }}>
-            List Your Service
-          </Text>
-          <Text style={{ fontSize: 12, color: Colors.gray }}>
+      <ParallaxScrollView
+        headerBackgroundColor={{
+          dark: Colors.lightGray,
+          light: Colors.lightGray,
+        }}
+      >
+        <ThemedView
+          lightColor={Colors.light.background}
+          darkColor={Colors.dark.background}
+          style={{ marginTop: 10 }}
+        >
+          <ThemedText type="subtitle">List Your Service</ThemedText>
+          <ThemedText type="default" style={{ fontSize: 14 }}>
             Provide details about the service you're offering.
-          </Text>
-          <View style={{ marginTop: 10 }}>
+          </ThemedText>
+          <ThemedView>
             <MyDropdown
               onChange={handleCategoryChange}
               data={category}
-              // Updatevalue={
-              //   product.category.charAt(0).toUpperCase() +
-              //   product.category.slice(1)
-              // }
               label="Select Category"
               required
             />
@@ -94,6 +91,7 @@ export default function Create({ route }: any) {
               required
               onChange={(value) => handleInputChange("productName", value)}
               value={formData.productName}
+              helperText="Product name ex: table, chair, sofa."
             />
             <InputField
               label="Description"
@@ -104,6 +102,7 @@ export default function Create({ route }: any) {
               multiline={true}
               onChange={(value) => handleInputChange("description", value)}
               value={formData.description}
+              helperText="description must be more than 20 words."
             />
             <MyDropdown
               label="Select Period"
@@ -127,6 +126,7 @@ export default function Create({ route }: any) {
               onChange={(value) => handleInputChange("title", value)}
               value={formData.title}
               required
+              helperText="Title ex: this product available for rent."
             />
 
             <InputField
@@ -138,37 +138,12 @@ export default function Create({ route }: any) {
               multiline
               onChange={(value) => handleInputChange("address", value)}
               value={formData.address}
+              helperText="address should be matched with your product."
             />
-          </View>
-          <View style={{ marginVertical: 10 }}>
-            <TouchableOpacity
-              style={{
-                backgroundColor: Colors.light,
-                padding: 15,
-                borderRadius: 5,
-                width: "100%",
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 10,
-                justifyContent: "center",
-              }}
-              onPress={handleNextPage}
-            >
-              <Text
-                style={{
-                  fontWeight: "600",
-                  fontSize: 18,
-                  textAlign: "center",
-                  alignItems: "center",
-                }}
-              >
-                Next
-              </Text>
-              <Ionicons name="arrow-forward-outline" size={20} />
-            </TouchableOpacity>
-          </View>
-        </View>
-      </ScrollView>
+          </ThemedView>
+          <ThemedButton title="Next" onPress={handleNextPage} />
+        </ThemedView>
+      </ParallaxScrollView>
     </>
   );
 }

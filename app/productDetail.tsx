@@ -17,6 +17,11 @@ import { BASE_URL } from "@env";
 import { Product } from "@/types";
 import { useProducts } from "@/context/ProductContext";
 import { useAuth } from "@/context/AuthContext";
+import { ThemedText } from "@/defaultComponents/ThemedText";
+import Divider from "@/components/ui/Divider";
+import ImageSlider from "@/components/ui/ImageSlider";
+import UserMap from "@/components/ui/UsreMap";
+// import ruppee from "@/assets/images/rupee-indian.png";
 
 export default function productDetail() {
   const { productId } = useLocalSearchParams();
@@ -27,32 +32,8 @@ export default function productDetail() {
   const [like, setLike] = useState(false);
   useEffect(() => {
     const p = products.find((p) => p._id === productId);
-    const isLiked = favoriteProducts.find((p: Product) => p._id === productId);
-
     setProduct(p);
-    setLike(isLiked ? true : false);
-  }, [user?.favorites, productId, products]);
-
-  const handleFavorite = async (product: Product | undefined) => {
-    try {
-      setLike(!like);
-      const res = await fetch(
-        `${BASE_URL}/api/product/favorite/${product?._id}`,
-        {
-          method: "PUT",
-        }
-      );
-      const data = await res.json();
-      // console.log(data);
-
-      if (res.ok) {
-        setLike(!like);
-        updateFavorite(product!);
-      }
-    } catch (error) {
-      alert(error);
-    }
-  };
+  }, [favoriteProducts]);
 
   if (loading) {
     return (
@@ -77,14 +58,7 @@ export default function productDetail() {
       />
       <ScrollView style={{}}>
         <View>
-          <Image
-            source={{
-              uri:
-                product?.images[0] ||
-                "https://cdn.bikedekho.com/processedimages/yamaha/r15-v4/source/r15-v466e5433ef20f5.jpg",
-            }}
-            style={{ height: 300, width: "100%" }}
-          />
+          {product?.images && <ImageSlider images={product.images} />}
           <View style={{ marginHorizontal: 15, marginTop: 10 }}>
             <View
               style={{
@@ -95,11 +69,21 @@ export default function productDetail() {
               }}
             >
               <Text style={{ fontSize: 20, fontWeight: "600" }}>
-                ₹ {product?.price} / {product?.timePeriod}
+                <Image
+                  source={require("../assets/images/rupee-indian.png")}
+                  style={{ width: 16, height: 16, tintColor: Colors.tomato }}
+                />
+                {product?.price} / {product?.timePeriod}
               </Text>
-              <TouchableOpacity onPress={() => handleFavorite(product)}>
+              <TouchableOpacity onPress={() => updateFavorite(product!)}>
                 <Ionicons
-                  name={like ? "heart" : "heart-outline"}
+                  name={
+                    favoriteProducts.some(
+                      (p: Product) => p._id === product?._id
+                    )
+                      ? "heart-sharp"
+                      : "heart-outline"
+                  }
                   size={30}
                   color="#F54"
                 />
@@ -116,26 +100,33 @@ export default function productDetail() {
                 marginTop: 2,
               }}
             >
-              <Ionicons name="location-outline" size={18} color="black" />
+              <Ionicons
+                name="location-outline"
+                size={18}
+                color={Colors.tomato}
+              />
               <Text style={{ fontSize: 14, color: Colors.gray }}>
                 {product?.address}
               </Text>
             </View>
           </View>
-          <View style={{ margin: 10, borderWidth: StyleSheet.hairlineWidth }} />
-          <View style={{ marginHorizontal: 15 }}>
-            <Text style={{ fontSize: 16, fontWeight: "600" }}>Details</Text>
-            <Text style={{ fontSize: 14, marginTop: 10 }}>
-              <Text style={{ fontWeight: "600" }}>Product</Text>
-              <Text style={{ color: Colors.gray }}>{product?.productName}</Text>
-            </Text>
+          <Divider />
+          <View style={{ marginHorizontal: 15, gap: 10 }}>
+            <ThemedText type="defaultSemiBold">Details</ThemedText>
+            <View style={{ flexDirection: "row", gap: 5 }}>
+              <ThemedText type="defaultSemiBold">Product</ThemedText>
+              <Text style={{ color: Colors.gray, flex: 1 }}>
+                {product?.productName}
+              </Text>
+            </View>
+            <View style={{ flexDirection: "row", gap: 5 }}>
+              <ThemedText type="defaultSemiBold">Category</ThemedText>
+              <Text style={{ color: Colors.gray, flex: 1 }}>
+                {product?.category}
+              </Text>
+            </View>
           </View>
-          <View
-            style={{
-              margin: 10,
-              borderWidth: StyleSheet.hairlineWidth,
-            }}
-          />
+          <Divider />
           <View>
             <Text style={{ fontSize: 16, fontWeight: "600", margin: 10 }}>
               Description
@@ -144,12 +135,7 @@ export default function productDetail() {
               {product?.description}
             </Text>
           </View>
-          <View
-            style={{
-              margin: 10,
-              borderWidth: StyleSheet.hairlineWidth,
-            }}
-          />
+          <Divider />
           <TouchableOpacity onPress={() => userProfile(product?.user?._id!)}>
             <View
               style={{
@@ -158,8 +144,11 @@ export default function productDetail() {
                 alignItems: "center",
                 justifyContent: "space-between",
                 backgroundColor: Colors.white,
+                borderColor: Colors.tomato,
+                borderWidth: 2,
                 padding: 10,
-                borderRadius: 10,
+                borderRadius: 5,
+                marginBottom: 10,
               }}
             >
               <View
@@ -168,8 +157,8 @@ export default function productDetail() {
                 <Image
                   source={{
                     uri:
-                      product?.images[0] ||
-                      "https://cdn.bikedekho.com/processedimages/yamaha/r15-v4/source/r15-v466e5433ef20f5.jpg",
+                      product?.user?.avatar ||
+                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRI9lRck6miglY0SZF_BZ_sK829yiNskgYRUg&s",
                   }}
                   style={{ height: 50, width: 50, borderRadius: 50 }}
                 />
@@ -180,20 +169,14 @@ export default function productDetail() {
               <Ionicons
                 name="chevron-forward-outline"
                 size={28}
-                color="black"
+                color={Colors.tomato}
               />
             </View>
           </TouchableOpacity>
-
           <View>
-            <Image
-              source={{
-                uri:
-                  product?.images[0] ||
-                  "https://cdn.bikedekho.com/processedimages/yamaha/r15-v4/source/r15-v466e5433ef20f5.jpg",
-              }}
-              style={{ height: 300, width: "100%" }}
-            />
+            {product?.productCordinates && (
+              <UserMap cordinets={product.productCordinates} />
+            )}
           </View>
         </View>
       </ScrollView>

@@ -1,4 +1,8 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { Colors } from "@/constants/Colors";
+import { ThemedText } from "@/defaultComponents/ThemedText";
+import { ThemedView } from "@/defaultComponents/ThemedView";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { StyleSheet, Text, TextInput } from "react-native";
 
 type inputProps = {
   placeholder: string;
@@ -10,6 +14,7 @@ type inputProps = {
   multiline?: boolean;
   required?: boolean;
   type?: "default" | "number-pad" | "decimal-pad" | "numeric" | "phone-pad";
+  helperText?: string;
 };
 
 function InputField({
@@ -22,34 +27,67 @@ function InputField({
   multiline,
   required,
   type,
+  helperText,
 }: inputProps) {
+  // Get dynamic background color based on theme
+  const backgroundColor = useThemeColor(
+    { light: "#fff", dark: "#333" }, // Replace with your desired colors
+    "background"
+  );
+  const borderColor = useThemeColor(
+    { light: "#ccc", dark: "#555" }, // Replace with your desired colors
+    "border"
+  );
+  const color = useThemeColor(
+    { light: "#000", dark: "#fff" }, // Replace with your desired colors
+    "text"
+  );
+
   return (
-    <View style={{ marginVertical: 10 }}>
-      <Text style={[{ fontWeight: "600", fontSize: 16, marginVertical: 5 }]}>
+    <ThemedView>
+      <ThemedText
+        style={[{ fontWeight: "600", fontSize: 16, marginVertical: 5 }]}
+      >
         {label}
         {required && <Text style={{ color: "red", fontSize: 12 }}>*</Text>}
-      </Text>
+      </ThemedText>
       <TextInput
         placeholder={placeholder}
         onChangeText={onChange}
         value={value}
         numberOfLines={line || 1}
         multiline={multiline}
-        // textAlignVertical="top"
         keyboardType={type}
         style={[
           {
             borderWidth: StyleSheet.hairlineWidth,
             borderRadius: 5,
             paddingHorizontal: 15,
-            fontWeight: 600,
+            fontWeight: "600",
             fontSize: 12,
+
+            color,
             height: 40,
+            backgroundColor, // Dynamic background color
+            borderColor, // Dynamic border color
           },
-          multiline && { height: line ? line * 20 : 100 },
+          multiline && {
+            height: line ? line * 20 : 100,
+            textAlignVertical: "top",
+          }, // Adjust height for multiline
         ]}
+        placeholderTextColor={useThemeColor(
+          { light: "#aaa", dark: "#666" }, // Placeholder colors for light/dark mode
+          "placeholder"
+        )}
       />
-    </View>
+      {helperText && (
+        <ThemedText style={{ fontSize: 10, color: Colors.gray }}>
+          {helperText}
+        </ThemedText>
+      )}
+    </ThemedView>
   );
 }
+
 export default InputField;

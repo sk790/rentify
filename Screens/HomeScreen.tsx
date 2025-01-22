@@ -15,40 +15,36 @@ import { Location, Product } from "@/types";
 import { useProducts } from "@/context/ProductContext";
 import { useLocation } from "@/context/LocationContext";
 import { useAuth } from "@/context/AuthContext";
+import ParallaxScrollView from "@/defaultComponents/ParallaxScrollView";
+import { Colors } from "@/constants/Colors";
+import { homeCategoryData } from "@/constants/Data";
+import { ThemedText } from "@/defaultComponents/ThemedText";
 
 export default function HomeScreen() {
-  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
-  const {
-    products,
-    setProducts,
-    setMyAds,
-    setFavoriteProducts,
-    favoriteProducts,
-  } = useProducts();
+  const { products, setProducts, setMyAds, setFavoriteProducts } =
+    useProducts();
   const [distances, setDistances] = useState<number[]>([]);
   const { location } = useLocation();
   const stringLocation = JSON.stringify(location);
   const { setUser } = useAuth();
 
-  useEffect(() => {
-    const getUser = async () => {
-      const res = await fetch(`${BASE_URL}/api/auth/me`);
-      const data = await res.json();
-      console.log(data);
-      if (res.ok) {
-        setFavoriteProducts(data.user.favorites);
-        setMyAds(data.user.products);
-        setUser(data.user);
-      }
-    };
-    getUser();
-  }, []);
+  const getUser = async () => {
+    const res = await fetch(`${BASE_URL}/api/auth/me`);
+    const data = await res.json();
+    console.log({ data });
+    if (res.ok) {
+      setFavoriteProducts(data.user.favorites);
+      setMyAds(data.user.products);
+      setUser(data.user);
+    }
+  };
+
   const getAllProducts = async () => {
     setLoading(true);
     try {
       const res = await fetch(
-        `${BASE_URL}/api/product/products?userCoords=${stringLocation}&areaRange=1000`
+        `${BASE_URL}/api/product/products?userCoords=${stringLocation}&areaRange=5`
       );
       const data = await res.json();
       setLoading(false);
@@ -68,25 +64,9 @@ export default function HomeScreen() {
   };
   useEffect(() => {
     getAllProducts();
+    getUser();
   }, []);
 
-  const category = [
-    "Vehicle",
-    "Painter",
-    "Furniture",
-    "Clothing",
-    "Accessories",
-    "Jewellery",
-    "Books",
-    "Sports",
-    "Music",
-    "Fashion",
-    "Beauty",
-    "Gaming",
-    "Gadgets",
-  ];
-  const image =
-    "https://cdn.bikedekho.com/processedimages/yamaha/r15-v4/source/r15-v466e5433ef20f5.jpg";
   const getProductDetails = (productId: string) => {
     router.push({ pathname: "/productDetail", params: { productId } });
   };
@@ -96,40 +76,42 @@ export default function HomeScreen() {
 
   return (
     <>
-      <Stack.Screen options={{ headerShown: true, header: () => <Header /> }} />
-      <ScrollView>
+      <Stack.Screen options={{ headerShown: false }} />
+      <ParallaxScrollView
+        headerBackgroundColor={{
+          light: Colors.lightTomato,
+          dark: Colors.lightTomato,
+        }}
+      >
+        <Header />
         <View style={styles.categoryContainer}>
-          {category.map((category, index) => (
+          {homeCategoryData?.map((category, index) => (
             <TouchableOpacity
               key={index}
               style={styles.categoryCard}
-              onPress={() => getProductsByCategory(category)}
+              onPress={() => getProductsByCategory(category.label)}
             >
-              <CategoryCard image={image} label={category} />
+              <CategoryCard image={category.image} label={category.label} />
             </TouchableOpacity>
           ))}
         </View>
         <View style={styles.productContainer}>
-          <Text style={styles.sectionTitle}>Near by You</Text>
+          <ThemedText type="defaultSemiBold" style={{ marginBottom: 10 }}>
+            Near by You
+          </ThemedText>
           <View style={styles.productList}>
-            {products.map((item: Product, index) => (
+            {products?.map((item: Product, index) => (
               <TouchableOpacity
                 style={styles.productCard}
                 onPress={() => getProductDetails(item._id)}
                 key={index}
               >
-                <HomeProductCard
-                  product={item}
-                  distance={distances[index]}
-                  isFavorite={favoriteProducts.some(
-                    (fav: Product) => fav._id === item._id
-                  )}
-                />
+                <HomeProductCard product={item} distance={distances[index]} />
               </TouchableOpacity>
             ))}
           </View>
         </View>
-      </ScrollView>
+      </ParallaxScrollView>
     </>
   );
 }
@@ -139,7 +121,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 5,
-    paddingHorizontal: 10,
   },
   categoryCard: {
     width: "32%",
@@ -152,11 +133,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     flexDirection: "column",
   },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    margin: 10,
-  },
+
   productList: {
     flexDirection: "row",
     flexWrap: "wrap",

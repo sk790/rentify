@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  useColorScheme,
   View,
 } from "react-native";
 import React, { useState } from "react";
@@ -15,8 +16,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "@/context/AuthContext";
 import { useProducts } from "@/context/ProductContext";
 import { BASE_URL } from "@env";
+import ParallaxScrollView from "@/defaultComponents/ParallaxScrollView";
+import { ThemedView } from "@/defaultComponents/ThemedView";
+import { ThemedText } from "@/defaultComponents/ThemedText";
+import { ThemedButton } from "@/defaultComponents/ThemedButton";
 
 export default function Account({ navigation }: { navigation: any }) {
+  const theme = useColorScheme();
+  const iconTheme = theme === "light" ? "black" : "white";
   const { setAuth } = useAuth();
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
@@ -32,31 +39,34 @@ export default function Account({ navigation }: { navigation: any }) {
   }
   const handleLogout = async () => {
     try {
+      setAuth(false);
+      await AsyncStorage.removeItem("token");
       const res = await fetch(`${BASE_URL}/api/auth/logout`);
       const data = await res.json();
-      console.log(data);
+      console.log({ data });
       if (res.ok) {
-        setAuth(false);
-        await AsyncStorage.removeItem("token");
       }
     } catch (error) {
       alert(error);
     }
   };
   return (
-    <ScrollView>
+    <ParallaxScrollView
+      headerBackgroundColor={{
+        dark: Colors.lightTomato,
+        light: Colors.lightTomato,
+      }}
+    >
       <ProfileCard user={user} me />
-      <View
+      <ThemedView
         style={{
-          margin: 10,
-          padding: 10,
-          backgroundColor: "white",
-          borderRadius: 10,
           alignItems: "center",
           height: "100%",
         }}
+        lightColor={Colors.light.background}
+        darkColor={Colors.dark.background}
       >
-        <View
+        <ThemedView
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -65,16 +75,16 @@ export default function Account({ navigation }: { navigation: any }) {
             marginVertical: 10,
           }}
         >
-          <Ionicons name="create-outline" size={24} color="black" />
-          <Text style={{ fontWeight: "bold", fontSize: 18 }}>My Ads</Text>
+          <Ionicons name="create-outline" size={24} color={iconTheme} />
+          <ThemedText>My Ads</ThemedText>
           <Ionicons
             name="arrow-forward-circle-sharp"
             size={24}
-            color="black"
+            color={iconTheme}
             style={{ position: "absolute", right: 0 }}
           />
-        </View>
-        <View
+        </ThemedView>
+        <ThemedView
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -83,16 +93,16 @@ export default function Account({ navigation }: { navigation: any }) {
             marginVertical: 10,
           }}
         >
-          <Ionicons name="create-outline" size={24} color="black" />
-          <Text style={{ fontWeight: "bold", fontSize: 18 }}>My Ads</Text>
+          <Ionicons name="create-outline" size={24} color={iconTheme} />
+          <ThemedText>My Ads</ThemedText>
           <Ionicons
             name="arrow-forward-circle-sharp"
             size={24}
-            color="black"
+            color={iconTheme}
             style={{ position: "absolute", right: 0 }}
           />
-        </View>
-        <View
+        </ThemedView>
+        <ThemedView
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -101,16 +111,16 @@ export default function Account({ navigation }: { navigation: any }) {
             marginVertical: 10,
           }}
         >
-          <Ionicons name="create-outline" size={24} color="black" />
-          <Text style={{ fontWeight: "bold", fontSize: 18 }}>My Ads</Text>
+          <Ionicons name="create-outline" size={24} color={iconTheme} />
+          <ThemedText>My Ads</ThemedText>
           <Ionicons
             name="arrow-forward-circle-sharp"
             size={24}
-            color="black"
+            color={iconTheme}
             style={{ position: "absolute", right: 0 }}
           />
-        </View>
-        <View
+        </ThemedView>
+        <ThemedView
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -119,24 +129,23 @@ export default function Account({ navigation }: { navigation: any }) {
             marginVertical: 10,
           }}
         >
-          <Ionicons name="create-outline" size={24} color="black" />
-          <Text style={{ fontWeight: "bold", fontSize: 18 }}>My Ads</Text>
+          <Ionicons name="create-outline" size={24} color={iconTheme} />
+          <ThemedText>My Ads</ThemedText>
           <Ionicons
             name="arrow-forward-circle-sharp"
             size={24}
-            color="black"
+            color={iconTheme}
             style={{ position: "absolute", right: 0 }}
           />
-        </View>
-        <MyButton
-          label="Logout"
-          bgColor={Colors.light}
-          color="black"
-          length="100%"
-          onClick={handleLogout}
+        </ThemedView>
+
+        <ThemedButton
+          title="Logout"
+          onPress={handleLogout}
+          style={{ width: "100%" }}
         />
-      </View>
-    </ScrollView>
+      </ThemedView>
+    </ParallaxScrollView>
   );
 }
 

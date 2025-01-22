@@ -10,62 +10,35 @@ import { useAuth } from "@/context/AuthContext";
 export default function HomeProductCard({
   product,
   distance,
-  isFavorite,
 }: {
   product: Product;
   distance: number;
-  isFavorite?: any;
 }) {
-  const { updateFavorite } = useProducts();
-  const { user } = useAuth();
+  const { updateFavorite, favoriteProducts } = useProducts();
 
   //this login for real time like state updation
   const [like, setLike] = useState(false);
   useEffect(() => {
-    setLike(isFavorite);
-  }, [isFavorite]);
-  const toggleFavorite = async (product: Product) => {
-    try {
-      setLike(!like);
-      const res = await fetch(
-        `${BASE_URL}/api/product/favorite/${product._id}`,
-        {
-          method: "PUT",
-        }
-      );
-      const data = await res.json();
-      if (res.ok) {
-        updateFavorite(product);
-      } else {
-        setLike(!like);
-        alert(data.msg);
-        console.log(data.msg, "error in toggle favorite");
-      }
-    } catch (error) {
-      setLike(!like);
-      console.log(error);
-    }
-  };
-
+    setLike(favoriteProducts.some((p: Product) => p._id === product._id));
+  }, [favoriteProducts]);
   return (
     <View
       style={{
         width: "100%",
         borderRadius: 10,
-        borderWidth: StyleSheet.hairlineWidth,
-        padding: 5,
+        borderColor: Colors.tomato,
+        borderWidth: 1,
+        padding: 3,
       }}
     >
       <TouchableOpacity
         style={{ position: "absolute", top: 5, right: 5, zIndex: 1 }}
-        onPress={() => {
-          toggleFavorite(product);
-        }}
       >
         <Ionicons
-          name={like ? "heart" : "heart-outline"}
-          color={like ? Colors.favorite : Colors.unFavorite}
-          size={28}
+          onPress={() => updateFavorite(product)}
+          name={like ? "heart-sharp" : "heart-outline"}
+          color={like ? Colors.favorite : Colors.tomato}
+          size={32}
         />
       </TouchableOpacity>
       <View style={{ alignItems: "center" }}>

@@ -37,14 +37,14 @@ export default function RootLayout() {
     <AuthProvider>
       <ProductProvider>
         <LocationProvider>
-          <ThemeProvider
+          {/* <ThemeProvider
             value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-          >
-            <Stack>
-              <Stack.Screen name="index" options={{ headerShown: false }} />
-            </Stack>
-            <StatusBar style="auto" />
-          </ThemeProvider>
+          > */}
+          <Stack>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+          </Stack>
+          <StatusBar style="auto" />
+          {/* </ThemeProvider> */}
         </LocationProvider>
       </ProductProvider>
     </AuthProvider>
