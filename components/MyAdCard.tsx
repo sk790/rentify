@@ -1,47 +1,92 @@
+import React, { useEffect, useRef, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Product } from "@/types";
 import { Colors } from "@/constants/Colors";
 import { BASE_URL } from "@env";
 import { router } from "expo-router";
 import { useProducts } from "@/context/ProductContext";
+import { ThemedButton } from "@/defaultComponents/ThemedButton";
+import { ThemedView } from "@/defaultComponents/ThemedView";
+import ThreeDotDrawer from "./ui/ThreeDots";
 
 type Props = {
   product: Product;
   onDelete?: (productId: string) => void;
-  onEdit?: (productId: Product) => void;
-  onRemoveFavorite?: (productId: Product) => void;
+  onEdit?: (product: Product) => void;
+  onRemoveFavorite?: (product: Product) => void;
   myAds?: boolean;
 };
-export default function MyAdCard({ product, onDelete, onEdit, myAds }: Props) {
-  const { updateFavorite, setProducts } = useProducts();
 
-  const handleDelete = async (prductId: string) => {
+export default function MyAdCard({ product, onDelete, onEdit, myAds }: Props) {
+  const { updateFavorite, setProducts, setMyAds } = useProducts();
+  const [isAvailable, setIsAvailable] = useState(
+    product.status === "Available" ? true : false
+  );
+
+  const [onRentProducts, setOnRentProducts] = useState<Product[]>([]);
+
+  const handleDelete = async (productId: string) => {
     if (!product._id) return;
     try {
-      const res = await fetch(`${BASE_URL}/api/product/${prductId}`, {
+      const res = await fetch(`${BASE_URL}/api/product/${productId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
       });
       const data = await res.json();
-      console.log(data);
 
       if (res.ok) {
         updateFavorite(product);
         setProducts((prev: Product[]) =>
-          prev.filter((p: Product) => p._id !== prductId)
+          prev.filter((p: Product) => p._id !== productId)
         );
         alert(data.msg);
-        onDelete?.(prductId);
+        onDelete?.(productId);
       }
     } catch (error) {
       console.log(error);
     }
   };
-
+  const updateStatus = async (productId: string) => {
+    let status = product.status === "Available" ? "Rented" : "Available";
+    try {
+      const res = await fetch(
+        `${BASE_URL}/api/product/status-update/${productId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: status }),
+        }
+      );
+      if (res.ok) {
+        setIsAvailable(!isAvailable);
+        setMyAds((prev: Product[]) =>
+          prev.map((p: Product) => (p._id === productId ? { ...p, status } : p))
+        );
+        router.reload();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const titles = [
+    {
+      title: "Edit",
+      onPress: () => onEdit?.(product),
+      icon: "pencil",
+      color: "black",
+    },
+    {
+      title: "Delete",
+      onPress: () => handleDelete(product._id),
+      icon: "trash",
+      color: "red",
+    },
+  ];
   return (
     <TouchableOpacity
       onPress={() =>
@@ -53,85 +98,98 @@ export default function MyAdCard({ product, onDelete, onEdit, myAds }: Props) {
     >
       <View
         style={{
-          flexDirection: "row",
+          flexDirection: "column",
           justifyContent: "space-between",
           width: "100%",
           backgroundColor: "white",
           borderRadius: 10,
           padding: 10,
+          borderColor: Colors.gray,
+          borderWidth: StyleSheet.hairlineWidth,
         }}
       >
         <View style={{ flexDirection: "row", gap: 10 }}>
-          <Image
-            source={{ uri: product.images[0] }}
-            style={{ width: 100, height: 100, borderRadius: 10 }}
-          />
-          <View
-            style={{ flexDirection: "column", justifyContent: "space-between" }}
-          >
-            <View>
-              <Text style={{ fontWeight: "500" }}>{product.title}</Text>
-              <Text>Rs {product.price}</Text>
-            </View>
+          <ThemedView style={{ flexDirection: "row", gap: 10, flex: 1 }}>
+            <Image
+              source={{ uri: product.images[0] }}
+              style={{ width: 100, height: 100, borderRadius: 10 }}
+            />
             <View
-              style={{ flexDirection: "row", gap: 10, alignItems: "center" }}
+              style={{
+                flexDirection: "column",
+                justifyContent: "space-between",
+              }}
             >
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Ionicons name="eye-outline" size={16} color="#f50" />
-                <Text
-                  style={{
-                    fontWeight: "600",
-                    fontSize: 12,
-                    color: Colors.gray,
-                  }}
-                >
-                  25
-                </Text>
+              <View>
+                <Text style={{ fontWeight: "500" }}>{product.title}</Text>
+                <Text>Rs {product.price}</Text>
               </View>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Ionicons name="heart" size={16} color="#f55" />
-                <Text
-                  style={{
-                    fontWeight: "600",
-                    fontSize: 12,
-                    color: Colors.gray,
-                  }}
-                >
-                  123
-                </Text>
+              <View
+                style={{ flexDirection: "row", gap: 10, alignItems: "center" }}
+              >
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <Ionicons name="eye-outline" size={16} color="#f50" />
+                  <Text
+                    style={{
+                      fontWeight: "600",
+                      fontSize: 12,
+                      color: Colors.gray,
+                    }}
+                  >
+                    25
+                  </Text>
+                </View>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <Ionicons name="heart" size={16} color="#f55" />
+                  <Text
+                    style={{
+                      fontWeight: "600",
+                      fontSize: 12,
+                      color: Colors.gray,
+                    }}
+                  >
+                    123
+                  </Text>
+                </View>
               </View>
             </View>
+          </ThemedView>
+          <View
+            style={{
+              flexDirection: "column",
+              justifyContent: "space-between",
+              paddingRight: 10,
+            }}
+          >
+            {myAds ? (
+              <ThreeDotDrawer titles={titles} />
+            ) : (
+              <>
+                <TouchableOpacity onPress={() => updateFavorite(product)}>
+                  <Ionicons name="heart" size={30} color={Colors.favorite} />
+                </TouchableOpacity>
+              </>
+            )}
           </View>
         </View>
-        <View
-          style={{
-            flexDirection: "column",
-            justifyContent: "space-between",
-            paddingRight: 10,
-          }}
-        >
-          {myAds ? (
-            <>
-              <Ionicons
-                name="pencil-sharp"
-                size={20}
-                color="black"
-                onPress={() => onEdit?.(product)}
-              />
-
-              <TouchableOpacity onPress={() => handleDelete(product._id)}>
-                <Ionicons name="trash-outline" size={26} color="red" />
-              </TouchableOpacity>
-            </>
-          ) : (
-            <TouchableOpacity onPress={() => updateFavorite(product)}>
-              <Ionicons name="heart" size={30} color={Colors.favorite} />
-            </TouchableOpacity>
-          )}
-        </View>
+        {myAds && (
+          <ThemedView style={{ flexDirection: "row", gap: 10 }}>
+            <ThemedButton
+              title={isAvailable ? "Available" : "On Rent"}
+              style={{ flex: 1 }}
+              variant="outline"
+              color={isAvailable ? "green" : "red"}
+              onPress={() => updateStatus(product._id)}
+            />
+            <ThemedButton
+              color="white"
+              title="Sell faster"
+              style={{ flex: 1 }}
+              variant="default"
+            />
+          </ThemedView>
+        )}
       </View>
     </TouchableOpacity>
   );
 }
-
-const styles = StyleSheet.create({});

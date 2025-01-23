@@ -39,7 +39,6 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
           method: "PUT",
         }
       );
-
       const data = await res.json();
       // console.log(data);
       if (res.ok) {

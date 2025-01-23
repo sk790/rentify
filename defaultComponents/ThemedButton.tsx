@@ -14,65 +14,79 @@ type ThemedButtonProps = TouchableOpacityProps & {
   title: string;
   lightColor?: string;
   darkColor?: string;
-  textLightColor?: string;
-  textDarkColor?: string;
+  color: string;
   loading?: boolean;
-  icon?: string;
+  icon?: keyof typeof Ionicons.glyphMap;
   position?: "left" | "right";
+  variant?: "outline" | "default";
 };
 
 export const ThemedButton: React.FC<ThemedButtonProps> = ({
   title,
   lightColor,
   darkColor,
-  textLightColor,
-  textDarkColor,
   style,
   icon,
-  loading,
-  position,
+  color,
+  loading = false,
+  position = "left",
+  variant = "default",
   ...props
 }) => {
   const theme = useColorScheme();
 
-  // Define default light/dark theme colors
+  // Determine button colors based on theme
   const backgroundColor =
-    theme === "dark" ? darkColor || "#333" : lightColor || Colors.tomato;
-  const textColor =
-    theme === "dark" ? textDarkColor || "#FFF" : textLightColor || "#FFF";
+    variant === "outline"
+      ? "transparent"
+      : theme === "dark"
+      ? darkColor || "#333"
+      : lightColor || Colors.tomato;
+
+  // Render icon based on position
+  const renderIcon = () =>
+    icon && <Ionicons name={icon as any} size={20} color={color} />;
 
   return (
     <TouchableOpacity
-      style={[styles.button, { backgroundColor }, style]}
+      style={[
+        styles.button,
+        variant === "outline" ? styles.outline : styles.default,
+        { backgroundColor, borderColor: Colors.tomato },
+        style,
+      ]}
       {...props}
     >
-      {icon && position === "left" && (
-        <Ionicons name={icon as any} size={20} color={textColor} />
+      {position === "left" && renderIcon()}
+      {loading ? (
+        <ActivityIndicator
+          size="small"
+          color={variant === "outline" ? Colors.tomato : color}
+        />
+      ) : (
+        <Text style={[styles.text, { color: color }]}>{title}</Text>
       )}
-      <Text style={[styles.text, { color: textColor }]}>
-        {loading ? (
-          <ActivityIndicator size={"small"} color={textColor} />
-        ) : (
-          title
-        )}
-      </Text>
-      {icon && position === "right" && (
-        <Ionicons name={icon as any} size={20} color={textColor} />
-      )}
+      {position === "right" && renderIcon()}
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   button: {
-    marginVertical: 10,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    flexDirection: "row",
-    gap: 10,
+    gap: 10, // Add spacing between elements
+    borderRadius: 5,
+    padding: 8,
+    marginVertical: 5,
+  },
+  outline: {
+    borderWidth: 1,
+    backgroundColor: "transparent",
+  },
+  default: {
+    backgroundColor: Colors.tomato,
   },
   text: {
     fontSize: 16,

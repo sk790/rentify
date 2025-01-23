@@ -1,13 +1,13 @@
+import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Animated,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
+  Image,
 } from "react-native";
-import React, { useRef, useState } from "react";
 import { router } from "expo-router";
 import { Product } from "@/types";
 import MyAdCard from "@/components/MyAdCard";
@@ -16,54 +16,54 @@ import ParallaxScrollView from "@/defaultComponents/ParallaxScrollView";
 import { Colors } from "@/constants/Colors";
 import { ThemedView } from "@/defaultComponents/ThemedView";
 import { ThemedText } from "@/defaultComponents/ThemedText";
+import { ThemedButton } from "@/defaultComponents/ThemedButton";
 
 export default function MyAds({ navigation }: { navigation: any }) {
   const [selectedTab, setSelectedTab] = useState("myads");
   const underlineAnim = useRef(new Animated.Value(0)).current;
   const [loading, setLoading] = useState(false);
-  const { myAds, setMyAds, favoriteProducts, setFavoriteProducts } =
-    useProducts();
+  const { myAds, setMyAds, favoriteProducts, updateFavorite } = useProducts();
+  const [onRentProducts, setOnRentProducts] = useState<Product[]>([]);
 
   const handleDelete = (productId: string) => {
-    //logic for real time deletion of product
-    if (myAds.map((fav: Product) => fav._id === productId)) {
-      setMyAds(myAds.filter((fav: Product) => fav._id !== productId));
-    }
-  };
-  const handleRemoveFavorite = (product: Product) => {
-    if (favoriteProducts.some((fav: Product) => fav._id === product._id)) {
-      setFavoriteProducts(
-        favoriteProducts.filter((fav: Product) => fav._id !== product._id)
-      );
-    } else {
-      setFavoriteProducts([...favoriteProducts, { ...product }]);
-    }
+    // Logic for real-time deletion of product
+    setMyAds(myAds.filter((product: Product) => product._id !== productId));
   };
 
+  useEffect(() => {
+    setOnRentProducts(
+      myAds.filter((product: Product) => product.status !== "Available")
+    );
+  }, []);
   const handleEdit = (product: Product) => {
     navigation.navigate("Create", { product });
   };
+
   const goToListing = () => {
     navigation.navigate("Create");
   };
 
   const handleTabPress = (tab: string) => {
     setSelectedTab(tab);
+
+    const toValue = tab === "myads" ? 0 : tab === "favorite" ? 1 : 2;
+
     Animated.timing(underlineAnim, {
-      toValue: tab === "myads" ? 0 : 1,
+      toValue,
       duration: 300,
       useNativeDriver: false,
     }).start();
   };
 
-  const underlinePosition = underlineAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["0%", "50%"], // Position the underline under the selected tab
+  const underlineTranslateX = underlineAnim.interpolate({
+    inputRange: [0, 1, 2],
+    outputRange: [15, 130, 250], // Adjust based on your tab width
   });
 
   const gotodetailpage = (id: string) => {
     router.push({ pathname: "/productDetail", params: { productId: id } });
   };
+
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -71,6 +71,7 @@ export default function MyAds({ navigation }: { navigation: any }) {
       </View>
     );
   }
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{
@@ -78,6 +79,7 @@ export default function MyAds({ navigation }: { navigation: any }) {
         light: Colors.lightGray,
       }}
     >
+      {/* Tabs */}
       <ThemedView style={styles.tabContainer}>
         <TouchableOpacity
           style={styles.tab}
@@ -101,18 +103,30 @@ export default function MyAds({ navigation }: { navigation: any }) {
             Favorite
           </ThemedText>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.tab}
+          onPress={() => handleTabPress("onrent")}
+        >
+          <ThemedText
+            type="subtitle"
+            style={[selectedTab === "onrent" && styles.activeTabText]}
+          >
+            On Rent
+          </ThemedText>
+        </TouchableOpacity>
       </ThemedView>
       {/* Animated Underline */}
-      <Animated.View style={[styles.underline, { left: underlinePosition }]} />
+      <Animated.View
+        style={[styles.underline, { left: underlineTranslateX }]}
+      />
+      {/* Tab Content */}
       <ScrollView style={styles.contentContainer}>
         {selectedTab === "myads" &&
           (myAds.length > 0 ? (
             myAds.map((product) => (
               <TouchableOpacity
                 key={product._id}
-                onPress={() => {
-                  gotodetailpage(product._id);
-                }}
+                onPress={() => gotodetailpage(product._id)}
               >
                 <MyAdCard
                   key={product._id}
@@ -124,39 +138,59 @@ export default function MyAds({ navigation }: { navigation: any }) {
               </TouchableOpacity>
             ))
           ) : (
-            <TouchableOpacity onPress={goToListing}>
-              <ThemedText type="subtitle" style={{ textAlign: "center" }}>
-                No products.
-              </ThemedText>
-            </TouchableOpacity>
+            <View style={styles.emptyState}>
+              <Image
+                source={{
+                  uri: "https://lookshopbd.com/website/images/no_result.gif",
+                }}
+                style={styles.emptyImage}
+              />
+              <ThemedButton
+                color="#333"
+                title="Create New Ad"
+                onPress={goToListing}
+                style={styles.button}
+              />
+            </View>
           ))}
-        {selectedTab === "favorite" ? (
-          favoriteProducts.length > 0 ? (
+
+        {selectedTab === "favorite" &&
+          (favoriteProducts.length > 0 ? (
             favoriteProducts.map((product: Product) => (
               <MyAdCard
                 key={product._id}
                 product={product}
                 myAds={false}
-                onRemoveFavorite={handleRemoveFavorite}
+                onRemoveFavorite={() => updateFavorite(product)}
               />
             ))
           ) : (
-            <ThemedText type="subtitle" style={{ textAlign: "center" }}>
-              No favorite products
-            </ThemedText>
-          )
-        ) : null}
+            <View style={styles.emptyState}>
+              <Image
+                source={{
+                  uri: "https://cdni.iconscout.com/illustration/premium/thumb/sorry-item-not-found-illustration-download-in-svg-png-gif-file-formats--available-product-tokostore-pack-e-commerce-shopping-illustrations-2809510.png?f=webp",
+                }}
+                style={styles.emptyImage}
+              />
+              <ThemedButton
+                color="#333"
+                title="Explore"
+                onPress={() => router.replace({ pathname: "/" })}
+                style={styles.button}
+              />
+            </View>
+          ))}
+
+        {selectedTab === "onrent" &&
+          onRentProducts.map((product: Product) => (
+            <MyAdCard key={product._id} product={product} myAds={true} />
+          ))}
       </ScrollView>
     </ParallaxScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    // flex: 1,
-    padding: 10,
-    backgroundColor: "white",
-  },
   tabContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -168,38 +202,37 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: "center",
   },
-  tabText: {
-    fontSize: 16,
-    color: "gray",
-  },
   activeTabText: {
-    color: "#f55",
+    color: Colors.tomato,
     fontWeight: "bold",
   },
   underline: {
     position: "absolute",
     top: 48,
     height: 2,
-    width: "50%", // Width of the underline matches the tab
-    backgroundColor: "#f55",
+    width: 100, // Matches tab width
+    backgroundColor: Colors.tomato,
     borderRadius: 1,
   },
   contentContainer: {
-    // flex: 1,
+    flex: 1,
   },
-  productCard: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+  emptyState: {
+    marginTop: 50,
     alignItems: "center",
-    padding: 10,
-    marginBottom: 5,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 5,
+  },
+  emptyImage: {
+    width: "100%",
+    height: 200,
+    marginBottom: 20,
+  },
+  button: {
+    width: "75%",
+    alignSelf: "center",
   },
   noProductsText: {
-    textAlign: "center",
     marginTop: 20,
+    textAlign: "center",
     fontSize: 16,
     color: "gray",
   },

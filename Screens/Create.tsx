@@ -4,7 +4,7 @@ import { router, Stack } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import MyDropdown from "@/components/MyDropdown";
 import InputField from "@/components/ui/InputField";
-import { category, period } from "@/constants/Data";
+import { category, period, status } from "@/constants/Data";
 import ParallaxScrollView from "@/defaultComponents/ParallaxScrollView";
 import { ThemedView } from "@/defaultComponents/ThemedView";
 import { ThemedText } from "@/defaultComponents/ThemedText";
@@ -19,6 +19,7 @@ export default function Create({ route }: any) {
     address: "",
     category: "",
     period: "",
+    status: "",
     cordinets: {
       latitude: 0,
       longitude: 0,
@@ -27,6 +28,7 @@ export default function Create({ route }: any) {
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>();
   const [selectedPeriod, setSelectedPeriod] = useState<string | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
 
   const handleInputChange = (key: string, value: string) => {
     setFormData((prev) => ({
@@ -41,6 +43,10 @@ export default function Create({ route }: any) {
   const handlePeriodChange = (value: string | null) => {
     setSelectedPeriod(value);
     formData.period = value as string;
+  };
+  const handleStatusChange = (value: string | null) => {
+    setSelectedStatus(value);
+    formData.status = value as string;
   };
 
   const handleNextPage = () => {
@@ -128,7 +134,12 @@ export default function Create({ route }: any) {
               required
               helperText="Title ex: this product available for rent."
             />
-
+            <MyDropdown
+              label="Status"
+              required
+              data={status}
+              onChange={handleStatusChange}
+            />
             <InputField
               label="Address"
               placeholder="Enter your address....."

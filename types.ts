@@ -28,6 +28,7 @@ export interface Product {
   availability: boolean;
   address: string;
   createdAt: string;
+  status: string;
   productCordinates: Location;
   isFavorite: boolean;
   __v: number;
@@ -40,4 +41,13 @@ export interface ApiResponse {
 export interface Location {
   latitude: number;
   longitude: number;
+}
+
+export interface Dimensions {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  pageX: number;
+  pageY: number;
 }

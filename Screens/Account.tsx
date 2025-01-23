@@ -11,7 +11,6 @@ import React, { useState } from "react";
 import ProfileCard from "@/components/ProfileCard";
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
-import MyButton from "@/components/ui/MyButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "@/context/AuthContext";
 import { useProducts } from "@/context/ProductContext";
@@ -140,6 +139,7 @@ export default function Account({ navigation }: { navigation: any }) {
         </ThemedView>
 
         <ThemedButton
+          color="white"
           title="Logout"
           onPress={handleLogout}
           style={{ width: "100%" }}

@@ -21,7 +21,7 @@ type userProps = {
   me?: boolean;
 };
 export default function ProfileCard({ user, me }: userProps) {
-  console.log(user);
+  // console.log(user);
   const theme = useColorScheme();
   const iconTheme = theme === "light" ? "black" : "white";
 
@@ -37,54 +37,45 @@ export default function ProfileCard({ user, me }: userProps) {
       }}
     >
       <ThemedView
-        style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
       >
-        <Image
-          source={{ uri: user?.image }}
-          style={{ width: 90, height: 90, borderRadius: 50 }}
-        />
-        <ThemedText type="subtitle">{user?.name}</ThemedText>
-        {/* <TouchableOpacity
-          style={[
-            {
-              padding: 10,
-              borderRadius: 10,
-              flex: 1,
-              width: "100%",
-            },
-            me ? { backgroundColor: "gray" } : { backgroundColor: "green" },
-          ]}
+        <ThemedView
+          style={{
+            flexDirection: "row",
+            gap: 10,
+            alignItems: "center",
+          }}
         >
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 5,
+          <Image
+            source={{
+              uri:
+                user?.avatar ||
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRI9lRck6miglY0SZF_BZ_sK829yiNskgYRUg&s",
             }}
-          >
-            {!me ? (
-              <>
-                <Ionicons name="call" size={24} color="white" />
-                <Text
-                  style={{ color: "white", textAlign: "center", fontSize: 16 }}
-                >
-                  Call
-                </Text>
-              </>
-            ) : (
-              <>
-                <Ionicons name="pencil-outline" size={24} color="white" />
-                <Text
-                  style={{ color: "white", textAlign: "center", fontSize: 16 }}
-                >
-                  Edit
-                </Text>
-              </>
-            )}
-          </View>
-        </TouchableOpacity> */}
-        <ThemedButton title={me ? "Edit" : "Call"} />
+            style={{ width: 90, height: 90, borderRadius: 50 }}
+          />
+          <ThemedText type="subtitle">{user?.name}</ThemedText>
+        </ThemedView>
+        {me ? (
+          <Ionicons
+            name="pencil-sharp"
+            size={24}
+            color={iconTheme}
+            style={{ alignSelf: "center" }}
+          />
+        ) : (
+          <ThemedButton
+            title="Call"
+            color="white"
+            icon="call-outline"
+            style={{ width: "30%" }}
+            variant="default"
+          />
+        )}
       </ThemedView>
       <ThemedView
         style={{ flexDirection: "row", alignItems: "center", gap: 5 }}

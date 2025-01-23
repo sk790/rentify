@@ -90,7 +90,7 @@ export default function productDetail() {
               </TouchableOpacity>
             </View>
             <Text style={{ fontSize: 16, fontWeight: "600" }}>
-              {product?.title}
+              {product?.productName}
             </Text>
             <View
               style={{
@@ -111,19 +111,39 @@ export default function productDetail() {
             </View>
           </View>
           <Divider />
+          <View
+            style={{
+              flexDirection: "row",
+              gap: 30,
+              marginHorizontal: 15,
+            }}
+          >
+            <ThemedText type="defaultSemiBold">{"Status"}</ThemedText>
+            <ThemedText
+              type="defaultSemiBold"
+              style={[
+                { flex: 1 },
+                { color: product?.status === "Available" ? "green" : "red" },
+              ]}
+            >
+              {product?.status}
+            </ThemedText>
+          </View>
+          <Divider />
           <View style={{ marginHorizontal: 15, gap: 10 }}>
+            {/* <Divider /> */}
             <ThemedText type="defaultSemiBold">Details</ThemedText>
-            <View style={{ flexDirection: "row", gap: 5 }}>
+            <View style={{ flexDirection: "row", gap: 30 }}>
               <ThemedText type="defaultSemiBold">Product</ThemedText>
-              <Text style={{ color: Colors.gray, flex: 1 }}>
+              <ThemedText type="defaultSemiBold" style={{ flex: 1 }}>
                 {product?.productName}
-              </Text>
+              </ThemedText>
             </View>
-            <View style={{ flexDirection: "row", gap: 5 }}>
+            <View style={{ flexDirection: "row", gap: 30 }}>
               <ThemedText type="defaultSemiBold">Category</ThemedText>
-              <Text style={{ color: Colors.gray, flex: 1 }}>
+              <ThemedText type="defaultSemiBold" style={{ flex: 1 }}>
                 {product?.category}
-              </Text>
+              </ThemedText>
             </View>
           </View>
           <Divider />

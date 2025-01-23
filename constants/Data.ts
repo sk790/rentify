@@ -61,3 +61,8 @@ export const period = [
   { label: "Weakly", value: "3" },
   { label: "Daily", value: "4" },
 ];
+export const status = [
+  { label: "Available", value: "1" },
+  { label: "Rented", value: "2" },
+  { label: "Not Available", value: "3" },
+];

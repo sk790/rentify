@@ -84,9 +84,25 @@ export default function HomeProductCard({
         <View
           style={{ flexDirection: "row", alignItems: "center", width: "100%" }}
         >
-          <Text style={{ fontSize: 12, color: Colors.gray, fontWeight: "600" }}>
+          <Text
+            style={{
+              fontSize: 12,
+              color: Colors.gray,
+              fontWeight: "600",
+              flex: 1,
+            }}
+          >
             {distance} km
           </Text>
+          <Ionicons
+            name={
+              product?.status === "Available"
+                ? "checkmark-circle"
+                : "close-circle"
+            }
+            size={14}
+            color={product?.status === "Available" ? "green" : "red"}
+          />
         </View>
       </View>
     </View>

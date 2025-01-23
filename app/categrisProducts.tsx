@@ -32,7 +32,6 @@ export default function categrisProducts() {
   const [range, setRange] = useState(5);
   const [lenght, setLenght] = useState(0);
   const [showMore, setShowMore] = useState(true);
-  const [filter, setfilter] = useState(false);
 
   const [loadingStatus, setLoadingStatus] = useState({
     productLoading: false,
@@ -44,12 +43,15 @@ export default function categrisProducts() {
 
   useEffect(() => {
     const getProductsByCategory = async () => {
+      setLoadingStatus((prev) => ({ ...prev, productLoading: true }));
       const res = await fetch(
         `${BASE_URL}/api/product/products?category=${encodedCategory.toLowerCase()}&limit=${limit}&areaRange=${range}&userCoords=${stringLocation}`
       );
       const data = await res.json();
+      setLoadingStatus((prev) => ({ ...prev, productLoading: false }));
       if (res.ok) {
         console.log(data);
+        if (data.products.length < limit) setShowMore(false);
         setLenght(data.categoryProductLenght);
         setProducts(data.products);
       }
@@ -83,53 +85,52 @@ export default function categrisProducts() {
       <ParallaxScrollView
         headerBackgroundColor={{ dark: Colors.tomato, light: Colors.tomato }}
       >
-        {/* <View
-        style={{
-          marginTop: inset.top + 20,
-          flexDirection: "row",
-          gap: 10,
-          alignItems: "center",
-          marginHorizontal: 10,
-          }}
-          >
-        <TextInput
-          placeholder="Set Range eg: 50km"
-          style={{
-            borderWidth: 1,
-            flex: 1,
-            paddingHorizontal: 10,
-            borderRadius: 5,
-            height: 40,
-            borderColor: Colors.tomato,
-            }}
-            onChangeText={(text) => setRange(parseInt(text))}
-            />
-            </View> */}
-        <ThemedText type="subtitle" style={{ textAlign: "center" }}>
-          {lenght} Ads found for {category}
-        </ThemedText>
-        <View
-          style={{
-            flexDirection: "row",
-            gap: 5,
-            alignItems: "center",
-            marginHorizontal: 5,
-          }}
-        >
-          <View
-            style={{
-              borderWidth: StyleSheet.hairlineWidth,
-              flex: 1,
-            }}
+        {products.length > 0 && (
+          <>
+            <ThemedText type="subtitle" style={{ textAlign: "center" }}>
+              {lenght} Ads found for {category}
+            </ThemedText>
+            <View
+              style={{
+                flexDirection: "row",
+                gap: 5,
+                alignItems: "center",
+                marginHorizontal: 5,
+              }}
+            >
+              <View
+                style={{
+                  borderWidth: StyleSheet.hairlineWidth,
+                  flex: 1,
+                }}
+              />
+              <ThemedText type="defaultSemiBold">
+                0 - {range || 5} km
+              </ThemedText>
+              <View
+                style={{ borderWidth: StyleSheet.hairlineWidth, flex: 1 }}
+              />
+            </View>
+          </>
+        )}
+
+        {loadingStatus.productLoading ? (
+          <ActivityIndicator
+            size="large"
+            color={Colors.tomato}
+            style={{ marginTop: 20 }}
           />
-          <ThemedText type="defaultSemiBold">0 - {range || 5} km</ThemedText>
-          <View style={{ borderWidth: StyleSheet.hairlineWidth, flex: 1 }} />
-        </View>
-        <HorizontalProductCard products={products} />
-        {products?.length === 0 && (
-          <ThemedText type="subtitle" style={{ textAlign: "center" }}>
-            No products found
-          </ThemedText>
+        ) : (
+          <HorizontalProductCard products={products} />
+        )}
+
+        {products?.length === 0 && !loadingStatus.productLoading && (
+          <Image
+            source={{
+              uri: "https://lookshopbd.com/website/images/no_result.gif",
+            }}
+            style={{ width: "100%", height: 200, marginTop: 250 }}
+          />
         )}
         {showMore && (
           <ThemedButton
