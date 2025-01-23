@@ -14,6 +14,7 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { AuthProvider } from "@/context/AuthContext";
 import { ProductProvider } from "@/context/ProductContext";
 import { LocationProvider } from "@/context/LocationContext";
+import { ModalProvider } from "@/context/ModalContext";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -37,14 +38,16 @@ export default function RootLayout() {
     <AuthProvider>
       <ProductProvider>
         <LocationProvider>
-          {/* <ThemeProvider
+          <ModalProvider>
+            {/* <ThemeProvider
             value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-          > */}
-          <Stack>
-            <Stack.Screen name="index" options={{ headerShown: false }} />
-          </Stack>
-          <StatusBar style="auto" />
-          {/* </ThemeProvider> */}
+            > */}
+            <Stack>
+              <Stack.Screen name="index" options={{ headerShown: false }} />
+            </Stack>
+            <StatusBar style="auto" />
+            {/* </ThemeProvider> */}
+          </ModalProvider>
         </LocationProvider>
       </ProductProvider>
     </AuthProvider>

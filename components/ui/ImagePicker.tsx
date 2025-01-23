@@ -19,7 +19,7 @@ import { Ionicons } from "@expo/vector-icons";
 const ImagePicker = (formData: any) => {
   const [imageUris, setImageUris] = useState<string[]>([]); // Store URIs of selected images
   const [loading, setLoading] = useState(false);
-  console.log(formData);
+  // console.log(formData);
 
   // Request permission to access media library
   const requestPermission = async () => {
@@ -179,6 +179,7 @@ const ImagePicker = (formData: any) => {
           }}
         >
           <ThemedButton
+            color="tomato"
             title="Edit"
             onPress={() => router.back()}
             style={{ marginTop: 10, flex: 1 }}
@@ -186,6 +187,7 @@ const ImagePicker = (formData: any) => {
             position="left"
           />
           <ThemedButton
+            color="tomato"
             title={loading ? "Uploading..." : "Upload"}
             icon="arrow-forward"
             position="right"

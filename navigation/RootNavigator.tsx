@@ -46,7 +46,7 @@ function AppTabs() {
             iconName = "home-outline"; // Ionicons name for home
           } else if (route.name === "Chat") {
             iconName = "chatbubbles-outline"; // Ionicons name for chat
-          } else if (route.name === "My Ads") {
+          } else if (route.name === "MyAds") {
             iconName = "list-outline"; // Ionicons name for list
           } else if (route.name === "Account") {
             iconName = "person-outline"; // Ionicons name for profile
@@ -78,7 +78,7 @@ function AppTabs() {
         component={Create}
       />
       <Tab.Screen
-        name="My Ads"
+        name="MyAds"
         options={{ headerShown: false }}
         component={MyAds}
       />

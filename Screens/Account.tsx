@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Linking,
   ScrollView,
   StyleSheet,
   Text,
@@ -7,28 +8,25 @@ import {
   useColorScheme,
   View,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import ParallaxScrollView from "@/defaultComponents/ParallaxScrollView";
 import React, { useState } from "react";
 import ProfileCard from "@/components/ProfileCard";
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "@/context/AuthContext";
 import { useProducts } from "@/context/ProductContext";
 import { BASE_URL } from "@env";
-import ParallaxScrollView from "@/defaultComponents/ParallaxScrollView";
 import { ThemedView } from "@/defaultComponents/ThemedView";
 import { ThemedText } from "@/defaultComponents/ThemedText";
 import { ThemedButton } from "@/defaultComponents/ThemedButton";
+import { useModal } from "@/context/ModalContext";
+import { router } from "expo-router";
 
 export default function Account({ navigation }: { navigation: any }) {
-  const theme = useColorScheme();
-  const iconTheme = theme === "light" ? "black" : "white";
   const { setAuth } = useAuth();
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
-
-  const { favoriteProducts, myAds, products } = useProducts();
-
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -49,6 +47,9 @@ export default function Account({ navigation }: { navigation: any }) {
       alert(error);
     }
   };
+  const goToFavorite = () => {
+    navigation.navigate("MyAds");
+  };
   return (
     <ParallaxScrollView
       headerBackgroundColor={{
@@ -56,97 +57,86 @@ export default function Account({ navigation }: { navigation: any }) {
         light: Colors.lightTomato,
       }}
     >
-      <ProfileCard user={user} me />
-      <ThemedView
-        style={{
-          alignItems: "center",
-          height: "100%",
-        }}
-        lightColor={Colors.light.background}
-        darkColor={Colors.dark.background}
-      >
-        <ThemedView
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 10,
-            width: "100%",
-            marginVertical: 10,
-          }}
-        >
-          <Ionicons name="create-outline" size={24} color={iconTheme} />
-          <ThemedText>My Ads</ThemedText>
-          <Ionicons
-            name="arrow-forward-circle-sharp"
-            size={24}
-            color={iconTheme}
-            style={{ position: "absolute", right: 0 }}
-          />
-        </ThemedView>
-        <ThemedView
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 10,
-            width: "100%",
-            marginVertical: 10,
-          }}
-        >
-          <Ionicons name="create-outline" size={24} color={iconTheme} />
-          <ThemedText>My Ads</ThemedText>
-          <Ionicons
-            name="arrow-forward-circle-sharp"
-            size={24}
-            color={iconTheme}
-            style={{ position: "absolute", right: 0 }}
-          />
-        </ThemedView>
-        <ThemedView
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 10,
-            width: "100%",
-            marginVertical: 10,
-          }}
-        >
-          <Ionicons name="create-outline" size={24} color={iconTheme} />
-          <ThemedText>My Ads</ThemedText>
-          <Ionicons
-            name="arrow-forward-circle-sharp"
-            size={24}
-            color={iconTheme}
-            style={{ position: "absolute", right: 0 }}
-          />
-        </ThemedView>
-        <ThemedView
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 10,
-            width: "100%",
-            marginVertical: 10,
-          }}
-        >
-          <Ionicons name="create-outline" size={24} color={iconTheme} />
-          <ThemedText>My Ads</ThemedText>
-          <Ionicons
-            name="arrow-forward-circle-sharp"
-            size={24}
-            color={iconTheme}
-            style={{ position: "absolute", right: 0 }}
-          />
-        </ThemedView>
+      <>
+        <ProfileCard user={user} me />
+        {/* add this coponent in future */}
+        {/* <ThemedButton title="Update your Kyc" color="white" /> */}
+        {/* <View> */}
 
-        <ThemedButton
-          color="white"
-          title="Logout"
-          onPress={handleLogout}
-          style={{ width: "100%" }}
+        <ProfileContent
+          label="My Ads"
+          onPress={goToFavorite}
+          rightIcon="list-outline"
+          leftIcon="chevron-forward"
         />
-      </ThemedView>
+
+        <ProfileContent
+          label="Settings"
+          rightIcon="settings-outline"
+          leftIcon="chevron-forward"
+          onPress={() => router.push("/settings")}
+        />
+        <ProfileContent
+          label="Notifications"
+          onPress={() => router.push("/notifications")}
+          rightIcon="notifications-outline"
+          leftIcon="chevron-forward"
+        />
+        <ProfileContent
+          label="Share"
+          rightIcon="share-social"
+          leftIcon="chevron-forward"
+          isLink={true}
+          onPress={() => Linking.openURL("https://play.google.com/")}
+        />
+        <ThemedButton
+          title="Logout"
+          color="white"
+          onPress={handleLogout}
+          style={{ marginHorizontal: 10, width: "50%" }}
+          icon="log-out-outline"
+        />
+      </>
     </ParallaxScrollView>
   );
 }
+
+const ProfileContent = ({
+  rightIcon,
+  label,
+  leftIcon,
+  onPress,
+  isLink,
+}: {
+  rightIcon: keyof typeof Ionicons.glyphMap;
+  leftIcon: keyof typeof Ionicons.glyphMap;
+  label: string;
+  isLink?: boolean;
+  onPress?: () => void;
+}) => {
+  return (
+    <ThemedView
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        marginHorizontal: 10,
+      }}
+    >
+      <TouchableOpacity
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 10,
+          flex: 1,
+        }}
+        onPress={onPress}
+      >
+        <Ionicons name={rightIcon} size={32} color={Colors.tomato} />
+        <ThemedText type="defaultSemiBold">{label}</ThemedText>
+      </TouchableOpacity>
+      <Ionicons name={leftIcon} size={25} color={Colors.tomato} />
+    </ThemedView>
+  );
+};
 
 const styles = StyleSheet.create({});
