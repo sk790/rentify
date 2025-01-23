@@ -17,25 +17,21 @@ import { useModal } from "@/context/ModalContext";
 import { ThemedButton } from "@/defaultComponents/ThemedButton";
 import { Product, User } from "@/types";
 import { ThemedText } from "@/defaultComponents/ThemedText";
-import MyDropdown from "./MyDropdown";
 import { BASE_URL } from "@env";
 import { useAuth } from "@/context/AuthContext";
-import MyInputField from "./ui/MyInput";
-import InputField from "./ui/InputField";
+import InputField from "./InputField";
 
-export default function MyModel({ userData }: { userData?: User }) {
+export default function UpdateProductModal({ product }: { product: Product }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [animation] = useState(new Animated.Value(0)); // Animation value for smooth transitions
-  const { isModalVisible, closeModal } = useModal();
+  const { closeProductModal, isProductModalVisible } = useModal();
   const [loading, setLoading] = useState(false);
-  const { setUser } = useAuth();
 
-  const [profileData, setProfileData] = useState<User | undefined>({
-    ...userData!,
+  const [productData, setProductData] = useState<Product | undefined>({
+    ...product,
   });
-
   useEffect(() => {
-    if (isModalVisible) {
+    if (isProductModalVisible) {
       setModalVisible(true);
       Animated.timing(animation, {
         toValue: 1,
@@ -49,41 +45,28 @@ export default function MyModel({ userData }: { userData?: User }) {
         useNativeDriver: true,
       }).start(() => setModalVisible(false)); // Close modal after animation ends
     }
-  }, [isModalVisible]);
+  }, [isProductModalVisible]);
 
   const modalTranslateY = animation.interpolate({
     inputRange: [0, 1],
     outputRange: [700, 0], // Start from bottom and slide up
   });
 
-  const handleProfileUpdate = async () => {
+  const handleProductUpdate = async () => {
     try {
-      if (
-        !profileData?.name ||
-        !profileData?.description ||
-        !profileData?.address
-      ) {
-        return Alert.alert("Error", "Please fill all the fields.");
-      }
-      setLoading(true);
-      const res = await fetch(`${BASE_URL}/api/auth/update-profile`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(profileData),
-      });
-      const data = await res.json();
-      setLoading(false);
-      if (res.ok) {
-        Alert.alert("Success", "Profile updated successfully.");
-        setUser((prevUser: User) => ({ ...prevUser, ...profileData }));
-      }
-      closeModal();
+      //   setProductData((prev: Product) => prev);
+
+      closeProductModal();
     } catch (error) {
       setLoading(false);
       console.log(error);
     }
+  };
+  const handleInputChange = (key: string, value: string) => {
+    setProductData((prev: any) => ({
+      ...prev,
+      [key]: value,
+    }));
   };
 
   return (
@@ -92,7 +75,7 @@ export default function MyModel({ userData }: { userData?: User }) {
         transparent
         visible={modalVisible}
         animationType="fade" // We'll handle animation ourselves
-        onRequestClose={closeModal}
+        onRequestClose={closeProductModal}
       >
         <View style={styles.modalOverlay}>
           <Animated.View
@@ -108,46 +91,38 @@ export default function MyModel({ userData }: { userData?: User }) {
                 alignItems: "center",
               }}
             >
-              <Text style={styles.modalTitle}>Edit Profile</Text>
+              <Text style={styles.modalTitle}>Edit Product</Text>
               <Ionicons
-                onPress={closeModal}
+                onPress={closeProductModal}
                 name="close"
                 size={38}
                 color={Colors.tomato}
               />
             </ThemedView>
             <ScrollView>
-              <TextInput
-                style={styles.input}
-                placeholder="Enter Your Name"
-                value={profileData?.name}
-                onChangeText={(text) =>
-                  setProfileData({ ...profileData!, name: text })
+              <InputField
+                label="Product Name"
+                name="productName"
+                value={productData?.productName}
+                onChange={(text: string) =>
+                  handleInputChange("productName", text)
                 }
+                placeholder="Enter product name"
               />
-              <TextInput
-                style={styles.input}
-                placeholder="Enter Your Description"
-                value={profileData?.description}
-                onChangeText={(text) =>
-                  setProfileData({ ...profileData!, description: text })
-                }
+              <InputField
+                label="Title"
+                name="title"
+                value={productData?.title}
+                onChange={(text: string) => handleInputChange("title", text)}
+                placeholder="Enter title"
               />
-              <TextInput
-                style={styles.input}
-                placeholder="Enter Your Address"
-                value={profileData?.address}
-                onChangeText={(text) =>
-                  setProfileData({ ...profileData!, address: text })
-                }
+
+              <ThemedButton
+                color="white"
+                title="Update"
+                onPress={handleProductUpdate}
               />
             </ScrollView>
-            <ThemedButton
-              title="Update"
-              color="#fff"
-              loading={loading}
-              onPress={handleProfileUpdate}
-            />
           </Animated.View>
         </View>
       </Modal>

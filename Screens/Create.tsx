@@ -152,7 +152,7 @@ export default function Create({ route }: any) {
               helperText="address should be matched with your product."
             />
           </ThemedView>
-          <ThemedButton title="Next" onPress={handleNextPage} />
+          <ThemedButton color="white" title="Next" onPress={handleNextPage} />
         </ThemedView>
       </ParallaxScrollView>
     </>

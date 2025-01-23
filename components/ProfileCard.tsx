@@ -30,7 +30,7 @@ export default function ProfileCard({ user, me }: userProps) {
   const theme = useColorScheme();
   const iconTheme = theme === "light" ? "black" : "white";
   const [profileImage, setProfileImage] = useState<string | null>(null);
-  const { closeModal, openModal } = useModal();
+  const { openModal } = useModal();
 
   const requestPermission = async () => {
     const { status } =

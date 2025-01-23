@@ -9,6 +9,8 @@ import { useProducts } from "@/context/ProductContext";
 import { ThemedButton } from "@/defaultComponents/ThemedButton";
 import { ThemedView } from "@/defaultComponents/ThemedView";
 import ThreeDotDrawer from "./ui/ThreeDots";
+import UpdateProductModal from "./ui/UpdateProductModal";
+import { useModal } from "@/context/ModalContext";
 
 type Props = {
   product: Product;
@@ -18,14 +20,12 @@ type Props = {
   myAds?: boolean;
 };
 
-export default function MyAdCard({ product, onDelete, onEdit, myAds }: Props) {
+export default function MyAdCard({ product, onDelete, myAds }: Props) {
   const { updateFavorite, setProducts, setMyAds } = useProducts();
+  const { openProductModal } = useModal();
   const [isAvailable, setIsAvailable] = useState(
     product.status === "Available" ? true : false
   );
-
-  const [onRentProducts, setOnRentProducts] = useState<Product[]>([]);
-
   const handleDelete = async (productId: string) => {
     if (!product._id) return;
     try {
@@ -73,10 +73,14 @@ export default function MyAdCard({ product, onDelete, onEdit, myAds }: Props) {
       console.log(error);
     }
   };
+  const onEdit = () => {
+    openProductModal();
+  };
+
   const titles = [
     {
       title: "Edit",
-      onPress: () => onEdit?.(product),
+      onPress: () => onEdit?.(),
       icon: "pencil",
       color: "black",
     },
@@ -189,6 +193,7 @@ export default function MyAdCard({ product, onDelete, onEdit, myAds }: Props) {
             />
           </ThemedView>
         )}
+        {product && <UpdateProductModal product={product} />}
       </View>
     </TouchableOpacity>
   );

@@ -1,3 +1,4 @@
+import { useModal } from "@/context/ModalContext";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useRef, useState } from "react";
 import {
@@ -36,8 +37,7 @@ const ThreeDotDrawer = ({ titles }: any) => {
     setIsMenuVisible(false);
   };
 
-  const handleOptionClick = (option: string) => {
-    console.log(`${option} clicked`);
+  const handleOptionClick = (option: any) => {
     closeMenu(); // Close menu after clicking an option
   };
 

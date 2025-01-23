@@ -17,8 +17,11 @@ import { Colors } from "@/constants/Colors";
 import { ThemedView } from "@/defaultComponents/ThemedView";
 import { ThemedText } from "@/defaultComponents/ThemedText";
 import { ThemedButton } from "@/defaultComponents/ThemedButton";
+import { useModal } from "@/context/ModalContext";
+import MyModel from "@/components/MyModel";
 
 export default function MyAds({ navigation }: { navigation: any }) {
+  const { openModal } = useModal();
   const [selectedTab, setSelectedTab] = useState("myads");
   const underlineAnim = useRef(new Animated.Value(0)).current;
   const [loading, setLoading] = useState(false);
@@ -36,7 +39,7 @@ export default function MyAds({ navigation }: { navigation: any }) {
     );
   }, []);
   const handleEdit = (product: Product) => {
-    navigation.navigate("Create", { product });
+    openModal();
   };
 
   const goToListing = () => {
@@ -50,14 +53,14 @@ export default function MyAds({ navigation }: { navigation: any }) {
 
     Animated.timing(underlineAnim, {
       toValue,
-      duration: 300,
+      duration: 400,
       useNativeDriver: false,
     }).start();
   };
 
   const underlineTranslateX = underlineAnim.interpolate({
     inputRange: [0, 1, 2],
-    outputRange: [15, 130, 250], // Adjust based on your tab width
+    outputRange: [5, 120, 235], // Adjust based on your tab width
   });
 
   const gotodetailpage = (id: string) => {
@@ -132,9 +135,10 @@ export default function MyAds({ navigation }: { navigation: any }) {
                   key={product._id}
                   product={product}
                   onDelete={() => handleDelete(product._id)}
-                  onEdit={handleEdit}
+                  onEdit={() => handleEdit(product)}
                   myAds={true}
                 />
+                <MyModel product={product} />
               </TouchableOpacity>
             ))
           ) : (
@@ -201,16 +205,22 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     alignItems: "center",
+    zIndex: 10,
   },
   activeTabText: {
-    color: Colors.tomato,
+    color: "white",
     fontWeight: "bold",
   },
   underline: {
+    zIndex: 0,
     position: "absolute",
-    top: 48,
-    height: 2,
-    width: 100, // Matches tab width
+    top: 18,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    borderBottomRightRadius: 15,
+    borderBottomLeftRadius: 15,
+    height: 35,
+    width: 120, // Matches tab width
     backgroundColor: Colors.tomato,
     borderRadius: 1,
   },

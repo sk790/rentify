@@ -9,7 +9,7 @@ type inputProps = {
   label: string;
   onChange: (text: string) => void;
   name: string;
-  value: string;
+  value: string | undefined;
   line?: number;
   multiline?: boolean;
   required?: boolean;
