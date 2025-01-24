@@ -1,6 +1,9 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, useColorScheme, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import React, { useEffect, useState } from "react";
+import { ThemedView } from "@/defaultComponents/ThemedView";
+import { ThemedText } from "@/defaultComponents/ThemedText";
+import { Colors } from "@/constants/Colors";
 
 type Props = {
   onChange: (value: string | null) => void;
@@ -10,6 +13,7 @@ type Props = {
 };
 
 export default function MyDropdown({ onChange, data, label, required }: Props) {
+  const theme = useColorScheme();
   const [value, setValue] = useState<string | null>(null);
   const [isFocus, setIsFocus] = useState(false);
 
@@ -20,12 +24,33 @@ export default function MyDropdown({ onChange, data, label, required }: Props) {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={{ fontSize: 16, fontWeight: "600", marginVertical: 5 }}>
+    <ThemedView style={styles.container}>
+      <ThemedText type="defaultSemiBold" style={{ marginVertical: 5 }}>
         {label}
         {required && <Text style={{ color: "red", fontSize: 12 }}>*</Text>}
-      </Text>
+      </ThemedText>
       <Dropdown
+        placeholderStyle={{
+          color: theme === "dark" ? Colors.white : "black",
+          fontSize: 16,
+          fontWeight: 600,
+        }}
+        selectedTextStyle={{
+          color: theme === "dark" ? Colors.white : "#aaa",
+          fontSize: 13,
+          fontWeight: "600",
+          paddingLeft: 8,
+        }}
+        iconColor={theme === "dark" ? Colors.white : "black"}
+        itemContainerStyle={{
+          backgroundColor: theme === "dark" ? "black" : Colors.white,
+        }}
+        itemTextStyle={{
+          color: theme === "dark" ? Colors.white : "black",
+          fontWeight: "600",
+          fontSize: 14,
+        }}
+        activeColor={theme === "dark" ? "black" : Colors.white}
         style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
         data={data}
         maxHeight={300}
@@ -37,7 +62,7 @@ export default function MyDropdown({ onChange, data, label, required }: Props) {
         onBlur={() => setIsFocus(false)}
         onChange={handleChange} // Handle value change.
       />
-    </View>
+    </ThemedView>
   );
 }
 

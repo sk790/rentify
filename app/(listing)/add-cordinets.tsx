@@ -45,6 +45,7 @@ export default function addcordinets() {
         }}
       >
         <ThemedButton
+          color={Colors.white}
           title={btnStyle === "green" ? "Done" : "Get Location"}
           onPress={getLocation}
           loading={locationBtnLoading}

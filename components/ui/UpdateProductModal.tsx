@@ -70,14 +70,14 @@ export default function UpdateProductModal({ product }: { product: Product }) {
   };
 
   return (
-    <View>
+    <ThemedView>
       <Modal
         transparent
         visible={modalVisible}
         animationType="fade" // We'll handle animation ourselves
         onRequestClose={closeProductModal}
       >
-        <View style={styles.modalOverlay}>
+        <ThemedView style={styles.modalOverlay}>
           <Animated.View
             style={[
               styles.modalContainer,
@@ -91,7 +91,7 @@ export default function UpdateProductModal({ product }: { product: Product }) {
                 alignItems: "center",
               }}
             >
-              <Text style={styles.modalTitle}>Edit Product</Text>
+              <ThemedText>Edit Product</ThemedText>
               <Ionicons
                 onPress={closeProductModal}
                 name="close"
@@ -118,15 +118,15 @@ export default function UpdateProductModal({ product }: { product: Product }) {
               />
 
               <ThemedButton
-                color="white"
+                color={Colors.white}
                 title="Update"
                 onPress={handleProductUpdate}
               />
             </ScrollView>
           </Animated.View>
-        </View>
+        </ThemedView>
       </Modal>
-    </View>
+    </ThemedView>
   );
 }
 
@@ -140,7 +140,6 @@ const styles = StyleSheet.create({
   modalContainer: {
     width: "95%",
     marginVertical: 80,
-    backgroundColor: "white",
     borderRadius: 10,
     padding: 10,
     shadowColor: "#000",
@@ -149,12 +148,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    textAlign: "center",
-    flex: 1,
-  },
+
   input: {
     borderBottomWidth: 1,
     borderColor: Colors.gray || "#ccc",

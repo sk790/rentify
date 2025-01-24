@@ -8,28 +8,23 @@ import {
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Navigator, router, Stack, useLocalSearchParams } from "expo-router";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { router, Stack, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import ProductDetailPageHeader from "@/components/ProductDetailPageHeader";
 import { Colors } from "@/constants/Colors";
-import { BASE_URL } from "@env";
 import { Product } from "@/types";
 import { useProducts } from "@/context/ProductContext";
-import { useAuth } from "@/context/AuthContext";
 import { ThemedText } from "@/defaultComponents/ThemedText";
 import Divider from "@/components/ui/Divider";
 import ImageSlider from "@/components/ui/ImageSlider";
 import UserMap from "@/components/ui/UsreMap";
-// import ruppee from "@/assets/images/rupee-indian.png";
 
 export default function productDetail() {
   const { productId } = useLocalSearchParams();
   const [product, setProduct] = useState<Product>();
   const [loading, setLoading] = useState(false);
   const { products, favoriteProducts, updateFavorite } = useProducts();
-  const { user } = useAuth();
-  const [like, setLike] = useState(false);
+
   useEffect(() => {
     const p = products.find((p) => p._id === productId);
     setProduct(p);
@@ -56,8 +51,8 @@ export default function productDetail() {
           header: () => <ProductDetailPageHeader />,
         }}
       />
-      <ScrollView style={{}}>
-        <View>
+      <ScrollView>
+        <View style={{ marginBottom: 50 }}>
           {product?.images && <ImageSlider images={product.images} />}
           <View style={{ marginHorizontal: 15, marginTop: 10 }}>
             <View
@@ -207,6 +202,7 @@ export default function productDetail() {
           width: "100%",
           flexDirection: "row",
           padding: 5,
+
           justifyContent: "space-between",
         }}
       >
@@ -230,7 +226,7 @@ export default function productDetail() {
             <Ionicons
               name="chatbubble-ellipses-sharp"
               size={28}
-              color="white"
+              color={Colors.white}
             />
             <Text style={{ color: Colors.white, fontWeight: "600" }}>Chat</Text>
           </View>
@@ -251,7 +247,7 @@ export default function productDetail() {
               gap: 5,
             }}
           >
-            <Ionicons name="logo-whatsapp" size={28} color="white" />
+            <Ionicons name="logo-whatsapp" size={28} color={Colors.white} />
             <Text style={{ color: Colors.white, fontWeight: "600" }}>
               Whatsapp
             </Text>

@@ -6,7 +6,7 @@ export const Colors = {
   black: "#333",
   gray: "#666",
   lightGray: "#999",
-  white: "#fff",
+  white: "#ffff",
   background: "#F4F4F4",
   highlight: "#F4CE14",
   favorite: "#FF0000",
@@ -31,6 +31,6 @@ export const Colors = {
     border: "#555", // Add border color for dark mode
     placeholder: "#666",
   },
-  tomato: "#FF6347",
+  tomato: "#F47",
   lightTomato: "#FF7F70",
 };

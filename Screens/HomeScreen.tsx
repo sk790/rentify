@@ -3,6 +3,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  useColorScheme,
   View,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
@@ -19,6 +20,7 @@ import ParallaxScrollView from "@/defaultComponents/ParallaxScrollView";
 import { Colors } from "@/constants/Colors";
 import { homeCategoryData } from "@/constants/Data";
 import { ThemedText } from "@/defaultComponents/ThemedText";
+import { ThemedView } from "@/defaultComponents/ThemedView";
 
 export default function HomeScreen() {
   const [loading, setLoading] = useState(false);
@@ -32,13 +34,15 @@ export default function HomeScreen() {
   const getUser = async () => {
     const res = await fetch(`${BASE_URL}/api/auth/me`);
     const data = await res.json();
-    console.log({ data });
+    // console.log({ data });
     if (res.ok) {
       setFavoriteProducts(data.user.favorites);
       setMyAds(data.user.products);
       setUser(data.user);
     }
   };
+  const theme = useColorScheme();
+  const bg = theme === "dark" ? Colors.black : Colors.white;
 
   const getAllProducts = async () => {
     setLoading(true);
@@ -79,27 +83,37 @@ export default function HomeScreen() {
       <Stack.Screen options={{ headerShown: false }} />
       <ParallaxScrollView
         headerBackgroundColor={{
-          light: Colors.lightTomato,
-          dark: Colors.lightTomato,
+          light: Colors.tomato,
+          dark: Colors.tomato,
         }}
       >
         <Header />
-        <View style={styles.categoryContainer}>
+        <ThemedView
+          style={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            gap: 20,
+            marginHorizontal: 2,
+            justifyContent: "flex-start",
+          }}
+        >
           {homeCategoryData?.map((category, index) => (
             <TouchableOpacity
               key={index}
-              style={styles.categoryCard}
+              // style={{ width: "49%" }}
               onPress={() => getProductsByCategory(category.label)}
             >
               <CategoryCard image={category.image} label={category.label} />
             </TouchableOpacity>
           ))}
-        </View>
-        <View style={styles.productContainer}>
+        </ThemedView>
+        <ThemedView>
           <ThemedText type="defaultSemiBold" style={{ marginBottom: 10 }}>
             Near by You
           </ThemedText>
-          <View style={styles.productList}>
+          <ThemedView
+            style={{ flexDirection: "row", flexWrap: "wrap", gap: 5 }}
+          >
             {products?.map((item: Product, index) => (
               <TouchableOpacity
                 style={styles.productCard}
@@ -109,8 +123,8 @@ export default function HomeScreen() {
                 <HomeProductCard product={item} distance={distances[index]} />
               </TouchableOpacity>
             ))}
-          </View>
-        </View>
+          </ThemedView>
+        </ThemedView>
       </ParallaxScrollView>
     </>
   );
@@ -122,23 +136,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     gap: 5,
   },
-  categoryCard: {
-    width: "32%",
-  },
-  productContainer: {
-    marginHorizontal: 10,
-    backgroundColor: "white",
-    marginTop: 5,
-    padding: 5,
-    borderRadius: 10,
-    flexDirection: "column",
-  },
 
-  productList: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 5,
-  },
   productCard: {
     width: "49%",
   },

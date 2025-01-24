@@ -25,11 +25,11 @@ export default function HorizontalProductCard({ products }: any) {
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
-              padding: 10,
+              padding: 5,
               borderRadius: 10,
-              marginHorizontal: 5,
+              margin: 5,
               borderWidth: 1,
-              borderColor: Colors.gray,
+              borderColor: Colors.tomato,
             }}
           >
             <View
@@ -44,14 +44,13 @@ export default function HorizontalProductCard({ products }: any) {
                   source={{
                     uri: product.images[0],
                   }}
-                  style={{ width: 100, height: 100, borderRadius: 10 }}
+                  style={{ width: 100, height: 100, borderRadius: 5 }}
                 />
               </View>
               <View
                 style={{
                   flexDirection: "column",
                   justifyContent: "space-between",
-                  width: 150,
                 }}
               >
                 <ThemedText

@@ -48,12 +48,13 @@ export default function Signup({ navigation }: { navigation: any }) {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      // console.log(data);
+      console.log(data);
       setIsLoading(false);
       if (res.ok) {
         await AsyncStorage.setItem("token", data.token);
         setAuth(true);
       } else {
+        setIsLoading(false);
         alert(data.msg);
       }
     } catch (error) {
@@ -100,7 +101,7 @@ export default function Signup({ navigation }: { navigation: any }) {
             <MyInputField
               style={{
                 flex: 1,
-                backgroundColor: "white",
+                backgroundColor: Colors.white,
                 borderTopLeftRadius: 5,
                 borderBottomLeftRadius: 5,
                 paddingHorizontal: 12,
@@ -125,7 +126,7 @@ export default function Signup({ navigation }: { navigation: any }) {
               onPress={handleOtp}
               disabled={isOtpSent}
             >
-              <Text style={{ color: "white", fontWeight: "600" }}>
+              <Text style={{ color: Colors.white, fontWeight: "600" }}>
                 {isOtpSent ? "Resend" : "Get Otp"}
               </Text>
             </TouchableOpacity>

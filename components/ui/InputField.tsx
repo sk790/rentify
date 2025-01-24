@@ -31,7 +31,7 @@ function InputField({
 }: inputProps) {
   // Get dynamic background color based on theme
   const backgroundColor = useThemeColor(
-    { light: "#fff", dark: "#333" }, // Replace with your desired colors
+    { light: "#fff", dark: "black" }, // Replace with your desired colors
     "background"
   );
   const borderColor = useThemeColor(
@@ -65,7 +65,6 @@ function InputField({
             paddingHorizontal: 15,
             fontWeight: "600",
             fontSize: 12,
-
             color,
             height: 40,
             backgroundColor, // Dynamic background color

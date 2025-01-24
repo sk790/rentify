@@ -2,7 +2,6 @@
   "expo": {
     "name": "frontend",
     "slug": "frontend",
-
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -18,7 +17,9 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.sk_nagar790.frontend",
-      "permissions": ["INTERNET"]
+      "permissions": [
+        "INTERNET"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -42,7 +43,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "9a091191-28c0-4e8d-bba7-51f0378f5924"
+        "projectId": "b8de2c92-5b10-4e17-b409-203f56ace17d"
       }
     }
   }

@@ -9,6 +9,7 @@ import {
   Animated,
   ScrollView,
   Alert,
+  useColorScheme,
 } from "react-native";
 import { Colors } from "@/constants/Colors"; // Add your colors or use default values
 import { Ionicons } from "@expo/vector-icons";
@@ -29,6 +30,8 @@ export default function MyModel({ userData }: { userData?: User }) {
   const { isModalVisible, closeModal } = useModal();
   const [loading, setLoading] = useState(false);
   const { setUser } = useAuth();
+  const theme = useColorScheme();
+  const bg = theme === "dark" ? Colors.black : Colors.white;
 
   const [profileData, setProfileData] = useState<User | undefined>({
     ...userData!,
@@ -98,17 +101,21 @@ export default function MyModel({ userData }: { userData?: User }) {
           <Animated.View
             style={[
               styles.modalContainer,
-              { transform: [{ translateY: modalTranslateY }] },
+              {
+                transform: [{ translateY: modalTranslateY }],
+                backgroundColor: bg,
+              },
             ]}
           >
             {/* Modal Content */}
             <ThemedView
+              darkColor={Colors.black}
               style={{
                 flexDirection: "row",
                 alignItems: "center",
               }}
             >
-              <Text style={styles.modalTitle}>Edit Profile</Text>
+              <ThemedText style={styles.modalTitle}>Edit Profile</ThemedText>
               <Ionicons
                 onPress={closeModal}
                 name="close"
@@ -118,7 +125,15 @@ export default function MyModel({ userData }: { userData?: User }) {
             </ThemedView>
             <ScrollView>
               <TextInput
-                style={styles.input}
+                placeholderTextColor={Colors.tomato}
+                style={[
+                  styles.input,
+                  {
+                    backgroundColor:
+                      theme === "dark" ? Colors.black : Colors.white,
+                    color: theme === "dark" ? Colors.tomato : Colors.black,
+                  },
+                ]}
                 placeholder="Enter Your Name"
                 value={profileData?.name}
                 onChangeText={(text) =>
@@ -126,7 +141,15 @@ export default function MyModel({ userData }: { userData?: User }) {
                 }
               />
               <TextInput
-                style={styles.input}
+                placeholderTextColor={Colors.tomato}
+                style={[
+                  styles.input,
+                  {
+                    backgroundColor:
+                      theme === "dark" ? Colors.black : Colors.white,
+                    color: theme === "dark" ? Colors.tomato : Colors.black,
+                  },
+                ]}
                 placeholder="Enter Your Description"
                 value={profileData?.description}
                 onChangeText={(text) =>
@@ -134,7 +157,15 @@ export default function MyModel({ userData }: { userData?: User }) {
                 }
               />
               <TextInput
-                style={styles.input}
+                placeholderTextColor={Colors.tomato}
+                style={[
+                  styles.input,
+                  {
+                    backgroundColor:
+                      theme === "dark" ? Colors.black : Colors.white,
+                    color: theme === "dark" ? Colors.tomato : Colors.black,
+                  },
+                ]}
                 placeholder="Enter Your Address"
                 value={profileData?.address}
                 onChangeText={(text) =>
@@ -158,14 +189,14 @@ export default function MyModel({ userData }: { userData?: User }) {
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: "rgba(0, 0, 0, 0.25)",
     justifyContent: "center",
     alignItems: "center",
   },
   modalContainer: {
     width: "95%",
     marginVertical: 80,
-    backgroundColor: "white",
+
     borderRadius: 10,
     padding: 10,
     shadowColor: "#000",
@@ -182,7 +213,7 @@ const styles = StyleSheet.create({
   },
   input: {
     borderBottomWidth: 1,
-    borderColor: Colors.gray || "#ccc",
+
     borderRadius: 8,
     padding: 10,
     height: 45,

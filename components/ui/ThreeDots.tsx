@@ -1,4 +1,7 @@
+import { Colors } from "@/constants/Colors";
 import { useModal } from "@/context/ModalContext";
+import { ThemedText } from "@/defaultComponents/ThemedText";
+import { ThemedView } from "@/defaultComponents/ThemedView";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useRef, useState } from "react";
 import {
@@ -8,9 +11,12 @@ import {
   Modal,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  useColorScheme,
 } from "react-native";
 
 const ThreeDotDrawer = ({ titles }: any) => {
+  const theme = useColorScheme();
+  const bg = theme === "dark" ? Colors.black : Colors.white;
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 10 });
   const threeDotsRef = useRef<any>(null);
@@ -48,7 +54,7 @@ const ThreeDotDrawer = ({ titles }: any) => {
         <Ionicons
           name="ellipsis-vertical"
           size={24}
-          color="#000"
+          color={Colors.tomato}
           style={{ padding: 5 }}
         />
       </TouchableOpacity>
@@ -59,36 +65,48 @@ const ThreeDotDrawer = ({ titles }: any) => {
         animationType="fade"
       >
         <TouchableWithoutFeedback onPress={closeMenu}>
-          <View style={styles.modalOverlay}>
+          <ThemedView style={styles.modalOverlay}>
             <TouchableWithoutFeedback>
-              <View
+              <ThemedView
                 style={[
                   styles.menu,
                   {
                     position: "absolute",
                     top: menuPosition.top,
                     left: menuPosition.left,
+                    borderColor: Colors.tomato,
+                    borderWidth: 1,
                   },
                 ]}
               >
                 {titles?.map((option: any) => (
-                  <TouchableOpacity
+                  <ThemedView
                     key={option.title}
-                    onPress={() => handleOptionClick(option.onPress())}
-                    style={{ flexDirection: "row", alignItems: "center" }}
+                    style={{
+                      padding: 10,
+                    }}
                   >
-                    <Ionicons
-                      name={option.icon}
-                      size={20}
-                      color={option.color}
-                    />
+                    <TouchableOpacity
+                      onPress={() => handleOptionClick(option.onPress())}
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 10,
+                      }}
+                    >
+                      <Ionicons
+                        name={option.icon}
+                        size={20}
+                        color={option.color}
+                      />
 
-                    <Text style={styles.menuItem}>{option.title}</Text>
-                  </TouchableOpacity>
+                      <ThemedText>{option.title}</ThemedText>
+                    </TouchableOpacity>
+                  </ThemedView>
                 ))}
-              </View>
+              </ThemedView>
             </TouchableWithoutFeedback>
-          </View>
+          </ThemedView>
         </TouchableWithoutFeedback>
       </Modal>
     </>
@@ -102,15 +120,8 @@ const styles = StyleSheet.create({
   },
   menu: {
     width: 200,
-    backgroundColor: "white",
     borderRadius: 5,
     padding: 10,
-  },
-  menuItem: {
-    padding: 10,
-    fontSize: 16,
-    fontWeight: "500",
-    color: "#333",
   },
 });
 export default ThreeDotDrawer;

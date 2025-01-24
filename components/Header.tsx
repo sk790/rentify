@@ -4,6 +4,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  useColorScheme,
   View,
 } from "react-native";
 import React from "react";
@@ -11,9 +12,14 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Colors } from "@/constants/Colors";
 import { Link, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+
 import { ThemedText } from "@/defaultComponents/ThemedText";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Header() {
+  const { user } = useAuth();
+  const theme = useColorScheme();
+  const bg = theme === "dark" ? Colors.black : Colors.white;
   return (
     <View style={{ flexDirection: "column" }}>
       <View
@@ -22,26 +28,32 @@ export default function Header() {
           justifyContent: "space-between",
           alignItems: "center",
           padding: 10,
-          backgroundColor: Colors.white,
+          borderRadius: 15,
+          marginBottom: 10,
+          backgroundColor: bg,
         }}
       >
         <ThemedText
           type="subtitle"
           style={{
-            color: Colors.tomato,
+            color: Colors.white,
             fontStyle: "italic",
-            paddingHorizontal: 10,
+            paddingHorizontal: 15,
             paddingVertical: 5,
             borderRadius: 15,
-            backgroundColor: "black",
+            backgroundColor: Colors.tomato,
           }}
         >
           RENTIFY
         </ThemedText>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Ionicons name="location-outline" size={20} color={Colors.tomato} />
-          <ThemedText type="defaultSemiBold" style={{ fontSize: 14 }}>
-            Rahamatpur, Belra M
+          <ThemedText
+            type="default"
+            style={{ fontSize: 13, width: "65%" }}
+            numberOfLines={1}
+          >
+            {user?.address || "Update Address"}
           </ThemedText>
           <Ionicons
             name="chevron-down-outline"
@@ -65,7 +77,7 @@ export default function Header() {
             alignItems: "center",
             borderWidth: 1,
             borderColor: Colors.tomato,
-            backgroundColor: "white",
+            backgroundColor: bg,
             flex: 1,
             paddingHorizontal: 10,
             borderRadius: 5,
@@ -75,15 +87,20 @@ export default function Header() {
           <TextInput
             placeholder="Search"
             style={{
-              backgroundColor: Colors.white,
+              backgroundColor: bg,
               width: "90%",
+              height: 40,
               fontWeight: "600",
               color: Colors.tomato,
             }}
+            placeholderTextColor={
+              bg === Colors.white ? Colors.tomato : Colors.white
+            }
           />
         </View>
         <View>
           <Ionicons
+            onPress={() => router.push("/notifications")}
             name="notifications-outline"
             size={28}
             color={Colors.tomato}

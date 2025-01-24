@@ -1,6 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { Colors } from "@/constants/Colors";
 
 type Props = {
   icon?: keyof typeof Ionicons.glyphMap; // Restrict to valid Ionicons names
@@ -35,7 +36,7 @@ export default function MyButton({
           paddingHorizontal: 15,
           width: length as any,
           padding: 10,
-          backgroundColor: bgColor || "white",
+          backgroundColor: bgColor || Colors.white,
         },
       ]}
       onPress={onClick}

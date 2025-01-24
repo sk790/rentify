@@ -40,7 +40,7 @@ function AppTabs() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ color, size }) => {
+        tabBarIcon: ({ color, size, focused }) => {
           let iconName: any;
           if (route.name === "Home") {
             iconName = "home-outline"; // Ionicons name for home
@@ -57,9 +57,14 @@ function AppTabs() {
           // You can return any component here (Icon, Image, etc.)
           return <Ionicons name={iconName} size={size} color={Colors.tomato} />;
         },
+
         tabBarActiveTintColor: Colors.tomato,
         tabBarInactiveTintColor: "gray",
-        tabBarStyle: { paddingBottom: 5, height: 60 }, // Custom styling
+        tabBarStyle: {
+          paddingBottom: 5,
+          height: 60,
+          backgroundColor: theme === "dark" ? Colors.black : Colors.white,
+        }, // Custom styling
       })}
     >
       <Tab.Screen

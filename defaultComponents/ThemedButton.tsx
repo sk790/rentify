@@ -14,7 +14,7 @@ type ThemedButtonProps = TouchableOpacityProps & {
   title: string;
   lightColor?: string;
   darkColor?: string;
-  color: string;
+  color?: string;
   loading?: boolean;
   icon?: keyof typeof Ionicons.glyphMap;
   position?: "left" | "right";

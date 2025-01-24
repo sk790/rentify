@@ -1,5 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Product } from "@/types";
 import { Colors } from "@/constants/Colors";
@@ -11,6 +18,7 @@ import { ThemedView } from "@/defaultComponents/ThemedView";
 import ThreeDotDrawer from "./ui/ThreeDots";
 import UpdateProductModal from "./ui/UpdateProductModal";
 import { useModal } from "@/context/ModalContext";
+import { ThemedText } from "@/defaultComponents/ThemedText";
 
 type Props = {
   product: Product;
@@ -21,6 +29,8 @@ type Props = {
 };
 
 export default function MyAdCard({ product, onDelete, myAds }: Props) {
+  const theme = useColorScheme();
+  const bg = theme === "dark" ? Colors.black : Colors.white;
   const { updateFavorite, setProducts, setMyAds } = useProducts();
   const { openProductModal } = useModal();
   const [isAvailable, setIsAvailable] = useState(
@@ -82,7 +92,7 @@ export default function MyAdCard({ product, onDelete, myAds }: Props) {
       title: "Edit",
       onPress: () => onEdit?.(),
       icon: "pencil",
-      color: "black",
+      color: Colors.tomato,
     },
     {
       title: "Delete",
@@ -100,19 +110,18 @@ export default function MyAdCard({ product, onDelete, myAds }: Props) {
         })
       }
     >
-      <View
+      <ThemedView
         style={{
           flexDirection: "column",
           justifyContent: "space-between",
           width: "100%",
-          backgroundColor: "white",
           borderRadius: 10,
           padding: 10,
-          borderColor: Colors.gray,
+          borderColor: Colors.tomato,
           borderWidth: StyleSheet.hairlineWidth,
         }}
       >
-        <View style={{ flexDirection: "row", gap: 10 }}>
+        <ThemedView style={{ flexDirection: "row", gap: 10 }}>
           <ThemedView style={{ flexDirection: "row", gap: 10, flex: 1 }}>
             <Image
               source={{ uri: product.images[0] }}
@@ -125,35 +134,19 @@ export default function MyAdCard({ product, onDelete, myAds }: Props) {
               }}
             >
               <View>
-                <Text style={{ fontWeight: "500" }}>{product.title}</Text>
-                <Text>Rs {product.price}</Text>
+                <ThemedText type="defaultSemiBold">{product.title}</ThemedText>
+                <ThemedText>Rs {product.price}</ThemedText>
               </View>
               <View
                 style={{ flexDirection: "row", gap: 10, alignItems: "center" }}
               >
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <Ionicons name="eye-outline" size={16} color="#f50" />
-                  <Text
-                    style={{
-                      fontWeight: "600",
-                      fontSize: 12,
-                      color: Colors.gray,
-                    }}
-                  >
-                    25
-                  </Text>
+                  <ThemedText style={{ fontSize: 12 }}> 25</ThemedText>
                 </View>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <Ionicons name="heart" size={16} color="#f55" />
-                  <Text
-                    style={{
-                      fontWeight: "600",
-                      fontSize: 12,
-                      color: Colors.gray,
-                    }}
-                  >
-                    123
-                  </Text>
+                  <ThemedText style={{ fontSize: 12 }}> 123</ThemedText>
                 </View>
               </View>
             </View>
@@ -175,7 +168,7 @@ export default function MyAdCard({ product, onDelete, myAds }: Props) {
               </>
             )}
           </View>
-        </View>
+        </ThemedView>
         {myAds && (
           <ThemedView style={{ flexDirection: "row", gap: 10 }}>
             <ThemedButton
@@ -186,7 +179,7 @@ export default function MyAdCard({ product, onDelete, myAds }: Props) {
               onPress={() => updateStatus(product._id)}
             />
             <ThemedButton
-              color="white"
+              color={Colors.white}
               title="Sell faster"
               style={{ flex: 1 }}
               variant="default"
@@ -194,7 +187,7 @@ export default function MyAdCard({ product, onDelete, myAds }: Props) {
           </ThemedView>
         )}
         {product && <UpdateProductModal product={product} />}
-      </View>
+      </ThemedView>
     </TouchableOpacity>
   );
 }

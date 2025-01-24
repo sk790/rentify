@@ -1,17 +1,8 @@
-import {
-  ActivityIndicator,
-  Alert,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from "react-native";
+import { ActivityIndicator, Alert, Image, useColorScheme } from "react-native";
 import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
-import { useFormateDate } from "@/hooks/useFormateDate";
+import { useFormateDateWithYear } from "@/hooks/useFormateDate";
 
 import { ThemedView } from "@/defaultComponents/ThemedView";
 import { ThemedText } from "@/defaultComponents/ThemedText";
@@ -25,10 +16,11 @@ import { BASE_URL } from "@env";
 import { User } from "@/types";
 import MyModel from "./MyModel";
 import { useModal } from "@/context/ModalContext";
+
 export default function ProfileCard({ user, me }: userProps) {
   const [imageLoading, setImageLoading] = useState(false);
   const theme = useColorScheme();
-  const iconTheme = theme === "light" ? "black" : "white";
+  const iconTheme = theme === "light" ? "black" : Colors.white;
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const { openModal } = useModal();
 
@@ -145,7 +137,7 @@ export default function ProfileCard({ user, me }: userProps) {
         ) : (
           <ThemedButton
             title="Call"
-            color="white"
+            color={Colors.white}
             icon="call-outline"
             style={{ width: "30%" }}
             variant="default"
@@ -153,15 +145,14 @@ export default function ProfileCard({ user, me }: userProps) {
         )}
       </ThemedView>
       <ThemedView style={{ flexDirection: "row", gap: 5 }}>
-        <Ionicons name="calendar" size={24} color={Colors.tomato} />
+        <Ionicons name="calendar-outline" size={24} color={Colors.tomato} />
         <ThemedText type="defaultSemiBold">
-          Member since {useFormateDate(user?.createdAt)}
+          Member since {useFormateDateWithYear(user?.createdAt)}
         </ThemedText>
-        {/* <MyButton color="white" bgColor="gray" label="Edit" /> */}
       </ThemedView>
 
       <ThemedView style={{ flexDirection: "row", gap: 5 }}>
-        <Ionicons name="mail" size={24} color={Colors.tomato} />
+        <Ionicons name="mail-outline" size={24} color={Colors.tomato} />
         <ThemedText>{user?.description || "About You"}</ThemedText>
       </ThemedView>
 
@@ -186,5 +177,3 @@ export default function ProfileCard({ user, me }: userProps) {
     </ThemedView>
   );
 }
-
-const styles = StyleSheet.create({});

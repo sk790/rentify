@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
   Image,
+  useColorScheme,
 } from "react-native";
 import { router } from "expo-router";
 import { Product } from "@/types";
@@ -19,6 +20,7 @@ import { ThemedText } from "@/defaultComponents/ThemedText";
 import { ThemedButton } from "@/defaultComponents/ThemedButton";
 import { useModal } from "@/context/ModalContext";
 import MyModel from "@/components/MyModel";
+import Header from "@/components/Header";
 
 export default function MyAds({ navigation }: { navigation: any }) {
   const { openModal } = useModal();
@@ -82,6 +84,7 @@ export default function MyAds({ navigation }: { navigation: any }) {
         light: Colors.lightGray,
       }}
     >
+      {/* <Header /> */}
       {/* Tabs */}
       <ThemedView style={styles.tabContainer}>
         <TouchableOpacity
@@ -161,12 +164,13 @@ export default function MyAds({ navigation }: { navigation: any }) {
         {selectedTab === "favorite" &&
           (favoriteProducts.length > 0 ? (
             favoriteProducts.map((product: Product) => (
-              <MyAdCard
-                key={product._id}
-                product={product}
-                myAds={false}
-                onRemoveFavorite={() => updateFavorite(product)}
-              />
+              <ThemedView key={product._id} style={{ marginVertical: 10 }}>
+                <MyAdCard
+                  product={product}
+                  myAds={false}
+                  onRemoveFavorite={() => updateFavorite(product)}
+                />
+              </ThemedView>
             ))
           ) : (
             <View style={styles.emptyState}>
@@ -208,7 +212,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   activeTabText: {
-    color: "white",
+    color: Colors.white,
     fontWeight: "bold",
   },
   underline: {

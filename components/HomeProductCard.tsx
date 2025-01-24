@@ -1,4 +1,11 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
@@ -7,6 +14,8 @@ import { useFormateDate } from "@/hooks/useFormateDate";
 import { BASE_URL } from "@env";
 import { useProducts } from "@/context/ProductContext";
 import { useAuth } from "@/context/AuthContext";
+import { ThemedView } from "@/defaultComponents/ThemedView";
+import { ThemedText } from "@/defaultComponents/ThemedText";
 export default function HomeProductCard({
   product,
   distance,
@@ -21,8 +30,10 @@ export default function HomeProductCard({
   useEffect(() => {
     setLike(favoriteProducts.some((p: Product) => p._id === product._id));
   }, [favoriteProducts]);
+  const theme = useColorScheme();
+  const bg = theme === "dark" ? Colors.black : Colors.white;
   return (
-    <View
+    <ThemedView
       style={{
         width: "100%",
         borderRadius: 10,
@@ -41,59 +52,58 @@ export default function HomeProductCard({
           size={32}
         />
       </TouchableOpacity>
-      <View style={{ alignItems: "center" }}>
+      <ThemedView style={{ alignItems: "center" }}>
         <Image
           source={{
             uri: product.images[0],
           }}
           style={{ width: "100%", height: 150, borderRadius: 10 }}
         />
-      </View>
-      <View style={{ marginTop: 10 }}>
-        <Text style={{ fontSize: 14, fontWeight: "600" }}>
+      </ThemedView>
+      <ThemedView style={{ marginTop: 10 }}>
+        <ThemedText>
           ₹ {product.price}/{product.timePeriod}
-        </Text>
-        <Text>{product.productName}</Text>
-        <View
+        </ThemedText>
+        <ThemedText>{product.productName}</ThemedText>
+        <ThemedView
           style={{
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
-            width: "100%",
           }}
         >
-          <View
+          <ThemedView
             style={{
               flexDirection: "row",
               alignItems: "center",
               marginTop: 5,
             }}
           >
-            <Ionicons name="location-outline" size={16} color="gray" />
-            <Text style={{ fontSize: 12, color: Colors.gray }}>
+            <Ionicons name="location-outline" size={16} color={Colors.tomato} />
+            <ThemedText type="defaultSemiBold" style={{ fontSize: 12 }}>
               {product.address}
-            </Text>
-          </View>
-          <Text style={{ fontSize: 12, color: Colors.gray, fontWeight: "600" }}>
+            </ThemedText>
+          </ThemedView>
+          <ThemedText type="defaultSemiBold" style={{ fontSize: 12 }}>
             {new Date(product.createdAt).toDateString() ===
             new Date().toDateString()
               ? "Today"
               : useFormateDate(product.createdAt)}
-          </Text>
-        </View>
-        <View
+          </ThemedText>
+        </ThemedView>
+        <ThemedView
           style={{ flexDirection: "row", alignItems: "center", width: "100%" }}
         >
-          <Text
+          <ThemedText
+            type="defaultSemiBold"
+            darkColor="gray"
             style={{
               fontSize: 12,
-              color: Colors.gray,
-              fontWeight: "600",
               flex: 1,
             }}
           >
             {distance} km
-          </Text>
+          </ThemedText>
           <Ionicons
             name={
               product?.status === "Available"
@@ -103,9 +113,9 @@ export default function HomeProductCard({
             size={14}
             color={product?.status === "Available" ? "green" : "red"}
           />
-        </View>
-      </View>
-    </View>
+        </ThemedView>
+      </ThemedView>
+    </ThemedView>
   );
 }
 

@@ -16,6 +16,8 @@ import { ThemedButton } from "@/defaultComponents/ThemedButton";
 import { ThemedView } from "@/defaultComponents/ThemedView";
 import Divider from "@/components/ui/Divider";
 import { Ionicons } from "@expo/vector-icons";
+import { Colors } from "@/constants/Colors";
+import ParallaxScrollView from "@/defaultComponents/ParallaxScrollView";
 
 export default function reviewProduct({ navigation }: any) {
   const { data } = useLocalSearchParams();
@@ -48,9 +50,11 @@ export default function reviewProduct({ navigation }: any) {
 
   return (
     <>
-      <Stack.Screen options={{ title: "Review Product" }} />
-      <ScrollView>
-        <ThemedView style={{ margin: 10, borderRadius: 5, padding: 10 }}>
+      <Stack.Screen options={{ headerShown: false }} />
+      <ParallaxScrollView
+        headerBackgroundColor={{ dark: "black", light: Colors.white }}
+      >
+        <ThemedView style={{ padding: 10, borderRadius: 5 }}>
           <ThemedView>
             <ThemedText type="defaultSemiBold">Category</ThemedText>
             <ThemedText style={{ color: "tomato", fontSize: 15 }}>
@@ -145,7 +149,7 @@ export default function reviewProduct({ navigation }: any) {
             />
           </View>
         </ThemedView>
-      </ScrollView>
+      </ParallaxScrollView>
     </>
   );
 }

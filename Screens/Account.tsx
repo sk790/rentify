@@ -91,7 +91,7 @@ export default function Account({ navigation }: { navigation: any }) {
         />
         <ThemedButton
           title="Logout"
-          color="white"
+          color={Colors.white}
           onPress={handleLogout}
           style={{ marginHorizontal: 10, width: "50%" }}
           icon="log-out-outline"
