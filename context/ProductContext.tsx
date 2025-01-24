@@ -5,11 +5,13 @@ import { BASE_URL } from "@env";
 interface ProductContextType {
   products: Product[];
   setProducts: (products: Product[]) => void;
-  favoriteProducts: any;
+  favoriteProducts: Product[];
   setFavoriteProducts: (products: Product[]) => void;
   myAds: Product[];
-  setMyAds: (products: Product[]) => void;
-  updateFavorite: (product: Product) => void;
+  setMyAds: (products: Product[] | ((prev: Product[]) => Product[])) => void;
+  updateFavorite: (product: Product) => Promise<void>;
+  updateProductData: Product | undefined; // Current product being updated
+  setUpdateProduct: (product: Product) => void;
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -18,10 +20,9 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
   const [products, setProductsState] = useState<Product[]>([]);
   const [favoriteProducts, setFavoriteProductsState] = useState<Product[]>([]);
   const [myAds, setMyAdsState] = useState<Product[]>([]);
-
-  const setMyAds = (newMyAds: Product[] | ((prev: Product[]) => Product[])) => {
-    setMyAdsState(newMyAds);
-  };
+  const [updateProductData, setUpdateProductDataState] = useState<
+    Product | undefined
+  >(undefined);
 
   const setProducts = (newProducts: Product[]) => {
     setProductsState(newProducts);
@@ -29,6 +30,16 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
 
   const setFavoriteProducts = (newFavoriteProducts: Product[]) => {
     setFavoriteProductsState(newFavoriteProducts);
+  };
+
+  const setMyAds = (newMyAds: Product[] | ((prev: Product[]) => Product[])) => {
+    setMyAdsState((prev) =>
+      typeof newMyAds === "function" ? newMyAds(prev) : newMyAds
+    );
+  };
+
+  const setUpdateProduct = (product: Product) => {
+    setUpdateProductDataState(product);
   };
 
   const updateFavorite = async (product: Product) => {
@@ -39,20 +50,25 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
           method: "PUT",
         }
       );
-      const data = await res.json();
-      // console.log(data);
-      if (res.ok) {
-        if (favoriteProducts.some((fav: Product) => fav._id === product._id)) {
-          //fav._id is the id of the product which is stored in users favorite list not favorite schema
-          setFavoriteProducts(
-            favoriteProducts.filter((fav: Product) => fav._id !== product._id)
-          );
-        } else {
-          setFavoriteProducts([...favoriteProducts, { ...product }]);
-        }
+      if (!res.ok) {
+        throw new Error("Failed to update favorite status");
+      }
+
+      const isAlreadyFavorite = favoriteProducts.some(
+        (fav) => fav._id === product._id
+      );
+
+      if (isAlreadyFavorite) {
+        // Remove from favorites
+        setFavoriteProducts(
+          favoriteProducts.filter((fav) => fav._id !== product._id)
+        );
+      } else {
+        // Add to favorites
+        setFavoriteProducts([...favoriteProducts, product]);
       }
     } catch (error) {
-      console.log(error);
+      console.error("Error updating favorite:", error);
     }
   };
 
@@ -66,6 +82,8 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
         myAds,
         setMyAds,
         updateFavorite,
+        setUpdateProduct,
+        updateProductData,
       }}
     >
       {children}

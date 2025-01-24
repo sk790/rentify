@@ -19,6 +19,7 @@ import ThreeDotDrawer from "./ui/ThreeDots";
 import UpdateProductModal from "./ui/UpdateProductModal";
 import { useModal } from "@/context/ModalContext";
 import { ThemedText } from "@/defaultComponents/ThemedText";
+import MyAlert from "./ui/MyAlert";
 
 type Props = {
   product: Product;
@@ -29,10 +30,10 @@ type Props = {
 };
 
 export default function MyAdCard({ product, onDelete, myAds }: Props) {
-  const theme = useColorScheme();
-  const bg = theme === "dark" ? Colors.black : Colors.white;
-  const { updateFavorite, setProducts, setMyAds } = useProducts();
-  const { openProductModal } = useModal();
+  const { updateFavorite, setProducts, setMyAds, setUpdateProduct } =
+    useProducts();
+  const { openAlertModal, closeAlertModal } = useModal();
+
   const [isAvailable, setIsAvailable] = useState(
     product.status === "Available" ? true : false
   );
@@ -46,7 +47,7 @@ export default function MyAdCard({ product, onDelete, myAds }: Props) {
         },
       });
       const data = await res.json();
-
+      closeAlertModal();
       if (res.ok) {
         updateFavorite(product);
         setProducts((prev: Product[]) =>
@@ -84,7 +85,10 @@ export default function MyAdCard({ product, onDelete, myAds }: Props) {
     }
   };
   const onEdit = () => {
-    openProductModal();
+    router.push({
+      pathname: "/updateProduct",
+      params: { updateFormData: JSON.stringify(product) },
+    });
   };
 
   const titles = [
@@ -96,7 +100,7 @@ export default function MyAdCard({ product, onDelete, myAds }: Props) {
     },
     {
       title: "Delete",
-      onPress: () => handleDelete(product._id),
+      onPress: () => openAlertModal(),
       icon: "trash",
       color: "red",
     },
@@ -186,7 +190,12 @@ export default function MyAdCard({ product, onDelete, myAds }: Props) {
             />
           </ThemedView>
         )}
-        {product && <UpdateProductModal product={product} />}
+        <MyAlert
+          message="Are you sure you want to delete this product"
+          title="Delete"
+          onCancel={closeAlertModal}
+          onConfirm={() => handleDelete(product._id)}
+        />
       </ThemedView>
     </TouchableOpacity>
   );

@@ -4,6 +4,7 @@ import { router, Stack } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
+import { ThemedView } from "@/defaultComponents/ThemedView";
 
 export default function ProductDetailPageHeader() {
   const inset = useSafeAreaInsets();
@@ -13,12 +14,12 @@ export default function ProductDetailPageHeader() {
         options={{
           headerShown: true,
           header: () => (
-            <View
+            <ThemedView
               style={[
                 {
                   flexDirection: "row",
+                  paddingHorizontal: 20,
                   justifyContent: "space-between",
-                  marginHorizontal: 15,
                 },
                 { paddingTop: inset.top },
               ]}
@@ -34,7 +35,7 @@ export default function ProductDetailPageHeader() {
               <TouchableOpacity>
                 <Ionicons name="share-social" size={28} color={Colors.tomato} />
               </TouchableOpacity>
-            </View>
+            </ThemedView>
           ),
         }}
       />

@@ -9,6 +9,7 @@ import {
   Animated,
   ScrollView,
   Alert,
+  useColorScheme,
 } from "react-native";
 import { Colors } from "@/constants/Colors"; // Add your colors or use default values
 import { Ionicons } from "@expo/vector-icons";
@@ -20,32 +21,41 @@ import { ThemedText } from "@/defaultComponents/ThemedText";
 import { BASE_URL } from "@env";
 import { useAuth } from "@/context/AuthContext";
 import InputField from "./InputField";
+import MyDropdown from "../MyDropdown";
+import { category, period, status } from "@/constants/Data";
+import { useProducts } from "@/context/ProductContext";
+import { router } from "expo-router";
 
 export default function UpdateProductModal({ product }: { product: Product }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [animation] = useState(new Animated.Value(0)); // Animation value for smooth transitions
   const { closeProductModal, isProductModalVisible } = useModal();
   const [loading, setLoading] = useState(false);
+  const theme = useColorScheme();
 
-  const [productData, setProductData] = useState<Product | undefined>({
-    ...product,
-  });
+  const { updateProductData } = useProducts();
+  const [productData, setProductData] = useState<any>();
+
+  const [selectedPeriod, setSelectedPeriod] = useState<string | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
+
   useEffect(() => {
     if (isProductModalVisible) {
+      setProductData(updateProductData);
       setModalVisible(true);
       Animated.timing(animation, {
         toValue: 1,
-        duration: 400, // Smooth fade-in duration
+        duration: 300, // Smooth fade-in duration
         useNativeDriver: true,
       }).start();
     } else {
       Animated.timing(animation, {
         toValue: 0,
-        duration: 400, // Smooth fade-out duration
+        duration: 100, // Smooth fade-out duration
         useNativeDriver: true,
       }).start(() => setModalVisible(false)); // Close modal after animation ends
     }
-  }, [isProductModalVisible]);
+  }, [isProductModalVisible, closeProductModal, modalVisible, animation]);
 
   const modalTranslateY = animation.interpolate({
     inputRange: [0, 1],
@@ -54,8 +64,7 @@ export default function UpdateProductModal({ product }: { product: Product }) {
 
   const handleProductUpdate = async () => {
     try {
-      //   setProductData((prev: Product) => prev);
-
+      console.log(productData);
       closeProductModal();
     } catch (error) {
       setLoading(false);
@@ -67,6 +76,15 @@ export default function UpdateProductModal({ product }: { product: Product }) {
       ...prev,
       [key]: value,
     }));
+  };
+
+  const handlePeriodChange = (value: string | null) => {
+    setSelectedPeriod(value);
+    updateProductData.timePeriod = value as string;
+  };
+  const handleStatusChange = (value: string | null) => {
+    setSelectedStatus(value);
+    updateProductData.status = value as string;
   };
 
   return (
@@ -81,6 +99,11 @@ export default function UpdateProductModal({ product }: { product: Product }) {
           <Animated.View
             style={[
               styles.modalContainer,
+              {
+                backgroundColor: theme === "dark" ? Colors.black : Colors.white,
+                borderWidth: 1,
+                borderColor: Colors.gray,
+              },
               { transform: [{ translateY: modalTranslateY }] },
             ]}
           >
@@ -91,7 +114,9 @@ export default function UpdateProductModal({ product }: { product: Product }) {
                 alignItems: "center",
               }}
             >
-              <ThemedText>Edit Product</ThemedText>
+              <ThemedText type="subtitle" style={{ flex: 1 }}>
+                Edit Product
+              </ThemedText>
               <Ionicons
                 onPress={closeProductModal}
                 name="close"
@@ -108,6 +133,8 @@ export default function UpdateProductModal({ product }: { product: Product }) {
                   handleInputChange("productName", text)
                 }
                 placeholder="Enter product name"
+                helperText="This is the name of the product"
+                required
               />
               <InputField
                 label="Title"
@@ -115,12 +142,65 @@ export default function UpdateProductModal({ product }: { product: Product }) {
                 value={productData?.title}
                 onChange={(text: string) => handleInputChange("title", text)}
                 placeholder="Enter title"
+                required
               />
 
+              <MyDropdown
+                label="Select Period"
+                required
+                data={period}
+                onChange={handlePeriodChange}
+              />
+              <InputField
+                label="Price"
+                name="price"
+                value={productData?.price.toString()}
+                onChange={(text: string) => handleInputChange("price", text)}
+                placeholder="Enter Price"
+                required
+                type="number-pad"
+              />
+              <InputField
+                label="Description"
+                name="description"
+                value={productData?.description}
+                onChange={(text: string) =>
+                  handleInputChange("description", text)
+                }
+                placeholder="Enter Description"
+                required
+                multiline
+                line={2}
+              />
+
+              <InputField
+                label="Address"
+                name="address"
+                value={productData?.address}
+                onChange={(text: string) => handleInputChange("address", text)}
+                placeholder="Enter Address"
+                required
+                helperText="address should be matched with your product."
+              />
+
+              <MyDropdown
+                label="Select Status"
+                required
+                data={status}
+                onChange={handleStatusChange}
+              />
               <ThemedButton
+                icon="arrow-forward-outline"
+                position="right"
+                style={{ marginTop: 20 }}
                 color={Colors.white}
-                title="Update"
-                onPress={handleProductUpdate}
+                title="Next"
+                onPress={() =>
+                  router.push({
+                    pathname: "/(listing)/add-cordinets",
+                    params: { formData: JSON.stringify(productData) },
+                  })
+                }
               />
             </ScrollView>
           </Animated.View>

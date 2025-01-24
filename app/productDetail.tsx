@@ -18,6 +18,7 @@ import { ThemedText } from "@/defaultComponents/ThemedText";
 import Divider from "@/components/ui/Divider";
 import ImageSlider from "@/components/ui/ImageSlider";
 import UserMap from "@/components/ui/UsreMap";
+import { ThemedView } from "@/defaultComponents/ThemedView";
 
 export default function productDetail() {
   const { productId } = useLocalSearchParams();
@@ -52,9 +53,9 @@ export default function productDetail() {
         }}
       />
       <ScrollView>
-        <View style={{ marginBottom: 50 }}>
+        <ThemedView>
           {product?.images && <ImageSlider images={product.images} />}
-          <View style={{ marginHorizontal: 15, marginTop: 10 }}>
+          <ThemedView style={{ marginHorizontal: 15, marginTop: 10 }}>
             <View
               style={{
                 flexDirection: "row",
@@ -63,13 +64,13 @@ export default function productDetail() {
                 alignItems: "center",
               }}
             >
-              <Text style={{ fontSize: 20, fontWeight: "600" }}>
+              <ThemedText style={{ fontSize: 20, fontWeight: "600" }}>
                 <Image
                   source={require("../assets/images/rupee-indian.png")}
                   style={{ width: 16, height: 16, tintColor: Colors.tomato }}
                 />
                 {product?.price} / {product?.timePeriod}
-              </Text>
+              </ThemedText>
               <TouchableOpacity onPress={() => updateFavorite(product!)}>
                 <Ionicons
                   name={
@@ -84,15 +85,15 @@ export default function productDetail() {
                 />
               </TouchableOpacity>
             </View>
-            <Text style={{ fontSize: 16, fontWeight: "600" }}>
+            <ThemedText style={{ fontSize: 16, fontWeight: "600" }}>
               {product?.productName}
-            </Text>
+            </ThemedText>
             <View
               style={{
                 flexDirection: "row",
                 width: "100%",
-                alignItems: "center",
-                marginTop: 2,
+                marginTop: 10,
+                gap: 5,
               }}
             >
               <Ionicons
@@ -100,11 +101,11 @@ export default function productDetail() {
                 size={18}
                 color={Colors.tomato}
               />
-              <Text style={{ fontSize: 14, color: Colors.gray }}>
+              <ThemedText numberOfLines={2} style={{ fontSize: 12 }}>
                 {product?.address}
-              </Text>
+              </ThemedText>
             </View>
-          </View>
+          </ThemedView>
           <Divider />
           <View
             style={{
@@ -125,7 +126,7 @@ export default function productDetail() {
             </ThemedText>
           </View>
           <Divider />
-          <View style={{ marginHorizontal: 15, gap: 10 }}>
+          <ThemedView style={{ marginHorizontal: 15, gap: 10 }}>
             {/* <Divider /> */}
             <ThemedText type="defaultSemiBold">Details</ThemedText>
             <View style={{ flexDirection: "row", gap: 30 }}>
@@ -140,25 +141,22 @@ export default function productDetail() {
                 {product?.category}
               </ThemedText>
             </View>
-          </View>
+          </ThemedView>
           <Divider />
-          <View>
-            <Text style={{ fontSize: 16, fontWeight: "600", margin: 10 }}>
-              Description
-            </Text>
-            <Text style={{ fontSize: 14, marginHorizontal: 10, marginTop: 5 }}>
+          <View style={{ marginHorizontal: 10, gap: 10 }}>
+            <ThemedText type="defaultSemiBold">Description</ThemedText>
+            <ThemedText type="default" style={{ fontSize: 14 }}>
               {product?.description}
-            </Text>
+            </ThemedText>
           </View>
           <Divider />
           <TouchableOpacity onPress={() => userProfile(product?.user?._id!)}>
-            <View
+            <ThemedView
               style={{
                 margin: 10,
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-between",
-                backgroundColor: Colors.white,
                 borderColor: Colors.tomato,
                 borderWidth: 2,
                 padding: 10,
@@ -166,7 +164,7 @@ export default function productDetail() {
                 marginBottom: 10,
               }}
             >
-              <View
+              <ThemedView
                 style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
               >
                 <Image
@@ -177,32 +175,32 @@ export default function productDetail() {
                   }}
                   style={{ height: 50, width: 50, borderRadius: 50 }}
                 />
-                <Text style={{ fontWeight: "600", fontSize: 20 }}>
+                <ThemedText type="defaultSemiBold">
                   {product?.user?.name}
-                </Text>
-              </View>
+                </ThemedText>
+              </ThemedView>
               <Ionicons
                 name="chevron-forward-outline"
                 size={28}
                 color={Colors.tomato}
               />
-            </View>
+            </ThemedView>
           </TouchableOpacity>
           <View>
             {product?.productCordinates && (
               <UserMap cordinets={product.productCordinates} />
             )}
           </View>
-        </View>
+        </ThemedView>
       </ScrollView>
-      <View
+      <ThemedView
         style={{
           position: "absolute",
           bottom: 0,
           width: "100%",
           flexDirection: "row",
           padding: 5,
-
+          borderRadius: 10,
           justifyContent: "space-between",
         }}
       >
@@ -253,7 +251,7 @@ export default function productDetail() {
             </Text>
           </View>
         </TouchableOpacity>
-      </View>
+      </ThemedView>
     </>
   );
 }

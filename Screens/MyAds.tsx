@@ -141,7 +141,7 @@ export default function MyAds({ navigation }: { navigation: any }) {
                   onEdit={() => handleEdit(product)}
                   myAds={true}
                 />
-                <MyModel product={product} />
+                {/* <MyModel product={product} /> */}
               </TouchableOpacity>
             ))
           ) : (

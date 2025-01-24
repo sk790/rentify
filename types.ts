@@ -31,6 +31,7 @@ export interface Product {
   status: string;
   productCordinates: Location;
   isFavorite: boolean;
+  period: string;
   __v: number;
 }
 

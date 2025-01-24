@@ -14,7 +14,7 @@ type Props = {
 
 export default function MyDropdown({ onChange, data, label, required }: Props) {
   const theme = useColorScheme();
-  const [value, setValue] = useState<string | null>(null);
+  const [value, setValue] = useState<string | null>();
   const [isFocus, setIsFocus] = useState(false);
 
   const handleChange = (item: { label: string; value: string }) => {

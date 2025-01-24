@@ -16,6 +16,8 @@ import ImagePicker from "@/components/ui/ImagePicker";
 export default function addcordinets() {
   const { formData } = useLocalSearchParams();
   const data = JSON.parse(formData as string);
+  console.log(data.cordinets, "data");
+
   const { fetchLocation, location } = useGetLocation();
   const [btnStyle, setBtnStyle] = useState("");
   const [locationBtnLoading, setLocationBtnLoading] = useState(false);

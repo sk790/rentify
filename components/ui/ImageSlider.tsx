@@ -1,4 +1,5 @@
 import { Colors } from "@/constants/Colors";
+import { ThemedView } from "@/defaultComponents/ThemedView";
 import React, { useState } from "react";
 import {
   View,
@@ -49,7 +50,7 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
   });
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <View {...panResponder.panHandlers}>
         <Image
           source={{ uri: images[currentIndex] }}
@@ -95,7 +96,7 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
           <Text style={styles.buttonText}>{">"}</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ThemedView>
   );
 };
 
@@ -104,7 +105,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f8f8f8",
+    marginTop: 10,
   },
   image: {
     height: 300,
@@ -143,7 +144,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   disabledButton: {
-    backgroundColor: "rgba(0, 0, 0, 0.2)", // Lighter background to indicate it's disabled
+    backgroundColor: "gray", // Lighter background to indicate it's disabled
   },
   buttonText: {
     color: "#fff",

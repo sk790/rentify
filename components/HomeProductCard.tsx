@@ -64,12 +64,13 @@ export default function HomeProductCard({
         <ThemedText>
           ₹ {product.price}/{product.timePeriod}
         </ThemedText>
-        <ThemedText>{product.productName}</ThemedText>
+        <ThemedText numberOfLines={2}>{product.productName}</ThemedText>
         <ThemedView
           style={{
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
+            gap: 5,
           }}
         >
           <ThemedView
@@ -77,14 +78,19 @@ export default function HomeProductCard({
               flexDirection: "row",
               alignItems: "center",
               marginTop: 5,
+              flex: 1,
             }}
           >
             <Ionicons name="location-outline" size={16} color={Colors.tomato} />
-            <ThemedText type="defaultSemiBold" style={{ fontSize: 12 }}>
+            <ThemedText
+              numberOfLines={1}
+              type="defaultSemiBold"
+              style={{ fontSize: 11 }}
+            >
               {product.address}
             </ThemedText>
           </ThemedView>
-          <ThemedText type="defaultSemiBold" style={{ fontSize: 12 }}>
+          <ThemedText type="defaultSemiBold" style={{ fontSize: 11 }}>
             {new Date(product.createdAt).toDateString() ===
             new Date().toDateString()
               ? "Today"
@@ -95,6 +101,7 @@ export default function HomeProductCard({
           style={{ flexDirection: "row", alignItems: "center", width: "100%" }}
         >
           <ThemedText
+            numberOfLines={1}
             type="defaultSemiBold"
             darkColor="gray"
             style={{

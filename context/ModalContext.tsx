@@ -7,6 +7,10 @@ type ModalContextType = {
   isProductModalVisible: boolean;
   openProductModal: () => void;
   closeProductModal: () => void;
+  // alertModal
+  openAlertModal: () => void;
+  closeAlertModal: () => void;
+  isAlertModalVisible: boolean;
 };
 
 const ModalContext = createContext<ModalContextType | undefined>(undefined);
@@ -16,11 +20,14 @@ export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [isProductModalVisible, setProductModalVisible] = useState(false);
+  const [isAlertModalVisible, setAlertModalVisible] = useState(false);
 
   const openModal = () => setModalVisible(true);
   const closeModal = () => setModalVisible(false);
   const openProductModal = () => setProductModalVisible(true);
   const closeProductModal = () => setProductModalVisible(false);
+  const openAlertModal = () => setAlertModalVisible(true);
+  const closeAlertModal = () => setAlertModalVisible(false);
 
   return (
     <ModalContext.Provider
@@ -31,6 +38,9 @@ export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({
         openProductModal,
         closeProductModal,
         isProductModalVisible,
+        openAlertModal,
+        closeAlertModal,
+        isAlertModalVisible,
       }}
     >
       {children}

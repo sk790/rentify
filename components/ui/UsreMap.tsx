@@ -1,3 +1,5 @@
+import { Colors } from "@/constants/Colors";
+import { ThemedView } from "@/defaultComponents/ThemedView";
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, ActivityIndicator, Text } from "react-native";
 import MapView, { Marker } from "react-native-maps";
@@ -30,7 +32,7 @@ const UserMap = ({ cordinets }: Props) => {
   }
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       {location && (
         <MapView
           style={styles.map}
@@ -56,7 +58,7 @@ const UserMap = ({ cordinets }: Props) => {
           />
         </MapView>
       )}
-    </View>
+    </ThemedView>
   );
 };
 
@@ -64,8 +66,9 @@ const styles = StyleSheet.create({
   container: {
     height: 300,
     margin: 10,
+    paddingBottom: 50,
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: Colors.tomato,
   },
   map: {
     flex: 1,

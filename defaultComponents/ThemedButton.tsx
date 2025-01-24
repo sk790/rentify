@@ -78,8 +78,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 10, // Add spacing between elements
     borderRadius: 5,
-    padding: 8,
-    marginVertical: 5,
+    padding: 10,
   },
   outline: {
     borderWidth: 1,
