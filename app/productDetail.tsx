@@ -24,10 +24,11 @@ export default function productDetail() {
   const { productId } = useLocalSearchParams();
   const [product, setProduct] = useState<Product>();
   const [loading, setLoading] = useState(false);
-  const { products, favoriteProducts, updateFavorite } = useProducts();
+  const { allProducts, favoriteProducts, updateFavoriteProducts } =
+    useProducts();
 
   useEffect(() => {
-    const p = products.find((p) => p._id === productId);
+    const p = allProducts.find((p) => p._id === productId);
     setProduct(p);
   }, [favoriteProducts]);
 
@@ -71,7 +72,9 @@ export default function productDetail() {
                 />
                 {product?.price} / {product?.timePeriod}
               </ThemedText>
-              <TouchableOpacity onPress={() => updateFavorite(product!)}>
+              <TouchableOpacity
+                onPress={() => updateFavoriteProducts(product!, "toggle")}
+              >
                 <Ionicons
                   name={
                     favoriteProducts.some(

@@ -27,17 +27,22 @@ export default function MyAds({ navigation }: { navigation: any }) {
   const [selectedTab, setSelectedTab] = useState("myads");
   const underlineAnim = useRef(new Animated.Value(0)).current;
   const [loading, setLoading] = useState(false);
-  const { myAds, setMyAds, favoriteProducts, updateFavorite } = useProducts();
+  const {
+    myAdsProducts,
+    updateMyAdsProducts,
+    favoriteProducts,
+    updateFavoriteProducts,
+  } = useProducts();
   const [onRentProducts, setOnRentProducts] = useState<Product[]>([]);
 
   const handleDelete = (productId: string) => {
     // Logic for real-time deletion of product
-    setMyAds(myAds.filter((product: Product) => product._id !== productId));
+    updateMyAdsProducts(productId);
   };
 
   useEffect(() => {
     setOnRentProducts(
-      myAds.filter((product: Product) => product.status !== "Available")
+      myAdsProducts.filter((product: Product) => product.status !== "Available")
     );
   }, []);
   const handleEdit = (product: Product) => {
@@ -128,8 +133,8 @@ export default function MyAds({ navigation }: { navigation: any }) {
       {/* Tab Content */}
       <ScrollView style={styles.contentContainer}>
         {selectedTab === "myads" &&
-          (myAds.length > 0 ? (
-            myAds.map((product) => (
+          (myAdsProducts.length > 0 ? (
+            myAdsProducts.map((product) => (
               <TouchableOpacity
                 key={product._id}
                 onPress={() => gotodetailpage(product._id)}
@@ -168,7 +173,7 @@ export default function MyAds({ navigation }: { navigation: any }) {
                 <MyAdCard
                   product={product}
                   myAds={false}
-                  onRemoveFavorite={() => updateFavorite(product)}
+                  onRemoveFavorite={() => updateFavoriteProducts(product)}
                 />
               </ThemedView>
             ))

@@ -20,7 +20,6 @@ import ParallaxScrollView from "@/defaultComponents/ParallaxScrollView";
 import { ThemedText } from "@/defaultComponents/ThemedText";
 import { useLocation } from "@/context/LocationContext";
 import { ThemedButton } from "@/defaultComponents/ThemedButton";
-import MyButton from "@/components/ui/MyButton";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function categrisProducts() {

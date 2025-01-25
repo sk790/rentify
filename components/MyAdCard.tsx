@@ -20,6 +20,7 @@ import UpdateProductModal from "./ui/UpdateProductModal";
 import { useModal } from "@/context/ModalContext";
 import { ThemedText } from "@/defaultComponents/ThemedText";
 import MyAlert from "./ui/MyAlert";
+import { deleteProduct } from "@/actions";
 
 type Props = {
   product: Product;
@@ -30,7 +31,7 @@ type Props = {
 };
 
 export default function MyAdCard({ product, onDelete, myAds }: Props) {
-  const { updateFavorite, setProducts, setMyAds, setUpdateProduct } =
+  const { updateAllProducts, updateFavoriteProducts, updateMyAdsProducts } =
     useProducts();
   const { openAlertModal, closeAlertModal } = useModal();
 
@@ -38,27 +39,12 @@ export default function MyAdCard({ product, onDelete, myAds }: Props) {
     product.status === "Available" ? true : false
   );
   const handleDelete = async (productId: string) => {
-    if (!product._id) return;
-    try {
-      const res = await fetch(`${BASE_URL}/api/product/${productId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await res.json();
-      closeAlertModal();
-      if (res.ok) {
-        updateFavorite(product);
-        setProducts((prev: Product[]) =>
-          prev.filter((p: Product) => p._id !== productId)
-        );
-        alert(data.msg);
-        onDelete?.(productId);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    const data = await deleteProduct(product._id);
+    console.log(data, "delete from my ads");
+    updateMyAdsProducts(product, "delete");
+    updateAllProducts(product, "delete");
+    updateFavoriteProducts(product, "delete");
+    closeAlertModal();
   };
   const updateStatus = async (productId: string) => {
     let status = product.status === "Available" ? "Rented" : "Available";
@@ -75,9 +61,7 @@ export default function MyAdCard({ product, onDelete, myAds }: Props) {
       );
       if (res.ok) {
         setIsAvailable(!isAvailable);
-        setMyAds((prev: Product[]) =>
-          prev.map((p: Product) => (p._id === productId ? { ...p, status } : p))
-        );
+        // updateMyAdsProducts(product,"");
         router.reload();
       }
     } catch (error) {
@@ -166,7 +150,9 @@ export default function MyAdCard({ product, onDelete, myAds }: Props) {
               <ThreeDotDrawer titles={titles} />
             ) : (
               <>
-                <TouchableOpacity onPress={() => updateFavorite(product)}>
+                <TouchableOpacity
+                  onPress={() => updateFavoriteProducts(product, "toggle")}
+                >
                   <Ionicons name="heart" size={30} color={Colors.favorite} />
                 </TouchableOpacity>
               </>

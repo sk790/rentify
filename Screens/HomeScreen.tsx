@@ -24,7 +24,7 @@ import { ThemedView } from "@/defaultComponents/ThemedView";
 
 export default function HomeScreen() {
   const [loading, setLoading] = useState(false);
-  const { products, setProducts, setMyAds, setFavoriteProducts } =
+  const { allProducts, setAllProducts, setFavoriteProducts, setMyAdsProducts } =
     useProducts();
   const [distances, setDistances] = useState<number[]>([]);
   const { location } = useLocation();
@@ -37,12 +37,10 @@ export default function HomeScreen() {
     // console.log({ data });
     if (res.ok) {
       setFavoriteProducts(data.user.favorites);
-      setMyAds(data.user.products);
+      setMyAdsProducts(data.user.products);
       setUser(data.user);
     }
   };
-  const theme = useColorScheme();
-  const bg = theme === "dark" ? Colors.black : Colors.white;
 
   const getAllProducts = async () => {
     setLoading(true);
@@ -58,7 +56,7 @@ export default function HomeScreen() {
         setLoading(false);
         // console.log(data.products, "data");
 
-        setProducts(data.products);
+        setAllProducts(data.products);
         setDistances(data.distances);
       }
     } catch (error) {
@@ -114,7 +112,7 @@ export default function HomeScreen() {
           <ThemedView
             style={{ flexDirection: "row", flexWrap: "wrap", gap: 5 }}
           >
-            {products?.map((item: Product, index) => (
+            {allProducts?.map((item: Product, index) => (
               <TouchableOpacity
                 style={styles.productCard}
                 onPress={() => getProductDetails(item._id)}

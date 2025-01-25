@@ -13,7 +13,7 @@ export default function HorizontalProductCard({ products }: any) {
   const getProductDetails = (productId: number) => {
     router.push({ pathname: "/productDetail", params: { productId } });
   };
-  const { updateFavorite, favoriteProducts } = useProducts();
+  const { updateFavoriteProducts, favoriteProducts } = useProducts();
   return (
     <>
       {products?.map((product: any, index: number) => (
@@ -108,7 +108,7 @@ export default function HorizontalProductCard({ products }: any) {
                 }
                 size={28}
                 color={Colors.favorite}
-                onPress={() => updateFavorite(product)}
+                onPress={() => updateFavoriteProducts(product, "toggle")}
               />
               <Text style={{ fontSize: 12, fontWeight: "600" }}>
                 {useFormateDate(product.createdAt)}

@@ -12,14 +12,14 @@ export default function profile() {
   const { userId } = useLocalSearchParams();
   const [user, setUser] = useState<User | undefined>(undefined);
   const [userProducts, setUserProducts] = useState<Product[] | undefined>([]);
-  const { products } = useProducts();
+  const { allProducts } = useProducts();
   const { user: loggedInUser } = useAuth();
-  console.log({ logged: loggedInUser });
+  // console.log({ logged: loggedInUser });
 
   const [me, setMe] = useState(false);
   useEffect(() => {
-    const userProducts = products.filter((p) => p.user._id === userId);
-    const product = products.find((p) => p.user._id.toString() === userId);
+    const userProducts = allProducts.filter((p) => p.user._id === userId);
+    const product = allProducts.find((p) => p.user._id.toString() === userId);
     // console.log({ user: user });
 
     setMe(product?.user._id === loggedInUser?._id);

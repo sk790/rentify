@@ -21,7 +21,6 @@ import { ThemedText } from "@/defaultComponents/ThemedText";
 import MyDropdown from "./MyDropdown";
 import { BASE_URL } from "@env";
 import { useAuth } from "@/context/AuthContext";
-import MyInputField from "./ui/MyInput";
 import InputField from "./ui/InputField";
 
 export default function MyModel({ userData }: { userData?: User }) {

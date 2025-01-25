@@ -88,7 +88,7 @@ const ImagePicker = (formData: any) => {
       const data = await response.json();
       setLoading(false);
       if (response.ok) {
-        console.log("Upload successful:", data.secure_url);
+        // console.log("Upload successful:", data.secure_url);
         return data.secure_url; // The URL of the uploaded image
       } else {
         console.error("Upload failed:", data.error);

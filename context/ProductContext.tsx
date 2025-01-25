@@ -3,87 +3,113 @@ import { Product } from "@/types";
 import { BASE_URL } from "@env";
 
 interface ProductContextType {
-  products: Product[];
-  setProducts: (products: Product[]) => void;
+  allProducts: Product[];
+  setAllProducts: (products: Product[]) => void;
+
   favoriteProducts: Product[];
   setFavoriteProducts: (products: Product[]) => void;
-  myAds: Product[];
-  setMyAds: (products: Product[] | ((prev: Product[]) => Product[])) => void;
-  updateFavorite: (product: Product) => Promise<void>;
-  updateProductData: Product | undefined; // Current product being updated
-  setUpdateProduct: (product: Product) => void;
+
+  myAdsProducts: Product[];
+  setMyAdsProducts: (products: Product[]) => void;
+
+  updateMyAdsProducts: (
+    product: Product,
+    action: "add" | "delete" | "update"
+  ) => void;
+  updateFavoriteProducts: (
+    product: Product,
+    action: "toggle" | "productUpdate" | "delete"
+  ) => void;
+  updateAllProducts: (
+    product: Product,
+    action: "add" | "delete" | "update"
+  ) => void;
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
 export const ProductProvider = ({ children }: { children: ReactNode }) => {
-  const [products, setProductsState] = useState<Product[]>([]);
+  const [allProducts, setProductsState] = useState<Product[]>([]);
   const [favoriteProducts, setFavoriteProductsState] = useState<Product[]>([]);
-  const [myAds, setMyAdsState] = useState<Product[]>([]);
-  const [updateProductData, setUpdateProductDataState] = useState<
-    Product | undefined
-  >(undefined);
+  const [myAdsProducts, setMyAdsState] = useState<Product[]>([]);
 
-  const setProducts = (newProducts: Product[]) => {
-    setProductsState(newProducts);
+  const setAllProducts = (products: Product[]) => {
+    setProductsState(products);
   };
-
   const setFavoriteProducts = (newFavoriteProducts: Product[]) => {
     setFavoriteProductsState(newFavoriteProducts);
   };
-
-  const setMyAds = (newMyAds: Product[] | ((prev: Product[]) => Product[])) => {
-    setMyAdsState((prev) =>
-      typeof newMyAds === "function" ? newMyAds(prev) : newMyAds
-    );
+  const setMyAdsProducts = (newMyAds: Product[]) => {
+    setMyAdsState(newMyAds);
   };
 
-  const setUpdateProduct = (product: Product) => {
-    setUpdateProductDataState(product);
+  const updateAllProducts = (
+    product: Product,
+    action: "add" | "delete" | "update"
+  ) => {
+    if (action === "add") {
+      setAllProducts([...allProducts, product]);
+    } else if (action === "delete") {
+      setAllProducts(allProducts.filter((p) => p._id !== product._id));
+    } else if (action === "update") {
+      setAllProducts(
+        allProducts.map((p) => (p._id === product._id ? product : p))
+      );
+    }
   };
 
-  const updateFavorite = async (product: Product) => {
-    try {
-      const res = await fetch(
-        `${BASE_URL}/api/product/favorite/${product._id}`,
-        {
-          method: "PUT",
-        }
-      );
-      if (!res.ok) {
-        throw new Error("Failed to update favorite status");
-      }
-
-      const isAlreadyFavorite = favoriteProducts.some(
-        (fav) => fav._id === product._id
-      );
-
-      if (isAlreadyFavorite) {
-        // Remove from favorites
+  const updateFavoriteProducts = (
+    product: Product,
+    action: "toggle" | "productUpdate" | "delete"
+  ) => {
+    if (action === "toggle") {
+      const isExist = favoriteProducts.some((fav) => fav._id === product._id);
+      if (!isExist) {
+        setFavoriteProducts([...favoriteProducts, product]);
+      } else {
         setFavoriteProducts(
           favoriteProducts.filter((fav) => fav._id !== product._id)
         );
-      } else {
-        // Add to favorites
-        setFavoriteProducts([...favoriteProducts, product]);
       }
-    } catch (error) {
-      console.error("Error updating favorite:", error);
+    } else if (action === "productUpdate") {
+      setFavoriteProducts(
+        favoriteProducts.map((p) => (p._id === product._id ? product : p))
+      );
+    } else if (action === "delete") {
+      setFavoriteProducts(
+        favoriteProducts.filter((p) => p._id !== product._id)
+      );
+    }
+  };
+  const updateMyAdsProducts = (
+    product: Product,
+    action: "add" | "delete" | "update"
+  ) => {
+    if (action === "add") {
+      setMyAdsState([...myAdsProducts, product]);
+    } else if (action === "delete") {
+      setMyAdsState(myAdsProducts.filter((p) => p._id !== product._id));
+    } else if (action === "update") {
+      setMyAdsState(
+        myAdsProducts.map((p) => (p._id === product._id ? product : p))
+      );
     }
   };
 
   return (
     <ProductContext.Provider
       value={{
-        products,
-        setProducts,
+        allProducts,
+        myAdsProducts,
         favoriteProducts,
+
+        setAllProducts,
+        setMyAdsProducts,
         setFavoriteProducts,
-        myAds,
-        setMyAds,
-        updateFavorite,
-        setUpdateProduct,
-        updateProductData,
+
+        updateAllProducts,
+        updateMyAdsProducts,
+        updateFavoriteProducts,
       }}
     >
       {children}

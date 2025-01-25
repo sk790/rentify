@@ -40,7 +40,7 @@ export default function reviewProduct({ navigation }: any) {
       if (response.ok) {
         router.push("/");
         Alert.alert("Success", "Your data has been saved.");
-        router.reload();
+        // router.reload();
       } else {
         console.error("Error saving data:", responseData);
         Alert.alert("Error", "There was an issue saving your data.");

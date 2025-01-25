@@ -17,16 +17,17 @@ import { BASE_URL } from "@env";
 import { useProducts } from "@/context/ProductContext";
 import MyAlert from "@/components/ui/MyAlert";
 import { useModal } from "@/context/ModalContext";
+import { Product } from "@/types";
 
 export default function UpdateProduct() {
   const { openAlertModal, closeAlertModal } = useModal();
   const theme = useColorScheme();
   const { updateFormData } = useLocalSearchParams();
   const data = JSON.parse(updateFormData as string);
-  const { setProducts, setMyAds, setFavoriteProducts } = useProducts();
+  const { updateAllProducts, updateFavoriteProducts, updateMyAdsProducts } =
+    useProducts();
 
-  const [productData, setProductData] = useState(data);
-  const [alertModel, setAlertModel] = useState(false);
+  const [productData, setProductData] = useState<Product>(data);
 
   const handleInputChange = (key: string, value: string) => {
     setProductData((prev: any) => ({
@@ -60,35 +61,12 @@ export default function UpdateProduct() {
 
     Alert.alert("Success", "Product updated successfully");
     if (res.ok) {
-      setProducts((prev: Product[]) =>
-        prev.map((p: Product) => (p._id === productData._id ? productData : p))
-      );
-      setMyAds((prev: Product[]) =>
-        prev.map((p: Product) => (p._id === productData._id ? productData : p))
-      );
-      setFavoriteProducts((prev: Product[]) =>
-        prev.map((p: Product) => (p._id === productData._id ? productData : p))
-      );
+      updateAllProducts(productData, "update");
+      updateMyAdsProducts(productData, "update");
+      updateFavoriteProducts(productData, "productUpdate");
       router.back();
+      closeAlertModal();
     }
-  };
-  const msg = () => {
-    Alert.alert(
-      "Confirm Action", // Title
-      "Are you sure you want to proceed?", // Message
-      [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Action cancelled"),
-          style: "cancel", // Styling for the "Cancel" button
-        },
-        {
-          text: "OK",
-          onPress: () => console.log("Action confirmed"),
-        },
-      ],
-      { cancelable: true } // Allow dismissal by tapping outside the alert
-    );
   };
 
   return (

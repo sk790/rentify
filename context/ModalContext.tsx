@@ -4,9 +4,7 @@ type ModalContextType = {
   isModalVisible: boolean;
   openModal: () => void;
   closeModal: () => void;
-  isProductModalVisible: boolean;
-  openProductModal: () => void;
-  closeProductModal: () => void;
+
   // alertModal
   openAlertModal: () => void;
   closeAlertModal: () => void;
@@ -19,13 +17,11 @@ export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [isModalVisible, setModalVisible] = useState(false);
-  const [isProductModalVisible, setProductModalVisible] = useState(false);
   const [isAlertModalVisible, setAlertModalVisible] = useState(false);
-
+  //form update user profile
   const openModal = () => setModalVisible(true);
   const closeModal = () => setModalVisible(false);
-  const openProductModal = () => setProductModalVisible(true);
-  const closeProductModal = () => setProductModalVisible(false);
+
   const openAlertModal = () => setAlertModalVisible(true);
   const closeAlertModal = () => setAlertModalVisible(false);
 
@@ -35,9 +31,6 @@ export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({
         isModalVisible,
         openModal,
         closeModal,
-        openProductModal,
-        closeProductModal,
-        isProductModalVisible,
         openAlertModal,
         closeAlertModal,
         isAlertModalVisible,

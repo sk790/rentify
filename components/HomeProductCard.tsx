@@ -1,21 +1,13 @@
-import {
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from "react-native";
+import { Image, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { Product } from "@/types";
 import { useFormateDate } from "@/hooks/useFormateDate";
-import { BASE_URL } from "@env";
 import { useProducts } from "@/context/ProductContext";
-import { useAuth } from "@/context/AuthContext";
 import { ThemedView } from "@/defaultComponents/ThemedView";
 import { ThemedText } from "@/defaultComponents/ThemedText";
+import { toggleFavorite } from "@/actions";
 export default function HomeProductCard({
   product,
   distance,
@@ -23,15 +15,17 @@ export default function HomeProductCard({
   product: Product;
   distance: number;
 }) {
-  const { updateFavorite, favoriteProducts } = useProducts();
+  const { favoriteProducts, updateFavoriteProducts } = useProducts();
 
-  //this login for real time like state updation
   const [like, setLike] = useState(false);
   useEffect(() => {
-    setLike(favoriteProducts.some((p: Product) => p._id === product._id));
+    setLike(favoriteProducts.some((fav) => fav._id === product._id));
   }, [favoriteProducts]);
-  const theme = useColorScheme();
-  const bg = theme === "dark" ? Colors.black : Colors.white;
+
+  const handleFavorite = async (productId: string) => {
+    await toggleFavorite(productId);
+    updateFavoriteProducts(product, "toggle");
+  };
   return (
     <ThemedView
       style={{
@@ -46,7 +40,7 @@ export default function HomeProductCard({
         style={{ position: "absolute", top: 5, right: 5, zIndex: 1 }}
       >
         <Ionicons
-          onPress={() => updateFavorite(product)}
+          onPress={() => handleFavorite(product._id)}
           name={like ? "heart-sharp" : "heart-outline"}
           color={like ? Colors.favorite : Colors.tomato}
           size={32}
