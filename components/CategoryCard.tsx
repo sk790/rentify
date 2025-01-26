@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, useColorScheme, View } from "react-native";
+import { Image, StyleSheet, useColorScheme } from "react-native";
 import React from "react";
 import { ThemedText } from "@/defaultComponents/ThemedText";
 import { Colors } from "@/constants/Colors";

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, useColorScheme, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ThemedView } from "@/defaultComponents/ThemedView";
 import { ThemedText } from "@/defaultComponents/ThemedText";
 import { Colors } from "@/constants/Colors";

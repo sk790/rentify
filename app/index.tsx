@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import RootNavigator from "@/navigation/RootNavigator";
 
 export default function App() {

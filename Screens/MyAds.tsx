@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   View,
   Image,
-  useColorScheme,
 } from "react-native";
 import { router } from "expo-router";
 import { Product } from "@/types";
@@ -19,8 +18,8 @@ import { ThemedView } from "@/defaultComponents/ThemedView";
 import { ThemedText } from "@/defaultComponents/ThemedText";
 import { ThemedButton } from "@/defaultComponents/ThemedButton";
 import { useModal } from "@/context/ModalContext";
-import MyModel from "@/components/MyModel";
-import Header from "@/components/Header";
+import { getUserRentProducts } from "@/actions";
+import { useAuth } from "@/context/AuthContext";
 
 export default function MyAds({ navigation }: { navigation: any }) {
   const { openModal } = useModal();
@@ -32,19 +31,16 @@ export default function MyAds({ navigation }: { navigation: any }) {
     updateMyAdsProducts,
     favoriteProducts,
     updateFavoriteProducts,
+    myProductsOnRent,
   } = useProducts();
-  const [onRentProducts, setOnRentProducts] = useState<Product[]>([]);
 
-  const handleDelete = (productId: string) => {
+  // console.log(myProductsOnRent, "myProductsOnRent");
+
+  const handleDelete = (product: Product) => {
     // Logic for real-time deletion of product
-    updateMyAdsProducts(productId);
+    updateMyAdsProducts(product, "delete");
   };
 
-  useEffect(() => {
-    setOnRentProducts(
-      myAdsProducts.filter((product: Product) => product.status !== "Available")
-    );
-  }, []);
   const handleEdit = (product: Product) => {
     openModal();
   };
@@ -70,15 +66,13 @@ export default function MyAds({ navigation }: { navigation: any }) {
     outputRange: [5, 120, 235], // Adjust based on your tab width
   });
 
-  const gotodetailpage = (id: string) => {
-    router.push({ pathname: "/productDetail", params: { productId: id } });
-  };
-
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <ThemedView
+        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+      >
         <ActivityIndicator size="large" />
-      </View>
+      </ThemedView>
     );
   }
 
@@ -89,8 +83,6 @@ export default function MyAds({ navigation }: { navigation: any }) {
         light: Colors.lightGray,
       }}
     >
-      {/* <Header /> */}
-      {/* Tabs */}
       <ThemedView style={styles.tabContainer}>
         <TouchableOpacity
           style={styles.tab}
@@ -135,19 +127,13 @@ export default function MyAds({ navigation }: { navigation: any }) {
         {selectedTab === "myads" &&
           (myAdsProducts.length > 0 ? (
             myAdsProducts.map((product) => (
-              <TouchableOpacity
+              <MyAdCard
                 key={product._id}
-                onPress={() => gotodetailpage(product._id)}
-              >
-                <MyAdCard
-                  key={product._id}
-                  product={product}
-                  onDelete={() => handleDelete(product._id)}
-                  onEdit={() => handleEdit(product)}
-                  myAds={true}
-                />
-                {/* <MyModel product={product} /> */}
-              </TouchableOpacity>
+                product={product}
+                onDelete={() => handleDelete(product)}
+                onEdit={() => handleEdit(product)}
+                myAds={true}
+              />
             ))
           ) : (
             <View style={styles.emptyState}>
@@ -169,13 +155,14 @@ export default function MyAds({ navigation }: { navigation: any }) {
         {selectedTab === "favorite" &&
           (favoriteProducts.length > 0 ? (
             favoriteProducts.map((product: Product) => (
-              <ThemedView key={product._id} style={{ marginVertical: 10 }}>
-                <MyAdCard
-                  product={product}
-                  myAds={false}
-                  onRemoveFavorite={() => updateFavoriteProducts(product)}
-                />
-              </ThemedView>
+              <MyAdCard
+                key={product._id}
+                product={product}
+                myAds={false}
+                onRemoveFavorite={() =>
+                  updateFavoriteProducts(product, "delete")
+                }
+              />
             ))
           ) : (
             <View style={styles.emptyState}>
@@ -195,8 +182,32 @@ export default function MyAds({ navigation }: { navigation: any }) {
           ))}
 
         {selectedTab === "onrent" &&
-          onRentProducts.map((product: Product) => (
-            <MyAdCard key={product._id} product={product} myAds={true} />
+          (myProductsOnRent && myProductsOnRent.length > 0 ? (
+            myProductsOnRent.map((product: Product) => (
+              <MyAdCard
+                key={product._id}
+                product={product}
+                myAds={true}
+                onRemoveFavorite={() =>
+                  updateFavoriteProducts(product, "delete")
+                }
+              />
+            ))
+          ) : (
+            <View style={styles.emptyState}>
+              <Image
+                source={{
+                  uri: "https://cdni.iconscout.com/illustration/premium/thumb/sorry-item-not-found-illustration-download-in-svg-png-gif-file-formats--available-product-tokostore-pack-e-commerce-shopping-illustrations-2809510.png?f=webp",
+                }}
+                style={styles.emptyImage}
+              />
+              <ThemedButton
+                color="#333"
+                title="Explore"
+                onPress={() => router.replace({ pathname: "/" })}
+                style={styles.button}
+              />
+            </View>
           ))}
       </ScrollView>
     </ParallaxScrollView>
@@ -224,14 +235,10 @@ const styles = StyleSheet.create({
     zIndex: 0,
     position: "absolute",
     top: 18,
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15,
-    borderBottomRightRadius: 15,
-    borderBottomLeftRadius: 15,
+    borderRadius: 10,
     height: 35,
     width: 120, // Matches tab width
     backgroundColor: Colors.tomato,
-    borderRadius: 1,
   },
   contentContainer: {
     flex: 1,

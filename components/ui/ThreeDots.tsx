@@ -1,22 +1,16 @@
 import { Colors } from "@/constants/Colors";
-import { useModal } from "@/context/ModalContext";
 import { ThemedText } from "@/defaultComponents/ThemedText";
 import { ThemedView } from "@/defaultComponents/ThemedView";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useRef, useState } from "react";
 import {
-  View,
-  Text,
   StyleSheet,
   Modal,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  useColorScheme,
 } from "react-native";
 
 const ThreeDotDrawer = ({ titles }: any) => {
-  const theme = useColorScheme();
-  const bg = theme === "dark" ? Colors.black : Colors.white;
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 10 });
   const threeDotsRef = useRef<any>(null);

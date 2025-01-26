@@ -3,8 +3,7 @@ import React from "react";
 import { Colors } from "@/constants/Colors";
 import Animated, { FadeInLeft, FadeInRight } from "react-native-reanimated";
 import { Ionicons } from "@expo/vector-icons";
-// import Google from "@/assets/images/google-logo.svg";
-
+// import  Google  from "@/assets/images/google-logo.svg";
 type Props = {
   navigation: any;
 };
@@ -17,7 +16,11 @@ const SocialLoginBottons = (props: Props) => {
     <View style={styles.socialLogin}>
       <Animated.View entering={FadeInLeft.delay(700).duration(300).springify()}>
         <TouchableOpacity style={styles.btn} onPress={handleSignUp}>
-          <Ionicons name="phone-portrait-outline" size={20} color="black" />
+          <Ionicons
+            name="phone-portrait-outline"
+            size={20}
+            color={Colors.tomato}
+          />
           <Text style={styles.btnText}>Continue with Mobile</Text>
         </TouchableOpacity>
       </Animated.View>
@@ -33,7 +36,7 @@ const SocialLoginBottons = (props: Props) => {
         entering={FadeInLeft.delay(1100).duration(300).springify()}
       >
         <TouchableOpacity style={styles.btn}>
-          <Ionicons name="logo-apple" size={20} color="black" />
+          <Ionicons name="logo-apple" size={20} color={Colors.tomato} />
           <Text style={styles.btnText}>Continue with Apple</Text>
         </TouchableOpacity>
       </Animated.View>
@@ -57,8 +60,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 5,
-    borderColor: Colors.gray,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: Colors.tomato,
+    borderWidth: 1,
     padding: 10,
     borderRadius: 25,
     justifyContent: "center",

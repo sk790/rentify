@@ -19,24 +19,31 @@ import Divider from "@/components/ui/Divider";
 import ImageSlider from "@/components/ui/ImageSlider";
 import UserMap from "@/components/ui/UsreMap";
 import { ThemedView } from "@/defaultComponents/ThemedView";
+import { getProductDetail } from "@/actions";
 
 export default function productDetail() {
   const { productId } = useLocalSearchParams();
   const [product, setProduct] = useState<Product>();
   const [loading, setLoading] = useState(false);
-  const { allProducts, favoriteProducts, updateFavoriteProducts } =
-    useProducts();
+  const { favoriteProducts, updateFavoriteProducts } = useProducts();
 
   useEffect(() => {
-    const p = allProducts.find((p) => p._id === productId);
-    setProduct(p);
-  }, [favoriteProducts]);
+    const fetchProduct = async () => {
+      setLoading(true);
+      const data = await getProductDetail(productId as string);
+      setProduct(data.product);
+      setLoading(false);
+    };
+    fetchProduct();
+  }, [productId]);
 
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <ThemedView
+        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+      >
         <ActivityIndicator size="large" color={Colors.primary} />
-      </View>
+      </ThemedView>
     );
   }
   const userProfile = (userId: string) => {

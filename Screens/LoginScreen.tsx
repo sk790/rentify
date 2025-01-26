@@ -1,5 +1,7 @@
 import {
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -7,138 +9,200 @@ import {
   View,
 } from "react-native";
 import React, { useState } from "react";
-import { useAuth } from "@/context/AuthContext";
 import { Stack } from "expo-router";
-import SocialLoginBottons from "@/components/SocialLoginBottons";
-import { Colors } from "@/constants/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "@env";
-import MyInputField from "@/components/ui/MyInput";
+import { useAuth } from "@/context/AuthContext";
+import { Colors } from "@/constants/Colors";
+import { LinearGradient } from "expo-linear-gradient";
+import AuthInput from "@/components/ui/AuthInput";
+import { ThemedText } from "@/defaultComponents/ThemedText";
+import { login } from "@/actions";
 
 export default function LoginScreen({ navigation }: { navigation: any }) {
+  const [isLoading, setIsLoading] = useState(false);
   const { setAuth } = useAuth();
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+
+  const [formData, setFormData] = useState({
+    phone: "",
+    password: "",
+  });
+
+  const handleInputChange = (key: string, value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
 
   const handleSubmit = async () => {
-    if (!phone || !password) {
-      alert("Please enter phone and password");
+    if (!formData.phone || !formData.password) {
+      alert("Please fill in all fields.");
+      return;
     }
     try {
-      setLoading(true);
-      const res = await fetch(`http://192.168.112.190:5000/api/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ password, phone }),
-      });
-      const data = await res.json();
-      console.log(data);
-
-      setLoading(false);
-      if (res.ok) {
-        await AsyncStorage.setItem("token", data.token);
-        setAuth(true);
-        setLoading(false);
-      } else {
-        alert(data.msg);
-      }
+      const data = await login(formData.phone, formData.password);
+      await AsyncStorage.setItem("token", data.token);
+      setAuth(true);
     } catch (error) {
-      setLoading(false);
+      setIsLoading(false);
+      alert(error);
     }
   };
 
   return (
     <>
-      <ScrollView>
-        <Stack.Screen options={{ headerTitle: "Sign In" }} />
-        <View style={styles.container}>
-          <Text style={styles.title}>Login to your account</Text>
-          <MyInputField
-            placeholder="Mobile Number"
-            placeholderTextColor={Colors.gray}
-            maxLength={10}
-            keyboardType="number-pad"
-            value={phone}
-            onChangeText={(text) => setPhone(text)}
-          />
-          <MyInputField
-            placeholder="Password"
-            placeholderTextColor={Colors.gray}
-            autoCapitalize="none"
-            secureTextEntry={true}
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-          />
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          headerStyle: { backgroundColor: "#4c669f" },
+        }}
+      />
+      <LinearGradient
+        colors={["#4c669f", "#3b5998", "#192f6a"]}
+        style={{ flex: 1 }}
+      >
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+        >
+          <ScrollView
+            contentContainerStyle={{
+              flexGrow: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              paddingHorizontal: 30,
+            }}
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="on-drag"
+          >
+            <View style={{ width: "100%", gap: 40 }}>
+              <View style={{ alignItems: "center", marginBottom: 20 }}>
+                <Text
+                  style={{
+                    fontSize: 38,
+                    color: Colors.white,
+                    fontWeight: "600",
+                  }}
+                >
+                  Welcome Back
+                </Text>
+                <Text
+                  style={{
+                    color: "#ffdd00",
+                    fontWeight: "600",
+                    fontSize: 12,
+                  }}
+                >
+                  Login to your account
+                </Text>
+              </View>
+              <View style={{ gap: 20 }}>
+                <AuthInput
+                  icon="call-outline"
+                  value={formData.phone}
+                  onChange={(text: string) => handleInputChange("phone", text)}
+                  placeholder="Phone"
+                  keyboardType="phone-pad"
+                />
+                <AuthInput
+                  icon="key-outline"
+                  value={formData.password}
+                  onChange={(text: string) =>
+                    handleInputChange("password", text)
+                  }
+                  placeholder="Password"
+                />
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: Colors.white,
+                      fontWeight: "600",
+                    }}
+                  >
+                    Remember me
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: Colors.white,
+                      fontWeight: "600",
+                    }}
+                  >
+                    Forgot password?
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "#4c669f",
+                  padding: 10,
+                  borderRadius: 10,
+                  marginTop: 60,
+                }}
+                onPress={handleSubmit}
+              >
+                <Text
+                  style={{
+                    color: Colors.white,
+                    fontWeight: "600",
+                    fontSize: 18,
+                    textAlign: "center",
+                  }}
+                >
+                  {isLoading ? (
+                    <ActivityIndicator size={"large"} color={"#ffdd00"} />
+                  ) : (
+                    "Login"
+                  )}
+                </Text>
+              </TouchableOpacity>
 
-          <TouchableOpacity style={styles.btn} onPress={handleSubmit}>
-            <Text style={styles.btnText}>
-              {loading ? (
-                <ActivityIndicator size="small" color={Colors.white} />
-              ) : (
-                "Login"
-              )}
-            </Text>
-          </TouchableOpacity>
-          <View style={styles.text}>
-            <Text>Don't have an account? </Text>
-            <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
-              <Text style={styles.loginlink}>Sign Up</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.divider} />
-          <SocialLoginBottons navigation={navigation} />
-        </View>
-      </ScrollView>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  marginTop: 20,
+                }}
+              >
+                <Text
+                  style={{
+                    color: Colors.white,
+                    fontWeight: "600",
+                    fontSize: 12,
+                  }}
+                >
+                  Already have an account?{" "}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("Login")}
+                  style={{ borderBottomColor: "#FFD700", borderBottomWidth: 1 }}
+                >
+                  <Text
+                    style={{
+                      color: "#FFD700",
+                      fontWeight: "600",
+                      fontSize: 13,
+                    }}
+                  >
+                    Login
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </LinearGradient>
     </>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "600",
-    letterSpacing: 1.2,
-    color: Colors.black,
-    marginBottom: 50,
-  },
-  btnText: {
-    color: Colors.white,
-    fontWeight: "600",
-    fontSize: 16,
-  },
-  btn: {
-    backgroundColor: Colors.primary,
-    paddingVertical: 14,
-    paddingHorizontal: 18,
-    alignSelf: "stretch",
-    borderRadius: 5,
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  text: {
-    flexDirection: "row",
-    fontSize: 14,
-    lineHeight: 24,
-    marginBottom: 30,
-    color: Colors.gray,
-  },
-  loginlink: {
-    color: Colors.primary,
-    fontWeight: "600",
-  },
-  divider: {
-    borderTopColor: Colors.lightGray,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    width: "30%",
-    marginBottom: 30,
-  },
-});
+const styles = StyleSheet.create({});

@@ -12,7 +12,7 @@ interface AuthContextType {
   auth: boolean; // Represents if the user is authenticated
   setAuth: (authState: boolean) => void; // Updates the authentication state
   user: User | undefined;
-  setUser: (user: User) => void;
+  setUser: (user: User, action: "update" | "setUser") => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -21,13 +21,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [auth, setAuth] = useState<boolean>(false); // Default authentication state is false
   const [user, setUserState] = useState<User | undefined>(undefined);
 
-  const setUser = (newUser: User) => {
-    setUserState(newUser);
+  const setUser = (newUser: User, action: "update" | "setUser") => {
+    if (action === "update") {
+      setUserState({ ...user, ...newUser });
+    } else {
+      setUserState(newUser);
+    }
   };
 
   useEffect(() => {
-    console.log("auth", auth);
-
     const initializeAuth = async () => {
       try {
         const token = await AsyncStorage.getItem("token");

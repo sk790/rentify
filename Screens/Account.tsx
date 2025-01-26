@@ -1,11 +1,8 @@
 import {
   ActivityIndicator,
   Linking,
-  ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
-  useColorScheme,
   View,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -15,13 +12,12 @@ import ProfileCard from "@/components/ProfileCard";
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "@/context/AuthContext";
-import { useProducts } from "@/context/ProductContext";
 import { BASE_URL } from "@env";
 import { ThemedView } from "@/defaultComponents/ThemedView";
 import { ThemedText } from "@/defaultComponents/ThemedText";
 import { ThemedButton } from "@/defaultComponents/ThemedButton";
-import { useModal } from "@/context/ModalContext";
 import { router } from "expo-router";
+import { logout } from "@/actions";
 
 export default function Account({ navigation }: { navigation: any }) {
   const { setAuth } = useAuth();
@@ -35,16 +31,10 @@ export default function Account({ navigation }: { navigation: any }) {
     );
   }
   const handleLogout = async () => {
-    try {
-      setAuth(false);
+    setAuth(false);
+    const res = await logout();
+    if (res?.ok) {
       await AsyncStorage.removeItem("token");
-      const res = await fetch(`${BASE_URL}/api/auth/logout`);
-      const data = await res.json();
-      console.log({ data });
-      if (res.ok) {
-      }
-    } catch (error) {
-      alert(error);
     }
   };
   const goToFavorite = () => {

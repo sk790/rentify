@@ -7,7 +7,6 @@ import { useFormateDate } from "@/hooks/useFormateDate";
 import { ThemedText } from "@/defaultComponents/ThemedText";
 import { useProducts } from "@/context/ProductContext";
 import { Product } from "@/types";
-import { ThemedButton } from "@/defaultComponents/ThemedButton";
 
 export default function HorizontalProductCard({ products }: any) {
   const getProductDetails = (productId: number) => {

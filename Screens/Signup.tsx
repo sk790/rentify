@@ -1,26 +1,24 @@
 import {
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import React, { useState } from "react";
 import { Stack } from "expo-router";
-// import LoginInputFields from "@/components/LoginInputFields";
-import SocialLoginBottons from "@/components/SocialLoginBottons";
-import { Colors } from "@/constants/Colors";
-import { useAuth } from "@/context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "@env";
-import MyInputField from "@/components/ui/MyInput";
+import { useAuth } from "@/context/AuthContext";
+import { Colors } from "@/constants/Colors";
+import { LinearGradient } from "expo-linear-gradient";
+import AuthInput from "@/components/ui/AuthInput";
 
 export default function Signup({ navigation }: { navigation: any }) {
   const [isLoading, setIsLoading] = useState(false);
-  const [otp, setOtp] = useState("");
-  const [isOtpSent, setIsOtpSent] = useState(false);
   const { setAuth } = useAuth();
 
   const [formData, setFormData] = useState({
@@ -28,15 +26,14 @@ export default function Signup({ navigation }: { navigation: any }) {
     password: "",
     confirmPassword: "",
   });
+
   const handleInputChange = (key: string, value: string) => {
     setFormData((prev) => ({
       ...prev,
       [key]: value,
     }));
   };
-  const handleOtp = async () => {
-    alert("Not available yet");
-  };
+
   const handleVerifyOtp = async () => {
     try {
       setIsLoading(true);
@@ -48,162 +45,160 @@ export default function Signup({ navigation }: { navigation: any }) {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      console.log(data);
       setIsLoading(false);
       if (res.ok) {
         await AsyncStorage.setItem("token", data.token);
         setAuth(true);
       } else {
-        setIsLoading(false);
         alert(data.msg);
       }
     } catch (error) {
+      setIsLoading(false);
       alert(error);
     }
   };
+
   return (
     <>
-      <ScrollView>
-        <Stack.Screen options={{ headerTitle: "Sign Up" }} />
-        <View style={styles.container}>
-          <Text style={styles.title}>Create an accont</Text>
-
-          <MyInputField
-            placeholder={"Phone Number"}
-            placeholderTextColor={Colors.gray}
-            value={formData.phone}
-            keyboardType="number-pad"
-            onChangeText={(value) => handleInputChange("phone", value)}
-          />
-          <MyInputField
-            placeholder="Password"
-            placeholderTextColor={Colors.gray}
-            autoCapitalize="none"
-            value={formData.password}
-            secureTextEntry={true}
-            onChangeText={(value) => handleInputChange("password", value)}
-          />
-          <MyInputField
-            placeholder="Confirm Password"
-            placeholderTextColor={Colors.gray}
-            value={formData.confirmPassword}
-            secureTextEntry={true}
-            onChangeText={(value) =>
-              handleInputChange("confirmPassword", value)
-            }
-          />
-          <View
-            style={{
-              flexDirection: "row",
-              marginBottom: 10,
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          headerStyle: { backgroundColor: "#4c669f" },
+        }}
+      />
+      <LinearGradient
+        colors={["#4c669f", "#3b5998", "#192f6a"]}
+        style={{ flex: 1 }}
+      >
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+        >
+          <ScrollView
+            contentContainerStyle={{
+              flexGrow: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              paddingHorizontal: 30,
             }}
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="on-drag"
           >
-            <MyInputField
-              style={{
-                flex: 1,
-                backgroundColor: Colors.white,
-                borderTopLeftRadius: 5,
-                borderBottomLeftRadius: 5,
-                paddingHorizontal: 12,
-                height: 50,
-                paddingVertical: 10,
-              }}
-              placeholder="OTP"
-              placeholderTextColor={Colors.gray}
-              maxLength={4}
-              keyboardType="number-pad"
-              value={otp}
-              onChangeText={(value) => setOtp(value)}
-            />
-            <TouchableOpacity
-              style={{
-                backgroundColor: "gray",
-                borderTopRightRadius: 5,
-                borderBottomRightRadius: 5,
-                justifyContent: "center",
-                paddingHorizontal: 2,
-              }}
-              onPress={handleOtp}
-              disabled={isOtpSent}
-            >
-              <Text style={{ color: Colors.white, fontWeight: "600" }}>
-                {isOtpSent ? "Resend" : "Get Otp"}
-              </Text>
-            </TouchableOpacity>
-          </View>
+            <View style={{ width: "100%", gap: 20 }}>
+              <View style={{ alignItems: "center", marginBottom: 20 }}>
+                <Text
+                  style={{
+                    fontSize: 38,
+                    color: Colors.white,
+                    fontWeight: "600",
+                  }}
+                >
+                  Register
+                </Text>
+                <Text
+                  style={{ color: "#ffdd00", fontWeight: "600", fontSize: 12 }}
+                >
+                  Create an account
+                </Text>
+              </View>
 
-          <TouchableOpacity style={styles.btn} onPress={handleVerifyOtp}>
-            <Text style={styles.btnText}>
-              {isLoading ? (
-                <ActivityIndicator size="small" color={Colors.white} />
-              ) : (
-                "Sign Up"
-              )}
-            </Text>
-          </TouchableOpacity>
-          <View style={styles.text}>
-            <Text>Already have an account? </Text>
-            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-              <Text style={styles.loginlink}>signin</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.divider} />
-          <SocialLoginBottons navigation={navigation} />
-        </View>
-      </ScrollView>
+              <View style={{ gap: 20 }}>
+                <AuthInput
+                  icon="call-outline"
+                  value={formData.phone}
+                  onChange={(text: string) => handleInputChange("phone", text)}
+                  placeholder="Phone"
+                  keyboardType="phone-pad"
+                />
+                <AuthInput
+                  icon="key-outline"
+                  value={formData.password}
+                  onChange={(text: string) =>
+                    handleInputChange("password", text)
+                  }
+                  placeholder="Password"
+                />
+                <AuthInput
+                  icon="key-outline"
+                  value={formData.confirmPassword}
+                  onChange={(text: string) =>
+                    handleInputChange("confirmPassword", text)
+                  }
+                  placeholder="Confirm Password"
+                />
+                <Text
+                  style={{
+                    color: "#4c669f",
+                    fontWeight: "600",
+                    fontSize: 12,
+                    textAlign: "center",
+                  }}
+                >
+                  By registering, you agree to our terms and conditions
+                </Text>
+              </View>
+
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "#4c669f",
+                  padding: 10,
+                  borderRadius: 10,
+                }}
+                onPress={handleVerifyOtp}
+              >
+                <Text
+                  style={{
+                    color: Colors.white,
+                    fontWeight: "600",
+                    fontSize: 18,
+                    textAlign: "center",
+                  }}
+                >
+                  {isLoading ? (
+                    <ActivityIndicator size={"large"} color={"#ffdd00"} />
+                  ) : (
+                    "REGISTER"
+                  )}
+                </Text>
+              </TouchableOpacity>
+
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  marginTop: 20,
+                }}
+              >
+                <Text
+                  style={{
+                    color: Colors.white,
+                    fontWeight: "600",
+                    fontSize: 12,
+                  }}
+                >
+                  Already have an account?{" "}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("Login")}
+                  style={{ borderBottomColor: "#FFD700", borderBottomWidth: 1 }}
+                >
+                  <Text
+                    style={{
+                      color: "#FFD700",
+                      fontWeight: "600",
+                      fontSize: 13,
+                    }}
+                  >
+                    Login
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </LinearGradient>
     </>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "600",
-    letterSpacing: 1.2,
-    color: Colors.black,
-    marginBottom: 50,
-  },
-  btnText: {
-    color: Colors.white,
-    fontWeight: "600",
-    fontSize: 16,
-  },
-  btn: {
-    backgroundColor: Colors.primary,
-    paddingVertical: 14,
-    paddingHorizontal: 18,
-    alignSelf: "stretch",
-    borderRadius: 5,
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  text: {
-    flexDirection: "row",
-    fontSize: 14,
-    lineHeight: 24,
-    marginBottom: 30,
-    color: Colors.gray,
-  },
-  loginlink: {
-    color: Colors.primary,
-    fontWeight: "600",
-  },
-  divider: {
-    borderTopColor: Colors.lightGray,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    width: "30%",
-    marginBottom: 30,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: Colors.white,
-  },
-});
+const styles = StyleSheet.create({});

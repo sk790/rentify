@@ -24,8 +24,13 @@ import { ThemedView } from "@/defaultComponents/ThemedView";
 
 export default function HomeScreen() {
   const [loading, setLoading] = useState(false);
-  const { allProducts, setAllProducts, setFavoriteProducts, setMyAdsProducts } =
-    useProducts();
+  const {
+    allProducts,
+    setAllProducts,
+    setFavoriteProducts,
+    setMyAdsProducts,
+    setMyProductsOnRent,
+  } = useProducts();
   const [distances, setDistances] = useState<number[]>([]);
   const { location } = useLocation();
   const stringLocation = JSON.stringify(location);
@@ -38,7 +43,9 @@ export default function HomeScreen() {
     if (res.ok) {
       setFavoriteProducts(data.user.favorites);
       setMyAdsProducts(data.user.products);
-      setUser(data.user);
+      setUser(data.user, "setUser");
+
+      setMyProductsOnRent(data.user.rented);
     }
   };
 
@@ -54,8 +61,6 @@ export default function HomeScreen() {
 
       if (res.ok) {
         setLoading(false);
-        // console.log(data.products, "data");
-
         setAllProducts(data.products);
         setDistances(data.distances);
       }
@@ -98,7 +103,6 @@ export default function HomeScreen() {
           {homeCategoryData?.map((category, index) => (
             <TouchableOpacity
               key={index}
-              // style={{ width: "49%" }}
               onPress={() => getProductsByCategory(category.label)}
             >
               <CategoryCard image={category.image} label={category.label} />

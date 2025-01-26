@@ -64,5 +64,4 @@ export const period = [
 export const status = [
   { label: "Available", value: "1" },
   { label: "Rented", value: "2" },
-  { label: "Not Available", value: "3" },
 ];

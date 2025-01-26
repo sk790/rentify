@@ -1,4 +1,4 @@
-import { ActivityIndicator, Alert, Image, useColorScheme } from "react-native";
+import { ActivityIndicator, Alert, Image } from "react-native";
 import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
@@ -12,15 +12,14 @@ type userProps = {
   me?: boolean;
 };
 import * as MyImagePicker from "expo-image-picker";
-import { BASE_URL } from "@env";
 import { User } from "@/types";
 import MyModel from "./MyModel";
 import { useModal } from "@/context/ModalContext";
+import { updateAvatar } from "@/actions";
 
 export default function ProfileCard({ user, me }: userProps) {
   const [imageLoading, setImageLoading] = useState(false);
-  const theme = useColorScheme();
-  const iconTheme = theme === "light" ? "black" : Colors.white;
+
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const { openModal } = useModal();
 
@@ -49,30 +48,15 @@ export default function ProfileCard({ user, me }: userProps) {
     });
     if (!result.canceled) {
       const imageUri = result.assets[0].uri;
-      try {
-        setImageLoading(true);
-        const res = await fetch(`${BASE_URL}/api/auth/avatar`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ avatar: imageUri }),
-        });
-        setImageLoading(false);
-        console.log({ res });
-
-        const data = await res.json();
-        if (res.ok) {
-          setProfileImage(imageUri);
-        }
-      } catch (error) {
-        setImageLoading(false);
-        console.log(error);
+      setImageLoading(true);
+      const res = await updateAvatar(imageUri);
+      setImageLoading(false);
+      if (res?.ok) {
+        setProfileImage(imageUri);
       }
     } else {
       Alert.alert("No images selected", "Please select at least one image.");
     }
-    console.log("upload avatar");
   };
 
   return (
@@ -131,7 +115,7 @@ export default function ProfileCard({ user, me }: userProps) {
             onPress={openModal}
             name="pencil-sharp"
             size={24}
-            color={iconTheme}
+            color={Colors.tomato}
             style={{ alignSelf: "center" }}
           />
         ) : (

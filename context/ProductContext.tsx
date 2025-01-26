@@ -12,9 +12,16 @@ interface ProductContextType {
   myAdsProducts: Product[];
   setMyAdsProducts: (products: Product[]) => void;
 
+  myProductsOnRent: Product[];
+  setMyProductsOnRent: (products: Product[]) => void;
+
+  updateMyProductsOnRent: (
+    product: Product,
+    action: "toggle" | "delete" | "productUpdate"
+  ) => void;
   updateMyAdsProducts: (
     product: Product,
-    action: "add" | "delete" | "update"
+    action: "add" | "delete" | "update" | "updateStatus"
   ) => void;
   updateFavoriteProducts: (
     product: Product,
@@ -32,7 +39,11 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
   const [allProducts, setProductsState] = useState<Product[]>([]);
   const [favoriteProducts, setFavoriteProductsState] = useState<Product[]>([]);
   const [myAdsProducts, setMyAdsState] = useState<Product[]>([]);
+  const [myProductsOnRent, setMyRentState] = useState<Product[]>([]);
 
+  const setMyProductsOnRent = (products: Product[]) => {
+    setMyRentState(products);
+  };
   const setAllProducts = (products: Product[]) => {
     setProductsState(products);
   };
@@ -83,7 +94,7 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
   };
   const updateMyAdsProducts = (
     product: Product,
-    action: "add" | "delete" | "update"
+    action: "add" | "delete" | "update" | "updateStatus"
   ) => {
     if (action === "add") {
       setMyAdsState([...myAdsProducts, product]);
@@ -92,6 +103,33 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
     } else if (action === "update") {
       setMyAdsState(
         myAdsProducts.map((p) => (p._id === product._id ? product : p))
+      );
+    } else if (action === "updateStatus") {
+      setAllProducts(
+        allProducts.map((p) => (p._id === product._id ? product : p))
+      );
+    }
+  };
+  const updateMyProductsOnRent = (
+    product: Product,
+    action: "toggle" | "delete" | "productUpdate"
+  ) => {
+    if (action === "toggle") {
+      const isExist = myProductsOnRent.some((fav) => fav._id === product._id);
+      if (!isExist) {
+        setMyProductsOnRent([...myProductsOnRent, product]);
+      } else {
+        setMyProductsOnRent(
+          myProductsOnRent.filter((fav) => fav._id !== product._id)
+        );
+      }
+    } else if (action === "productUpdate") {
+      setMyProductsOnRent(
+        myProductsOnRent.map((p) => (p._id === product._id ? product : p))
+      );
+    } else if (action === "delete") {
+      setMyProductsOnRent(
+        myProductsOnRent.filter((p) => p._id !== product._id)
       );
     }
   };
@@ -102,14 +140,17 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
         allProducts,
         myAdsProducts,
         favoriteProducts,
+        myProductsOnRent,
 
         setAllProducts,
         setMyAdsProducts,
         setFavoriteProducts,
+        setMyProductsOnRent,
 
         updateAllProducts,
         updateMyAdsProducts,
         updateFavoriteProducts,
+        updateMyProductsOnRent,
       }}
     >
       {children}

@@ -1,26 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from "react-native";
+import React, { useState } from "react";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Product } from "@/types";
 import { Colors } from "@/constants/Colors";
-import { BASE_URL } from "@env";
 import { router } from "expo-router";
 import { useProducts } from "@/context/ProductContext";
 import { ThemedButton } from "@/defaultComponents/ThemedButton";
 import { ThemedView } from "@/defaultComponents/ThemedView";
 import ThreeDotDrawer from "./ui/ThreeDots";
-import UpdateProductModal from "./ui/UpdateProductModal";
 import { useModal } from "@/context/ModalContext";
 import { ThemedText } from "@/defaultComponents/ThemedText";
 import MyAlert from "./ui/MyAlert";
-import { deleteProduct } from "@/actions";
+import { deleteProduct, toggleRent, updateStatus } from "@/actions";
 
 type Props = {
   product: Product;
@@ -30,43 +21,41 @@ type Props = {
   myAds?: boolean;
 };
 
-export default function MyAdCard({ product, onDelete, myAds }: Props) {
-  const { updateAllProducts, updateFavoriteProducts, updateMyAdsProducts } =
-    useProducts();
+export default function MyAdCard({ product, myAds }: Props) {
+  const {
+    updateAllProducts,
+    updateFavoriteProducts,
+    updateMyAdsProducts,
+    updateMyProductsOnRent,
+  } = useProducts();
   const { openAlertModal, closeAlertModal } = useModal();
+  // console.log(product);
 
-  const [isAvailable, setIsAvailable] = useState(
-    product.status === "Available" ? true : false
-  );
-  const handleDelete = async (productId: string) => {
-    const data = await deleteProduct(product._id);
-    console.log(data, "delete from my ads");
+  // const [isAvailable, setIsAvailable] = useState(
+  //   product.status === "Available" ? true : false
+  // );
+  const handleDelete = async (product: Product) => {
+    await deleteProduct(product._id);
     updateMyAdsProducts(product, "delete");
     updateAllProducts(product, "delete");
     updateFavoriteProducts(product, "delete");
+    updateMyProductsOnRent(product, "delete");
     closeAlertModal();
   };
-  const updateStatus = async (productId: string) => {
-    let status = product.status === "Available" ? "Rented" : "Available";
-    try {
-      const res = await fetch(
-        `${BASE_URL}/api/product/status-update/${productId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ status: status }),
-        }
-      );
-      if (res.ok) {
-        setIsAvailable(!isAvailable);
-        // updateMyAdsProducts(product,"");
-        router.reload();
-      }
-    } catch (error) {
-      console.log(error);
+  const handleUpdateStatus = async (product: Product) => {
+    const res = await updateStatus(product._id);
+
+    if (product.status === "Available") {
+      product.status = "Rented";
+    } else {
+      product.status = "Available";
     }
+    if (res?.ok) {
+      updateMyAdsProducts(product, "updateStatus");
+    }
+    const rentData = await toggleRent(product._id);
+    // console.log(rentData);
+    updateMyProductsOnRent(product, "toggle");
   };
   const onEdit = () => {
     router.push({
@@ -107,6 +96,8 @@ export default function MyAdCard({ product, onDelete, myAds }: Props) {
           padding: 10,
           borderColor: Colors.tomato,
           borderWidth: StyleSheet.hairlineWidth,
+          gap: 5,
+          marginVertical: 5,
         }}
       >
         <ThemedView style={{ flexDirection: "row", gap: 10 }}>
@@ -162,11 +153,11 @@ export default function MyAdCard({ product, onDelete, myAds }: Props) {
         {myAds && (
           <ThemedView style={{ flexDirection: "row", gap: 10 }}>
             <ThemedButton
-              title={isAvailable ? "Available" : "On Rent"}
+              title={product.status === "Available" ? "Available" : "On Rent"}
               style={{ flex: 1 }}
               variant="outline"
-              color={isAvailable ? "green" : "red"}
-              onPress={() => updateStatus(product._id)}
+              color={product.status === "Available" ? "green" : "red"}
+              onPress={() => handleUpdateStatus(product)}
             />
             <ThemedButton
               color={Colors.white}
@@ -180,7 +171,7 @@ export default function MyAdCard({ product, onDelete, myAds }: Props) {
           message="Are you sure you want to delete this product"
           title="Delete"
           onCancel={closeAlertModal}
-          onConfirm={() => handleDelete(product._id)}
+          onConfirm={() => handleDelete(product)}
         />
       </ThemedView>
     </TouchableOpacity>

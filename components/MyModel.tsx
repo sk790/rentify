@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import {
   View,
-  Text,
   Modal,
   StyleSheet,
-  TouchableOpacity,
   TextInput,
   Animated,
   ScrollView,
@@ -16,12 +14,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { ThemedView } from "@/defaultComponents/ThemedView";
 import { useModal } from "@/context/ModalContext";
 import { ThemedButton } from "@/defaultComponents/ThemedButton";
-import { Product, User } from "@/types";
+import { User } from "@/types";
 import { ThemedText } from "@/defaultComponents/ThemedText";
-import MyDropdown from "./MyDropdown";
-import { BASE_URL } from "@env";
 import { useAuth } from "@/context/AuthContext";
-import InputField from "./ui/InputField";
+import { updateProfile } from "@/actions";
 
 export default function MyModel({ userData }: { userData?: User }) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -68,18 +64,11 @@ export default function MyModel({ userData }: { userData?: User }) {
         return Alert.alert("Error", "Please fill all the fields.");
       }
       setLoading(true);
-      const res = await fetch(`${BASE_URL}/api/auth/update-profile`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(profileData),
-      });
-      const data = await res.json();
+      const res = await updateProfile(profileData);
       setLoading(false);
-      if (res.ok) {
+      if (res?.ok) {
         Alert.alert("Success", "Profile updated successfully.");
-        setUser((prevUser: User) => ({ ...prevUser, ...profileData }));
+        setUser(profileData, "update");
       }
       closeModal();
     } catch (error) {
@@ -103,12 +92,13 @@ export default function MyModel({ userData }: { userData?: User }) {
               {
                 transform: [{ translateY: modalTranslateY }],
                 backgroundColor: bg,
+                borderColor: Colors.tomato,
+                borderWidth: StyleSheet.hairlineWidth,
               },
             ]}
           >
             {/* Modal Content */}
             <ThemedView
-              darkColor={Colors.black}
               style={{
                 flexDirection: "row",
                 alignItems: "center",
@@ -124,13 +114,13 @@ export default function MyModel({ userData }: { userData?: User }) {
             </ThemedView>
             <ScrollView>
               <TextInput
-                placeholderTextColor={Colors.tomato}
+                placeholderTextColor={Colors.white}
                 style={[
                   styles.input,
                   {
                     backgroundColor:
-                      theme === "dark" ? Colors.black : Colors.white,
-                    color: theme === "dark" ? Colors.tomato : Colors.black,
+                      theme === "dark" ? Colors.gray : Colors.white,
+                    color: theme === "dark" ? Colors.white : Colors.black,
                   },
                 ]}
                 placeholder="Enter Your Name"
@@ -140,13 +130,13 @@ export default function MyModel({ userData }: { userData?: User }) {
                 }
               />
               <TextInput
-                placeholderTextColor={Colors.tomato}
+                placeholderTextColor={Colors.white}
                 style={[
                   styles.input,
                   {
                     backgroundColor:
-                      theme === "dark" ? Colors.black : Colors.white,
-                    color: theme === "dark" ? Colors.tomato : Colors.black,
+                      theme === "dark" ? Colors.gray : Colors.white,
+                    color: theme === "dark" ? Colors.white : Colors.black,
                   },
                 ]}
                 placeholder="Enter Your Description"
@@ -156,13 +146,13 @@ export default function MyModel({ userData }: { userData?: User }) {
                 }
               />
               <TextInput
-                placeholderTextColor={Colors.tomato}
+                placeholderTextColor={Colors.white}
                 style={[
                   styles.input,
                   {
                     backgroundColor:
-                      theme === "dark" ? Colors.black : Colors.white,
-                    color: theme === "dark" ? Colors.tomato : Colors.black,
+                      theme === "dark" ? Colors.gray : Colors.white,
+                    color: theme === "dark" ? Colors.white : Colors.black,
                   },
                 ]}
                 placeholder="Enter Your Address"

@@ -1,5 +1,5 @@
 import { BASE_URL } from "@env";
-
+import { useProducts } from "./context/ProductContext";
 export const deleteProduct = async (productId: string) => {
   try {
     if (!productId) return;
@@ -31,5 +31,117 @@ export const toggleFavorite = async (productId: string) => {
     return data;
   } catch (error) {
     console.error("Error updating favorite:", error);
+  }
+};
+
+export const updateStatus = async (productId: string) => {
+  try {
+    const res = await fetch(
+      `${BASE_URL}/api/product/status-update/${productId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    // const data = await res.json();
+    return res;
+  } catch (error) {
+    console.error("Error updating status:", error);
+  }
+};
+
+export const updateProfile = async (data: any) => {
+  try {
+    const res = await fetch(`${BASE_URL}/api/auth/update-profile`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    // const response = await res.json();
+    return res;
+  } catch (error) {
+    console.error("Error updating profile:", error);
+  }
+};
+export const updateAvatar = async (avatar: string) => {
+  try {
+    const res = await fetch(`${BASE_URL}/api/auth/avatar`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ avatar }),
+    });
+    const response = await res.json();
+
+    return res;
+  } catch (error) {
+    console.error("Error updating profile:", error);
+  }
+};
+export const login = async (phone: string, password: string) => {
+  try {
+    const res = await fetch(`${BASE_URL}/api/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ phone, password }),
+    });
+    const data = await res.json();
+    alert(data.msg);
+    return data;
+  } catch (error) {
+    console.error("Error logging in:", error);
+  }
+};
+export const logout = async () => {
+  try {
+    const res = await fetch(`${BASE_URL}/api/auth/logout`, {
+      method: "POST",
+    });
+    return res;
+  } catch (error) {
+    console.error("Error logging out:", error);
+  }
+};
+
+export const getProductDetail = async (productId: string) => {
+  try {
+    const res = await fetch(`${BASE_URL}/api/product/${productId}`, {
+      method: "GET",
+    });
+    const data = await res.json();
+    if (res.ok) {
+      return data;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const getUserRentProducts = async (userId: string) => {
+  // try {
+  //   const res = await fetch(`${BASE_URL}/api/rent/get-rented`);
+  //   // console.log(res);
+  //   const data = await res.json();
+  //   return data;
+  // } catch (error) {
+  //   alert(error);
+  // }
+};
+
+export const toggleRent = async (productId: string) => {
+  try {
+    const res = await fetch(`${BASE_URL}/api/rent/toggle/${productId}`, {
+      method: "PUT",
+    });
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    alert(error);
   }
 };

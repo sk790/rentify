@@ -49,7 +49,7 @@ export default function categrisProducts() {
       const data = await res.json();
       setLoadingStatus((prev) => ({ ...prev, productLoading: false }));
       if (res.ok) {
-        console.log(data);
+        // console.log(data);
         if (data.products.length < limit) setShowMore(false);
         setLenght(data.categoryProductLenght);
         setProducts(data.products);
@@ -60,7 +60,7 @@ export default function categrisProducts() {
 
   const handleMore = async () => {
     const startIndex = products.length;
-    console.log(startIndex, "startIndex");
+    // console.log(startIndex, "startIndex");
     setLoadingStatus((prev) => ({ ...prev, showMoreLoading: true }));
     const res = await fetch(
       `${BASE_URL}/api/product/products?category=${encodedCategory.toLowerCase()}&limit=${limit}&areaRange=${range}&userCoords=${stringLocation}&startIndex=${startIndex}`

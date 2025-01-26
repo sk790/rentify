@@ -24,8 +24,12 @@ export default function UpdateProduct() {
   const theme = useColorScheme();
   const { updateFormData } = useLocalSearchParams();
   const data = JSON.parse(updateFormData as string);
-  const { updateAllProducts, updateFavoriteProducts, updateMyAdsProducts } =
-    useProducts();
+  const {
+    updateAllProducts,
+    updateFavoriteProducts,
+    updateMyAdsProducts,
+    updateMyProductsOnRent,
+  } = useProducts();
 
   const [productData, setProductData] = useState<Product>(data);
 
@@ -57,13 +61,12 @@ export default function UpdateProduct() {
       },
       body: JSON.stringify(productData),
     });
-    const data = await res.json();
-
     Alert.alert("Success", "Product updated successfully");
     if (res.ok) {
       updateAllProducts(productData, "update");
       updateMyAdsProducts(productData, "update");
       updateFavoriteProducts(productData, "productUpdate");
+      updateMyProductsOnRent(productData, "productUpdate");
       router.back();
       closeAlertModal();
     }
@@ -92,7 +95,6 @@ export default function UpdateProduct() {
       />
       <ThemedView style={{ height: "100%" }}>
         <ThemedView style={{ flexDirection: "column", height: "87%" }}>
-          {/* <ScrollView contentContainerStyle={styles.scrollViewContent}> */}
           <View
             style={{
               flex: 1,
@@ -163,25 +165,3 @@ export default function UpdateProduct() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollViewContent: {
-    flexGrow: 1,
-    padding: 16,
-  },
-  form: {
-    gap: 10,
-    marginHorizontal: 10,
-  },
-  button: {
-    position: "absolute",
-    bottom: 20, // Distance from the bottom edge
-    left: 16,
-    right: 16,
-    marginHorizontal: "auto",
-    alignSelf: "center",
-  },
-});

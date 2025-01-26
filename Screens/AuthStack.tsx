@@ -1,5 +1,4 @@
 import {
-  Button,
   ImageBackground,
   StyleSheet,
   Text,
@@ -7,7 +6,7 @@ import {
   View,
 } from "react-native";
 import React from "react";
-import { Link, Stack } from "expo-router";
+import { Stack } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, { FadeInRight } from "react-native-reanimated";
 import SocialLoginBottons from "@/components/SocialLoginBottons";
@@ -32,7 +31,7 @@ export default function AuthStack({ navigation }: { navigation: any }) {
           <LinearGradient
             colors={[
               "transparent",
-              "rgba(255, 255, 255, 0.9)",
+              "rgba(255, 255, 255, 1)",
               "rgba(255, 255, 255, 1)",
             ]}
             style={styles.background}
@@ -48,7 +47,9 @@ export default function AuthStack({ navigation }: { navigation: any }) {
                 style={styles.description}
                 entering={FadeInRight.delay(500).duration(300).springify()}
               >
-                this is description
+                Rentify is an innovative platform designed to simplify property
+                rentals for both landlords and tenants. It offers a seamless and
+                user-friendly experience. ease.
               </Animated.Text>
               <SocialLoginBottons navigation={navigation} />
               <View style={styles.text}>
@@ -86,8 +87,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   title: {
-    fontSize: 22,
-    color: Colors.primary,
+    fontSize: 32,
+    color: Colors.tomato,
     fontWeight: "900",
     letterSpacing: 1,
     marginBottom: 5,
@@ -108,7 +109,7 @@ const styles = StyleSheet.create({
     color: Colors.gray,
   },
   loginlink: {
-    color: Colors.primary,
+    color: Colors.lightTomato,
     fontWeight: "600",
   },
 });

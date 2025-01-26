@@ -19,7 +19,7 @@ export default function profile() {
   const [me, setMe] = useState(false);
   useEffect(() => {
     const userProducts = allProducts.filter((p) => p.user._id === userId);
-    const product = allProducts.find((p) => p.user._id.toString() === userId);
+    const product = allProducts.find((p) => p.user._id === userId);
     // console.log({ user: user });
 
     setMe(product?.user._id === loggedInUser?._id);

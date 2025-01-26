@@ -31,6 +31,6 @@ export const Colors = {
     border: "#555", // Add border color for dark mode
     placeholder: "#666",
   },
-  tomato: "#F47",
+  tomato: "#FF6347",
   lightTomato: "#FF7F70",
 };
