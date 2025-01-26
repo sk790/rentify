@@ -57,11 +57,11 @@ export default function MyModel({ userData }: { userData?: User }) {
   const handleProfileUpdate = async () => {
     try {
       if (
-        !profileData?.name ||
-        !profileData?.description ||
+        !profileData?.name &&
+        !profileData?.description &&
         !profileData?.address
       ) {
-        return Alert.alert("Error", "Please fill all the fields.");
+        return Alert.alert("Error", "Please fill at least one of the fields.");
       }
       setLoading(true);
       const res = await updateProfile(profileData);
@@ -114,7 +114,7 @@ export default function MyModel({ userData }: { userData?: User }) {
             </ThemedView>
             <ScrollView>
               <TextInput
-                placeholderTextColor={Colors.white}
+                // placeholderTextColor={Colors.white}
                 style={[
                   styles.input,
                   {
@@ -130,7 +130,7 @@ export default function MyModel({ userData }: { userData?: User }) {
                 }
               />
               <TextInput
-                placeholderTextColor={Colors.white}
+                // placeholderTextColor={Colors.black}
                 style={[
                   styles.input,
                   {
@@ -146,7 +146,7 @@ export default function MyModel({ userData }: { userData?: User }) {
                 }
               />
               <TextInput
-                placeholderTextColor={Colors.white}
+                // placeholderTextColor={Colors.white}
                 style={[
                   styles.input,
                   {

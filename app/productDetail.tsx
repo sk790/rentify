@@ -72,13 +72,17 @@ export default function productDetail() {
                 alignItems: "center",
               }}
             >
-              <ThemedText style={{ fontSize: 20, fontWeight: "600" }}>
+              <ThemedView
+                style={{ alignItems: "center", flexDirection: "row" }}
+              >
                 <Image
                   source={require("../assets/images/rupee-indian.png")}
-                  style={{ width: 16, height: 16, tintColor: Colors.tomato }}
+                  style={{ width: 14, height: 14 }}
                 />
-                {product?.price} / {product?.timePeriod}
-              </ThemedText>
+                <ThemedText type="defaultSemiBold">
+                  {product?.price}/{product?.timePeriod}
+                </ThemedText>
+              </ThemedView>
               <TouchableOpacity
                 onPress={() => updateFavoriteProducts(product!, "toggle")}
               >
@@ -95,7 +99,7 @@ export default function productDetail() {
                 />
               </TouchableOpacity>
             </View>
-            <ThemedText style={{ fontSize: 16, fontWeight: "600" }}>
+            <ThemedText type="defaultSemiBold" style={{ fontSize: 14 }}>
               {product?.productName}
             </ThemedText>
             <View
@@ -103,6 +107,7 @@ export default function productDetail() {
                 flexDirection: "row",
                 width: "100%",
                 marginTop: 10,
+                alignItems: "center",
                 gap: 5,
               }}
             >
@@ -141,21 +146,19 @@ export default function productDetail() {
             <ThemedText type="defaultSemiBold">Details</ThemedText>
             <View style={{ flexDirection: "row", gap: 30 }}>
               <ThemedText type="defaultSemiBold">Product</ThemedText>
-              <ThemedText type="defaultSemiBold" style={{ flex: 1 }}>
+              <ThemedText style={{ flex: 1, fontSize: 14 }}>
                 {product?.productName}
               </ThemedText>
             </View>
             <View style={{ flexDirection: "row", gap: 30 }}>
               <ThemedText type="defaultSemiBold">Category</ThemedText>
-              <ThemedText type="defaultSemiBold" style={{ flex: 1 }}>
-                {product?.category}
-              </ThemedText>
+              <ThemedText style={{ flex: 1 }}>{product?.category}</ThemedText>
             </View>
           </ThemedView>
           <Divider />
           <View style={{ marginHorizontal: 10, gap: 10 }}>
             <ThemedText type="defaultSemiBold">Description</ThemedText>
-            <ThemedText type="default" style={{ fontSize: 14 }}>
+            <ThemedText style={{ fontSize: 14 }}>
               {product?.description}
             </ThemedText>
           </View>

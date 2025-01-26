@@ -1,4 +1,9 @@
-import { ActivityIndicator, Alert, Image } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
@@ -16,12 +21,14 @@ import { User } from "@/types";
 import MyModel from "./MyModel";
 import { useModal } from "@/context/ModalContext";
 import { updateAvatar } from "@/actions";
+import { router } from "expo-router";
 
 export default function ProfileCard({ user, me }: userProps) {
   const [imageLoading, setImageLoading] = useState(false);
 
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const { openModal } = useModal();
+  // console.log(user?.avatar);
 
   const requestPermission = async () => {
     const { status } =
@@ -61,8 +68,6 @@ export default function ProfileCard({ user, me }: userProps) {
 
   return (
     <ThemedView
-      lightColor={Colors.light.background}
-      darkColor={Colors.dark.background}
       style={{
         flexDirection: "column",
         padding: 10,
@@ -80,7 +85,7 @@ export default function ProfileCard({ user, me }: userProps) {
         <ThemedView
           style={{
             flexDirection: "row",
-            gap: 10,
+            gap: 5,
             alignItems: "center",
           }}
         >
@@ -97,18 +102,26 @@ export default function ProfileCard({ user, me }: userProps) {
                 source={{
                   uri: user?.avatar,
                 }}
-                style={{ width: 100, height: 100, borderRadius: 50 }}
+                style={{ width: 80, height: 80, borderRadius: 50 }}
               />
             )}
-            <Ionicons
-              onPress={() => uploadAvatar(user?._id as string)}
-              name="camera"
-              size={30}
-              color={Colors.tomato}
-              style={{ position: "absolute", top: 50, left: 80 }}
-            />
+            {me && (
+              <Ionicons
+                onPress={() => uploadAvatar(user?._id as string)}
+                name="camera"
+                size={30}
+                color={Colors.tomato}
+                style={{ position: "absolute", top: 40, left: 60 }}
+              />
+            )}
           </ThemedView>
-          <ThemedText type="subtitle">{user?.name}</ThemedText>
+          <ThemedText
+            numberOfLines={2}
+            type="subtitle"
+            style={{ fontSize: 16 }}
+          >
+            {user?.name}
+          </ThemedText>
         </ThemedView>
         {me ? (
           <Ionicons

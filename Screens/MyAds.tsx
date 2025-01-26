@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   ActivityIndicator,
   Animated,
@@ -18,8 +18,6 @@ import { ThemedView } from "@/defaultComponents/ThemedView";
 import { ThemedText } from "@/defaultComponents/ThemedText";
 import { ThemedButton } from "@/defaultComponents/ThemedButton";
 import { useModal } from "@/context/ModalContext";
-import { getUserRentProducts } from "@/actions";
-import { useAuth } from "@/context/AuthContext";
 
 export default function MyAds({ navigation }: { navigation: any }) {
   const { openModal } = useModal();
