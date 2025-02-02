@@ -1,6 +1,6 @@
 import { Colors } from "@/constants/Colors";
-import { ThemedText } from "@/defaultComponents/ThemedText";
-import { ThemedView } from "@/defaultComponents/ThemedView";
+import { ThemedText } from "@/components/ui/ThemedText";
+import { ThemedView } from "@/components/ui/ThemedView";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { StyleSheet, Text, TextInput } from "react-native";
 

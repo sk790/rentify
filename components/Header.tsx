@@ -1,24 +1,15 @@
-import {
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from "react-native";
+import { StyleSheet, TouchableOpacity, useColorScheme } from "react-native";
 import React from "react";
 import { Colors } from "@/constants/Colors";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
-import { ThemedText } from "@/defaultComponents/ThemedText";
+import { ThemedText } from "@/components/ui/ThemedText";
 import { useAuth } from "@/context/AuthContext";
-import { ThemedView } from "@/defaultComponents/ThemedView";
-import SearchBar from "./ui/SearchBar";
+import { ThemedView } from "@/components/ui/ThemedView";
 
 export default function Header() {
   const { user } = useAuth();
-  const theme = useColorScheme();
-  const bg = theme === "dark" ? Colors.black : Colors.white;
   return (
     <ThemedView style={{ flexDirection: "column" }}>
       <ThemedView
@@ -39,13 +30,13 @@ export default function Header() {
             paddingHorizontal: 15,
             paddingVertical: 5,
             borderRadius: 15,
-            backgroundColor: Colors.tomato,
+            backgroundColor: Colors.primary,
           }}
         >
           RENTIFY
         </ThemedText>
         <ThemedView style={{ flexDirection: "row", alignItems: "center" }}>
-          <Ionicons name="location-outline" size={20} color={Colors.tomato} />
+          <Ionicons name="location-outline" size={20} color={Colors.primary} />
           <ThemedText
             type="default"
             style={{ fontSize: 13, width: "65%" }}
@@ -56,7 +47,7 @@ export default function Header() {
           <Ionicons
             name="chevron-down-outline"
             size={20}
-            color={Colors.tomato}
+            color={Colors.primary}
           />
         </ThemedView>
       </ThemedView>
@@ -78,7 +69,7 @@ export default function Header() {
             lightColor={Colors.light.cardColor}
             style={{
               padding: 10,
-              borderColor: Colors.tomato,
+              borderColor: Colors.primary,
               borderWidth: 1,
               height: 45,
               gap: 5,
@@ -92,7 +83,7 @@ export default function Header() {
               name="search-outline"
               style={{ marginLeft: 5 }}
               size={28}
-              color={Colors.tomato}
+              color={Colors.primary}
             />
             <ThemedText style={{ fontWeight: "600" }}>Search here</ThemedText>
           </ThemedView>
@@ -101,7 +92,7 @@ export default function Header() {
           onPress={() => router.push("/notifications")}
           name="notifications-outline"
           size={28}
-          color={Colors.tomato}
+          color={Colors.primary}
           style={{ marginRight: 10 }}
         />
       </ThemedView>

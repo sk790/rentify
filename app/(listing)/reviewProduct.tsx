@@ -1,12 +1,12 @@
 import { Alert, Image, StyleSheet, View } from "react-native";
 import React, { useState } from "react";
 import { router, Stack, useLocalSearchParams } from "expo-router";
-import { ThemedText } from "@/defaultComponents/ThemedText";
-import { ThemedButton } from "@/defaultComponents/ThemedButton";
-import { ThemedView } from "@/defaultComponents/ThemedView";
+import { ThemedText } from "@/components/ui/ThemedText";
+import { ThemedButton } from "@/components/ui/ThemedButton";
+import { ThemedView } from "@/components/ui/ThemedView";
 import Divider from "@/components/ui/Divider";
 import { Colors } from "@/constants/Colors";
-import ParallaxScrollView from "@/defaultComponents/ParallaxScrollView";
+import ParallaxScrollView from "@/components/ui/ParallaxScrollView";
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
 
 export default function reviewProduct({ navigation }: any) {

@@ -4,7 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { useAuth } from "../context/AuthContext"; // Adjust path
 import LoginScreen from "@/Screens/LoginScreen";
 import HomeScreen from "@/Screens/HomeScreen";
-import Chat from "@/Screens/Chat";
+import Convarsations from "@/Screens/Convarsations";
 import MyAds from "@/Screens/MyAds";
 import Account from "@/Screens/Account";
 import Signup from "@/Screens/Signup";
@@ -54,10 +54,12 @@ function AppTabs() {
             iconName = "create-outline"; // Ionicons name for profile
           }
           // You can return any component here (Icon, Image, etc.)
-          return <Ionicons name={iconName} size={size} color={Colors.tomato} />;
+          return (
+            <Ionicons name={iconName} size={size} color={Colors.primary} />
+          );
         },
 
-        tabBarActiveTintColor: Colors.tomato,
+        tabBarActiveTintColor: Colors.primary,
         tabBarInactiveTintColor: "gray",
         tabBarStyle: {
           paddingBottom: 5,
@@ -72,11 +74,11 @@ function AppTabs() {
         options={{ headerShown: false }}
         component={HomeScreen}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Chat"
         options={{ headerShown: false }}
-        component={Chat}
-      />
+        component={Convarsations}
+      /> */}
       <Tab.Screen
         name="Create"
         options={{ headerShown: false }}

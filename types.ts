@@ -52,3 +52,21 @@ export interface Dimensions {
   pageX: number;
   pageY: number;
 }
+
+export interface Conv {
+  _id: string;
+  participants: {
+    sender: User;
+    receiver: User;
+  };
+}
+export interface Message {
+  _id: string;
+  sender: User;
+  receiver: User;
+  text: string;
+  createdAt: string;
+  updatedAt: string;
+  status: string;
+  __v: number;
+}

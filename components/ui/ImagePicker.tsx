@@ -12,8 +12,8 @@ import {
 } from "react-native";
 import * as MyImagePicker from "expo-image-picker";
 import { router } from "expo-router";
-import { ThemedButton } from "@/defaultComponents/ThemedButton";
-import { ThemedView } from "@/defaultComponents/ThemedView";
+import { ThemedButton } from "@/components/ui/ThemedButton";
+import { ThemedView } from "@/components/ui/ThemedView";
 import { Ionicons } from "@expo/vector-icons";
 import { uploadToCloudinary } from "@/hooks/useUploadToCloudinary";
 import { Colors } from "@/constants/Colors";

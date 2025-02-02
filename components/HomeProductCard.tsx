@@ -5,8 +5,8 @@ import { Colors } from "@/constants/Colors";
 import { Product } from "@/types";
 import { useFormateDate } from "@/hooks/useFormateDate";
 import { useProducts } from "@/context/ProductContext";
-import { ThemedView } from "@/defaultComponents/ThemedView";
-import { ThemedText } from "@/defaultComponents/ThemedText";
+import { ThemedView } from "@/components/ui/ThemedView";
+import { ThemedText } from "@/components/ui/ThemedText";
 import { toggleFavorite } from "@/actions";
 import { router } from "expo-router";
 export default function HomeProductCard({
@@ -49,7 +49,7 @@ export default function HomeProductCard({
           <Ionicons
             onPress={() => handleFavorite(product._id)}
             name={like ? "heart-sharp" : "heart-outline"}
-            color={like ? Colors.favorite : Colors.tomato}
+            color={like ? Colors.favorite : Colors.primary}
             size={32}
           />
         </TouchableOpacity>
@@ -85,7 +85,7 @@ export default function HomeProductCard({
               <Ionicons
                 name="location-outline"
                 size={16}
-                color={Colors.tomato}
+                color={Colors.primary}
               />
               <ThemedText
                 numberOfLines={1}

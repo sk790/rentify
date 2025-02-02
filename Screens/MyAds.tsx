@@ -1,53 +1,30 @@
 import React, { useRef, useState } from "react";
 import {
-  ActivityIndicator,
   Animated,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-  View,
-  Image,
 } from "react-native";
-import { router } from "expo-router";
+import { router, Stack } from "expo-router";
 import { Product } from "@/types";
-import MyAdCard from "@/components/MyAdCard";
+import MyAdCard from "@/components/ui/MyAdCard";
 import { useProducts } from "@/context/ProductContext";
-import ParallaxScrollView from "@/defaultComponents/ParallaxScrollView";
 import { Colors } from "@/constants/Colors";
-import { ThemedView } from "@/defaultComponents/ThemedView";
-import { ThemedText } from "@/defaultComponents/ThemedText";
-import { ThemedButton } from "@/defaultComponents/ThemedButton";
+import { ThemedView } from "@/components/ui/ThemedView";
+import { ThemedText } from "@/components/ui/ThemedText";
 import { useModal } from "@/context/ModalContext";
 import EmptyPage from "@/components/ui/EmptyPage";
+import LoadingCard from "@/components/ui/LoadingCard";
 
 export default function MyAds({ navigation }: { navigation: any }) {
   const { openModal } = useModal();
   const [selectedTab, setSelectedTab] = useState("myads");
   const underlineAnim = useRef(new Animated.Value(0)).current;
-  const [loading, setLoading] = useState(false);
   const { myAdsProducts, favoriteProducts, myProductsOnRent, updateProduct } =
     useProducts();
-
-  // console.log(myProductsOnRent, "myProductsOnRent");
-
-  const handleDelete = (product: Product) => {
-    // Logic for real-time deletion of product
-    updateProduct(product, "delete");
-  };
-
-  const handleEdit = (product: Product) => {
-    openModal();
-  };
-
-  const goToListing = () => {
-    navigation.navigate("Create");
-  };
-
   const handleTabPress = (tab: string) => {
     setSelectedTab(tab);
-
     const toValue = tab === "myads" ? 0 : tab === "favorite" ? 1 : 2;
-
     Animated.timing(underlineAnim, {
       toValue,
       duration: 400,
@@ -59,24 +36,9 @@ export default function MyAds({ navigation }: { navigation: any }) {
     inputRange: [0, 1, 2],
     outputRange: [5, 120, 235], // Adjust based on your tab width
   });
-
-  if (loading) {
-    return (
-      <ThemedView
-        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-      >
-        <ActivityIndicator size="large" />
-      </ThemedView>
-    );
-  }
-
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{
-        dark: Colors.lightGray,
-        light: Colors.lightGray,
-      }}
-    >
+    <ThemedView style={{ flex: 1 }}>
+      <Stack.Screen options={{ title: "My Ads", headerShown: true }} />
       <ThemedView style={styles.tabContainer}>
         <TouchableOpacity
           style={styles.tab}
@@ -117,95 +79,74 @@ export default function MyAds({ navigation }: { navigation: any }) {
         style={[styles.underline, { left: underlineTranslateX }]}
       />
       {/* Tab Content */}
-      <ScrollView style={styles.contentContainer}>
-        {selectedTab === "myads" &&
-          (myAdsProducts.length > 0 ? (
-            myAdsProducts.map((product) => (
-              <MyAdCard
-                key={product._id}
-                product={product}
-                onDelete={() => handleDelete(product)}
-                onEdit={() => handleEdit(product)}
-                myAds={true}
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1, // This makes the content expand to full height
+          paddingBottom: 20, // Add some bottom padding if needed
+        }}
+      >
+        <ThemedView>
+          {selectedTab === "myads" &&
+            (myAdsProducts.length > 0 ? (
+              myAdsProducts.map((product) => (
+                <MyAdCard
+                  key={product._id}
+                  product={product}
+                  onDelete={() => updateProduct(product, "delete")}
+                  onEdit={() => openModal()}
+                  myAds={true}
+                />
+              ))
+            ) : (
+              <EmptyPage
+                msg="You have no ads"
+                btnText="Create"
+                onClick={() => navigation.navigate("Create")}
               />
-            ))
-          ) : (
-            <View style={styles.emptyState}>
-              <EmptyPage msg="You have no ads" />
-              <ThemedButton
-                color={Colors.white}
-                icon="create-outline"
-                position="right"
-                title="Create New Ad"
-                onPress={goToListing}
-                style={styles.button}
+            ))}
+          {selectedTab === "favorite" &&
+            (favoriteProducts.length > 0 ? (
+              favoriteProducts.map((product) => (
+                <MyAdCard
+                  key={product._id}
+                  product={product}
+                  myAds={false}
+                  onRemoveFavorite={() =>
+                    updateProduct(product, "toggleFavorite")
+                  }
+                />
+              ))
+            ) : (
+              <EmptyPage
+                msg="You have no favorite ads"
+                btnText="Explore"
+                onClick={() => router.push("/categrisProducts")}
               />
-            </View>
-          ))}
-
-        {selectedTab === "favorite" &&
-          (favoriteProducts.length > 0 ? (
-            favoriteProducts.map((product: Product) => (
-              <MyAdCard
-                key={product._id}
-                product={product}
-                myAds={false}
-                onRemoveFavorite={() =>
-                  updateProduct(product, "toggleFavorite")
-                }
-              />
-            ))
-          ) : (
-            <View style={styles.emptyState}>
-              <Image
-                source={{
-                  uri: "https://cdni.iconscout.com/illustration/premium/thumb/sorry-item-not-found-illustration-download-in-svg-png-gif-file-formats--available-product-tokostore-pack-e-commerce-shopping-illustrations-2809510.png?f=webp",
-                }}
-                style={styles.emptyImage}
-              />
-              <ThemedButton
-                color={Colors.white}
-                icon="expand-outline"
-                position="right"
-                title="Explore"
-                onPress={() => router.replace({ pathname: "/" })}
-                style={styles.button}
-              />
-            </View>
-          ))}
-
-        {selectedTab === "onrent" &&
-          (myProductsOnRent.length > 0 ? (
-            myProductsOnRent.map((product: Product) => (
-              <MyAdCard
-                key={product._id}
-                product={product}
-                myAds={true}
-                onRemoveFavorite={() =>
-                  updateProduct(product, "toggleFavorite")
-                }
-              />
-            ))
-          ) : (
-            <View style={styles.emptyState}>
-              <Image
-                source={{
-                  uri: "https://cdni.iconscout.com/illustration/premium/thumb/sorry-item-not-found-illustration-download-in-svg-png-gif-file-formats--available-product-tokostore-pack-e-commerce-shopping-illustrations-2809510.png?f=webp",
-                }}
-                style={styles.emptyImage}
-              />
-              <ThemedButton
-                color={Colors.white}
-                icon="expand-outline"
-                title="Explore"
-                onPress={() => router.replace({ pathname: "/" })}
-                style={styles.button}
-                position="right"
-              />
-            </View>
-          ))}
+            ))}
+          {selectedTab === "onrent" &&
+            (myProductsOnRent.length > 0 ? (
+              myProductsOnRent.map((product: Product) => (
+                <MyAdCard
+                  key={product._id}
+                  product={product}
+                  myAds={true}
+                  onRemoveFavorite={() =>
+                    updateProduct(product, "toggleFavorite")
+                  }
+                />
+              ))
+            ) : (
+              <>
+                <EmptyPage
+                  msg="You have no products on rent"
+                  btnText="Create"
+                  onClick={() => navigation.navigate("Create")}
+                />
+              </>
+            ))}
+        </ThemedView>
       </ScrollView>
-    </ParallaxScrollView>
+    </ThemedView>
   );
 }
 
@@ -213,7 +154,6 @@ const styles = StyleSheet.create({
   tabContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 5,
     position: "relative",
   },
   tab: {
@@ -229,15 +169,17 @@ const styles = StyleSheet.create({
   underline: {
     zIndex: 0,
     position: "absolute",
-    top: 18,
-    borderRadius: 10,
+    top: 9,
+    borderRadius: 5,
     height: 35,
     width: 120, // Matches tab width
-    backgroundColor: Colors.tomato,
+    backgroundColor: Colors.primary,
   },
   contentContainer: {
     flex: 1,
-    marginTop: "20%",
+    minHeight: "100%", // Ensure content takes full height
+
+    // justifyContent:
   },
   emptyState: {
     marginTop: 50,

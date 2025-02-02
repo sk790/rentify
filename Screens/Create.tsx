@@ -2,13 +2,13 @@ import { Alert, StyleSheet } from "react-native";
 import React, { useState } from "react";
 import { router, Stack } from "expo-router";
 import { Colors } from "@/constants/Colors";
-import MyDropdown from "@/components/MyDropdown";
+import MyDropdown from "@/components/ui/MyDropdown";
 import InputField from "@/components/ui/InputField";
 import { category, period, status } from "@/constants/Data";
-import ParallaxScrollView from "@/defaultComponents/ParallaxScrollView";
-import { ThemedView } from "@/defaultComponents/ThemedView";
-import { ThemedText } from "@/defaultComponents/ThemedText";
-import { ThemedButton } from "@/defaultComponents/ThemedButton";
+import ParallaxScrollView from "@/components/ui/ParallaxScrollView";
+import { ThemedView } from "@/components/ui/ThemedView";
+import { ThemedText } from "@/components/ui/ThemedText";
+import { ThemedButton } from "@/components/ui/ThemedButton";
 
 export default function Create({ route }: any) {
   const [formData, setFormData] = useState({

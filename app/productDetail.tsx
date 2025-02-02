@@ -11,15 +11,15 @@ import {
 import React, { useEffect, useState } from "react";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import ProductDetailPageHeader from "@/components/ProductDetailPageHeader";
+import ProductDetailPageHeader from "@/components/ui/ProductDetailPageHeader";
 import { Colors } from "@/constants/Colors";
 import { Product } from "@/types";
 import { useProducts } from "@/context/ProductContext";
-import { ThemedText } from "@/defaultComponents/ThemedText";
+import { ThemedText } from "@/components/ui/ThemedText";
 import Divider from "@/components/ui/Divider";
 import ImageSlider from "@/components/ui/ImageSlider";
 // import UserMap from "@/components/ui/UsreMap";
-import { ThemedView } from "@/defaultComponents/ThemedView";
+import { ThemedView } from "@/components/ui/ThemedView";
 import { getProductDetail } from "@/actions";
 
 export default function productDetail() {
@@ -84,7 +84,7 @@ export default function productDetail() {
               >
                 <Image
                   source={require("../assets/images/rupee-indian.png")}
-                  style={{ width: 14, height: 14, tintColor: Colors.tomato }}
+                  style={{ width: 14, height: 14, tintColor: Colors.primary }}
                 />
                 <ThemedText type="defaultSemiBold">
                   {product?.price}/{product?.timePeriod}
@@ -121,7 +121,7 @@ export default function productDetail() {
               <Ionicons
                 name="location-outline"
                 size={18}
-                color={Colors.tomato}
+                color={Colors.primary}
               />
               <ThemedText numberOfLines={2} style={{ fontSize: 12 }}>
                 {product?.address}
@@ -195,7 +195,7 @@ export default function productDetail() {
                 borderWidth: 1,
                 padding: 10,
                 borderRadius: 5,
-                marginBottom: 10,
+                marginBottom: 60,
               }}
             >
               <View
@@ -216,13 +216,13 @@ export default function productDetail() {
               <Ionicons
                 name="chevron-forward-outline"
                 size={28}
-                color={Colors.tomato}
+                color={Colors.primary}
               />
             </ThemedView>
           </TouchableOpacity>
           <View>
             {/* {product?.productCordinates && (
-              <UserMap cordinets={product.productCordinates} />
+              <UserMap coordinates={product?.productCordinates} />
             )} */}
           </View>
         </ThemedView>
@@ -239,6 +239,12 @@ export default function productDetail() {
         }}
       >
         <TouchableOpacity
+          onPress={() =>
+            router.push({
+              pathname: "/userChat",
+              params: { chatUser: JSON.stringify(product?.user) },
+            })
+          }
           style={{
             backgroundColor: Colors.gray,
             padding: 10,

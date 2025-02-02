@@ -1,8 +1,8 @@
 import { Image, StyleSheet, useColorScheme } from "react-native";
 import React from "react";
-import { ThemedText } from "@/defaultComponents/ThemedText";
+import { ThemedText } from "@/components/ui/ThemedText";
 import { Colors } from "@/constants/Colors";
-import { ThemedView } from "@/defaultComponents/ThemedView";
+import { ThemedView } from "@/components/ui/ThemedView";
 type Props = {
   label: string;
   image: string;

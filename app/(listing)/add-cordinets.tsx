@@ -9,8 +9,8 @@ import React, { useEffect, useState } from "react";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import { useGetLocation } from "@/hooks/GetLocation";
-import { ThemedButton } from "@/defaultComponents/ThemedButton";
-import ParallaxScrollView from "@/defaultComponents/ParallaxScrollView";
+import { ThemedButton } from "@/components/ui/ThemedButton";
+import ParallaxScrollView from "@/components/ui/ParallaxScrollView";
 import ImagePicker from "@/components/ui/ImagePicker";
 
 export default function addcordinets() {

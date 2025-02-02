@@ -4,16 +4,16 @@ import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { useFormateDateWithYear } from "@/hooks/useFormateDate";
 
-import { ThemedView } from "@/defaultComponents/ThemedView";
-import { ThemedText } from "@/defaultComponents/ThemedText";
-import { ThemedButton } from "@/defaultComponents/ThemedButton";
+import { ThemedView } from "@/components/ui/ThemedView";
+import { ThemedText } from "@/components/ui/ThemedText";
+import { ThemedButton } from "@/components/ui/ThemedButton";
 type userProps = {
   user: User | undefined;
   me?: boolean;
 };
 import * as MyImagePicker from "expo-image-picker";
 import { User } from "@/types";
-import MyModel from "./MyModel";
+import MyModel from "../ui/MyModel";
 import { useModal } from "@/context/ModalContext";
 import { updateAvatar } from "@/actions";
 import { uploadToCloudinary } from "@/hooks/useUploadToCloudinary";
@@ -90,7 +90,7 @@ export default function ProfileCard({ user, me }: userProps) {
                 style={{ width: 100, height: 100, borderRadius: 50 }}
               />
             ) : imageLoading ? (
-              <ActivityIndicator size="large" color={Colors.tomato} />
+              <ActivityIndicator size="large" color={Colors.primary} />
             ) : (
               <Image
                 source={{
@@ -104,7 +104,7 @@ export default function ProfileCard({ user, me }: userProps) {
                 onPress={() => uploadAvatar(user?._id as string)}
                 name="camera"
                 size={30}
-                color={Colors.tomato}
+                color={Colors.primary}
                 style={{ position: "absolute", top: 50, left: 80 }}
               />
             )}
@@ -122,7 +122,7 @@ export default function ProfileCard({ user, me }: userProps) {
             onPress={openModal}
             name="pencil-sharp"
             size={24}
-            color={Colors.tomato}
+            color={Colors.primary}
             style={{ alignSelf: "center" }}
           />
         ) : (
@@ -136,26 +136,26 @@ export default function ProfileCard({ user, me }: userProps) {
         )}
       </ThemedView>
       <ThemedView style={{ flexDirection: "row", gap: 5 }}>
-        <Ionicons name="calendar-outline" size={24} color={Colors.tomato} />
+        <Ionicons name="calendar-outline" size={24} color={Colors.primary} />
         <ThemedText type="defaultSemiBold">
           Member since {useFormateDateWithYear(user?.createdAt)}
         </ThemedText>
       </ThemedView>
 
       <ThemedView style={{ flexDirection: "row", gap: 5 }}>
-        <Ionicons name="mail-outline" size={24} color={Colors.tomato} />
+        <Ionicons name="mail-outline" size={24} color={Colors.primary} />
         <ThemedText>{user?.description || "About You"}</ThemedText>
       </ThemedView>
 
       <ThemedView style={{ flexDirection: "row", gap: 5 }}>
-        <Ionicons name="location-outline" size={24} color={Colors.tomato} />
+        <Ionicons name="location-outline" size={24} color={Colors.primary} />
         <ThemedText>{user?.address || "address"}</ThemedText>
       </ThemedView>
       <ThemedView style={{ flexDirection: "row", gap: 5 }}>
         <Ionicons
           name="phone-portrait-outline"
           size={24}
-          color={Colors.tomato}
+          color={Colors.primary}
         />
         <ThemedText type="defaultSemiBold">{user?.phone}</ThemedText>
       </ThemedView>

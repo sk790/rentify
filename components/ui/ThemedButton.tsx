@@ -36,12 +36,7 @@ export const ThemedButton: React.FC<ThemedButtonProps> = ({
   const theme = useColorScheme();
 
   // Determine button colors based on theme
-  const backgroundColor =
-    variant === "outline"
-      ? "transparent"
-      : theme === "dark"
-      ? darkColor || "#333"
-      : lightColor || Colors.tomato;
+  const backgroundColor = theme === "dark" ? Colors.gray : Colors.primary;
 
   // Render icon based on position
   const renderIcon = () =>
@@ -49,22 +44,14 @@ export const ThemedButton: React.FC<ThemedButtonProps> = ({
 
   return (
     <TouchableOpacity
-      style={[
-        styles.button,
-        variant === "outline" ? styles.outline : styles.default,
-        { backgroundColor, borderColor: Colors.tomato },
-        style,
-      ]}
+      style={[styles.button, { backgroundColor }, style]}
       {...props}
     >
       {position === "left" && renderIcon()}
       {loading ? (
-        <ActivityIndicator
-          size="small"
-          color={variant === "outline" ? Colors.tomato : color}
-        />
+        <ActivityIndicator size="small" color={color || "white"} />
       ) : (
-        <Text style={[styles.text, { color: color }]}>{title}</Text>
+        <Text style={[styles.text, { color: color || "white" }]}>{title}</Text>
       )}
       {position === "right" && renderIcon()}
     </TouchableOpacity>
@@ -85,7 +72,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
   },
   default: {
-    backgroundColor: Colors.tomato,
+    backgroundColor: Colors.primary,
   },
   text: {
     fontSize: 16,

@@ -1,4 +1,3 @@
-import { Colors } from "@/constants/Colors";
 import React from "react";
 import { View, StyleSheet, Animated } from "react-native";
 import { ThemedView } from "./ThemedView";

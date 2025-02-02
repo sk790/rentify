@@ -2,11 +2,12 @@ import { ScrollView, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 
 import HorizontalProductCard from "@/components/HorizontalProductCard";
-import ProfileCard from "@/components/ProfileCard";
+import ProfileCard from "@/components/ui/ProfileCard";
 import { useLocalSearchParams } from "expo-router";
 import { Product, User } from "@/types";
 import { useProducts } from "@/context/ProductContext";
 import { useAuth } from "@/context/AuthContext";
+import { ThemedView } from "@/components/ui/ThemedView";
 
 export default function profile() {
   const { userId } = useLocalSearchParams();
@@ -28,11 +29,13 @@ export default function profile() {
   }, [userId]);
 
   return (
-    <ScrollView>
-      <ProfileCard user={user} me={me} />
-      {userProducts?.map((product) => (
-        <HorizontalProductCard key={product._id} product={product} />
-      ))}
-    </ScrollView>
+    <ThemedView style={{ flex: 1 }}>
+      <ScrollView>
+        <ProfileCard user={user} me={me} />
+        {userProducts?.map((product) => (
+          <HorizontalProductCard key={product._id} product={product} />
+        ))}
+      </ScrollView>
+    </ThemedView>
   );
 }

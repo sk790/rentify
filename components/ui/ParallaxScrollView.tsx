@@ -5,8 +5,7 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 
-import { ThemedView } from "@/defaultComponents/ThemedView";
-import { useBottomTabOverflow } from "@/defaultComponents/ui/TabBarBackground";
+import { ThemedView } from "@/components/ui/ThemedView";
 import { useColorScheme } from "@/hooks/useColorScheme";
 
 const HEADER_HEIGHT = 40;
@@ -21,7 +20,6 @@ export default function ParallaxScrollView({
 }: Props) {
   const colorScheme = useColorScheme() ?? "light";
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
-  const bottom = useBottomTabOverflow();
 
   const headerAnimatedStyle = useAnimatedStyle(() => {
     // Add your parallax animation logic here, if necessary.
@@ -34,8 +32,6 @@ export default function ParallaxScrollView({
       <ScrollView
         ref={scrollRef}
         scrollEventThrottle={16}
-        scrollIndicatorInsets={{ bottom }}
-        contentContainerStyle={{ paddingBottom: bottom }}
         stickyHeaderIndices={[0]} // Make the header sticky
       >
         <View
@@ -53,7 +49,7 @@ export default function ParallaxScrollView({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
   },
   header: {
     height: HEADER_HEIGHT,

@@ -1,6 +1,6 @@
 import { Colors } from "@/constants/Colors";
-import { ThemedText } from "@/defaultComponents/ThemedText";
-import { ThemedView } from "@/defaultComponents/ThemedView";
+import { ThemedText } from "@/components/ui/ThemedText";
+import { ThemedView } from "@/components/ui/ThemedView";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useRef, useState } from "react";
 import {
@@ -47,7 +47,7 @@ const ThreeDotDrawer = ({ titles }: any) => {
     <>
       {/* Detect clicks outside the menu */}
       <TouchableOpacity ref={threeDotsRef} onPress={toggleMenu}>
-        <Ionicons name="ellipsis-vertical" size={24} color={Colors.tomato} />
+        <Ionicons name="ellipsis-vertical" size={24} color={Colors.primary} />
       </TouchableOpacity>
       <Modal
         transparent={true}

@@ -1,13 +1,13 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
-import { router } from "expo-router";
+import { router, Stack } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useFormateDate } from "@/hooks/useFormateDate";
-import { ThemedText } from "@/defaultComponents/ThemedText";
+import { ThemedText } from "@/components/ui/ThemedText";
 import { useProducts } from "@/context/ProductContext";
 import { Product } from "@/types";
-import { ThemedView } from "@/defaultComponents/ThemedView";
+import { ThemedView } from "@/components/ui/ThemedView";
 
 export default function HorizontalProductCard({
   product,
@@ -21,16 +21,14 @@ export default function HorizontalProductCard({
 
   return (
     <>
+      <Stack.Screen name="profile" options={{ title: "Profile" }} />
       <TouchableOpacity onPress={() => getProductDetails(product?._id)}>
         <ThemedView
           darkColor={Colors.dark.cardColor}
           lightColor={Colors.light.cardColor}
           style={{
-            marginVertical: 10,
-            borderRadius: 10,
-            borderWidth: 1,
-            marginHorizontal: 10,
-            borderColor: Colors.gray,
+            borderBottomColor: Colors.gray,
+            borderBottomWidth: 1,
             padding: 10,
           }}
         >
@@ -66,7 +64,7 @@ export default function HorizontalProductCard({
                   <Ionicons
                     name="location-outline"
                     size={16}
-                    color={Colors.tomato}
+                    color={Colors.primary}
                   />
                   <ThemedText
                     numberOfLines={1}
@@ -141,7 +139,7 @@ const styles = StyleSheet.create({
   rupeeIcon: {
     width: 12,
     height: 12,
-    tintColor: Colors.tomato,
+    tintColor: Colors.primary,
     marginRight: 4,
   },
   titleText: {

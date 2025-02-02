@@ -16,7 +16,7 @@ import { useAuth } from "@/context/AuthContext";
 import { Colors } from "@/constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
 import AuthInput from "@/components/ui/AuthInput";
-import { ThemedText } from "@/defaultComponents/ThemedText";
+import { ThemedText } from "@/components/ui/ThemedText";
 import { login } from "@/actions";
 import { Ionicons } from "@expo/vector-icons";
 

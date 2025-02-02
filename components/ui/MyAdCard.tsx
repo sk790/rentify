@@ -5,12 +5,12 @@ import { Product } from "@/types";
 import { Colors } from "@/constants/Colors";
 import { router } from "expo-router";
 import { useProducts } from "@/context/ProductContext";
-import { ThemedButton } from "@/defaultComponents/ThemedButton";
-import { ThemedView } from "@/defaultComponents/ThemedView";
-import ThreeDotDrawer from "./ui/ThreeDots";
+import { ThemedButton } from "@/components/ui/ThemedButton";
+import { ThemedView } from "@/components/ui/ThemedView";
+import ThreeDotDrawer from "../ui/ThreeDots";
 import { useModal } from "@/context/ModalContext";
-import { ThemedText } from "@/defaultComponents/ThemedText";
-import MyAlert from "./ui/MyAlert";
+import { ThemedText } from "@/components/ui/ThemedText";
+import MyAlert from "../ui/MyAlert";
 import { deleteProduct, toggleRent } from "@/actions";
 
 type Props = {
@@ -53,7 +53,7 @@ export default function MyAdCard({ product, myAds }: Props) {
       title: "Edit",
       onPress: () => onEdit?.(),
       icon: "pencil",
-      color: Colors.tomato,
+      color: Colors.primary,
     },
     {
       title: "Delete",
@@ -77,12 +77,9 @@ export default function MyAdCard({ product, myAds }: Props) {
         style={{
           flexDirection: "column",
           justifyContent: "space-between",
-          borderRadius: 10,
+          borderBottomColor: Colors.gray,
           padding: 10,
-          borderColor: Colors.gray,
-          borderWidth: StyleSheet.hairlineWidth,
           gap: 5,
-          marginVertical: 10,
         }}
       >
         <View style={{ flexDirection: "row" }}>

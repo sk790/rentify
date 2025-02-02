@@ -1,5 +1,5 @@
 import { Colors } from "@/constants/Colors";
-import { ThemedView } from "@/defaultComponents/ThemedView";
+import { ThemedView } from "@/components/ui/ThemedView";
 import React, { useState } from "react";
 import {
   View,
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     width: 10,
     borderRadius: 5,
     height: 10,
-    backgroundColor: Colors.tomato,
+    backgroundColor: Colors.primary,
   },
   buttonsContainer: {
     position: "absolute",
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   button: {
-    backgroundColor: Colors.tomato,
+    backgroundColor: Colors.primary,
     borderRadius: 50,
     padding: 15,
     marginHorizontal: 20,

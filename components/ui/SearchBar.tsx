@@ -1,6 +1,6 @@
 import { StyleSheet, TextInput, Keyboard, View } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import { ThemedView } from "@/defaultComponents/ThemedView";
+import { ThemedView } from "@/components/ui/ThemedView";
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -53,7 +53,7 @@ export default function SearchBar({
           borderRadius: 5,
         }}
       >
-        <Ionicons name="search-outline" size={28} color={Colors.tomato} />
+        <Ionicons name="search-outline" size={28} color={Colors.primary} />
         <TextInput
           placeholder={placeholder || "Search here..."}
           placeholderTextColor={Colors.gray}
@@ -61,7 +61,7 @@ export default function SearchBar({
             width: "90%",
             height: 45,
             fontWeight: "600",
-            color: Colors.tomato,
+            color: Colors.primary,
           }}
           ref={inputRef}
           onChangeText={(text) => setValue(text)}
@@ -72,7 +72,7 @@ export default function SearchBar({
           onPress={() => router.push("/notifications")}
           name="notifications-outline"
           size={28}
-          color={Colors.tomato}
+          color={Colors.primary}
         />
       </View>
     </ThemedView>

@@ -19,7 +19,7 @@ const SocialLoginBottons = (props: Props) => {
           <Ionicons
             name="phone-portrait-outline"
             size={20}
-            color={Colors.tomato}
+            color={Colors.primary}
           />
           <Text style={styles.btnText}>Continue with Mobile</Text>
         </TouchableOpacity>
@@ -36,7 +36,7 @@ const SocialLoginBottons = (props: Props) => {
         entering={FadeInLeft.delay(1100).duration(300).springify()}
       >
         <TouchableOpacity style={styles.btn}>
-          <Ionicons name="logo-apple" size={20} color={Colors.tomato} />
+          <Ionicons name="logo-apple" size={20} color={Colors.primary} />
           <Text style={styles.btnText}>Continue with Apple</Text>
         </TouchableOpacity>
       </Animated.View>
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 5,
-    borderColor: Colors.tomato,
+    borderColor: Colors.primary,
     borderWidth: 1,
     padding: 10,
     borderRadius: 25,

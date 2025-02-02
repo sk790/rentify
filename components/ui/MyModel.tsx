@@ -11,11 +11,11 @@ import {
 } from "react-native";
 import { Colors } from "@/constants/Colors"; // Add your colors or use default values
 import { Ionicons } from "@expo/vector-icons";
-import { ThemedView } from "@/defaultComponents/ThemedView";
+import { ThemedView } from "@/components/ui/ThemedView";
 import { useModal } from "@/context/ModalContext";
-import { ThemedButton } from "@/defaultComponents/ThemedButton";
+import { ThemedButton } from "@/components/ui/ThemedButton";
 import { User } from "@/types";
-import { ThemedText } from "@/defaultComponents/ThemedText";
+import { ThemedText } from "@/components/ui/ThemedText";
 import { useAuth } from "@/context/AuthContext";
 import { updateProfile } from "@/actions";
 
@@ -109,7 +109,7 @@ export default function MyModel({ userData }: { userData?: User }) {
                 onPress={closeModal}
                 name="close"
                 size={38}
-                color={Colors.tomato}
+                color={Colors.primary}
               />
             </ThemedView>
             <ScrollView>

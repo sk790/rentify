@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { View, useColorScheme, Alert } from "react-native";
-import { ThemedView } from "@/defaultComponents/ThemedView";
-import { ThemedButton } from "@/defaultComponents/ThemedButton";
+import { ThemedView } from "@/components/ui/ThemedView";
+import { ThemedButton } from "@/components/ui/ThemedButton";
 import InputField from "@/components/ui/InputField";
-import MyDropdown from "@/components/MyDropdown";
+import MyDropdown from "@/components/ui/MyDropdown";
 import { period, status } from "@/constants/Data";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { Colors } from "@/constants/Colors";

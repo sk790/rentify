@@ -165,3 +165,43 @@ export const addProduct = async (data: any) => {
     console.log(error);
   }
 };
+
+type Props = {
+  senderId: string | undefined;
+  receiverId: string;
+  text: string;
+};
+export const sendMessage = async ({ senderId, receiverId, text }: Props) => {
+  try {
+    const res = await fetch(`${BASE_URL}/api/chat/send-message`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ senderId, receiverId, text }),
+    });
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getMessages = async ({ chatUserId }: { chatUserId: string }) => {
+  // console.log(chatUserId, "chatUserId");
+  try {
+    const res = await fetch(`${BASE_URL}/api/chat/get-messages/${chatUserId}`);
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getConverstions = async () => {
+  try {
+    const res = await fetch(`${BASE_URL}/api/chat/get-conversations`);
+    // console.log(res);
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};

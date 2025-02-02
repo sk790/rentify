@@ -16,3 +16,11 @@ export const useFormateDateWithYear = (date?: string) => {
     });
   }
 };
+export const useFormateTime = (date?: string) => {
+  if (date) {
+    return new Date(date).toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+    });
+  }
+};

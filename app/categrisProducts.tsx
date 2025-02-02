@@ -1,29 +1,16 @@
-import {
-  ActivityIndicator,
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import { Colors } from "@/constants/Colors";
 import { Stack, useLocalSearchParams } from "expo-router";
 
 import HorizontalProductCard from "@/components/HorizontalProductCard";
 import { Product } from "@/types";
-import ParallaxScrollView from "@/defaultComponents/ParallaxScrollView";
-import { ThemedText } from "@/defaultComponents/ThemedText";
+import { ThemedText } from "@/components/ui/ThemedText";
 import { useLocation } from "@/context/LocationContext";
-import { ThemedButton } from "@/defaultComponents/ThemedButton";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ThemedView } from "@/defaultComponents/ThemedView";
-import Header from "@/components/Header";
+import { ThemedButton } from "@/components/ui/ThemedButton";
+import { ThemedView } from "@/components/ui/ThemedView";
 import EmptyPage from "@/components/ui/EmptyPage";
-import ProductDetailPageHeader from "@/components/ProductDetailPageHeader";
 import SearchBar from "@/components/ui/SearchBar";
-import LoadingCard from "@/defaultComponents/LoadingCard";
+import LoadingCard from "@/components/ui/LoadingCard";
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
 
 export default function categrisProducts() {
@@ -55,9 +42,9 @@ export default function categrisProducts() {
           search || encodedCategory.toLowerCase()
         }&limit=${limit}&areaRange=${range}&userCoords=${stringLocation}`
       );
-      const data = await res.json();
       setLoadingStatus((prev) => ({ ...prev, productLoading: false }));
       if (res.ok) {
+        const data = await res.json();
         if (data.products.length < limit) setShowMore(false);
         setLenght(data.categoryProductLenght);
         // console.log(data);
@@ -89,15 +76,9 @@ export default function categrisProducts() {
       />
       <ThemedView style={{ paddingTop: 20, flex: 1 }}>
         <SearchBar placeholder={category as string} onChange={setSearch} />
-        {products.length === 0 &&
-          !loadingStatus.productLoading &&
-          search !== "" && (
-            <View
-              style={{ flex: 1, justifyContent: "center", marginTop: "50%" }}
-            >
-              <EmptyPage msg="No products found Try changing your search or category" />
-            </View>
-          )}
+        {products.length === 0 && !loadingStatus.productLoading && (
+          <EmptyPage msg="No products found Try changing your search or category" />
+        )}
         <ScrollView>
           <ThemedView>
             {!loadingStatus.productLoading && products.length > 0 && (

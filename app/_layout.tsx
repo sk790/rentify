@@ -15,6 +15,8 @@ import { AuthProvider } from "@/context/AuthContext";
 import { ProductProvider } from "@/context/ProductContext";
 import { LocationProvider } from "@/context/LocationContext";
 import { ModalProvider } from "@/context/ModalContext";
+import { ChatProvider } from "@/context/ChatContext";
+// import { SocketProvider } from "@/context/SocketContext";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -39,14 +41,18 @@ export default function RootLayout() {
       <ProductProvider>
         <LocationProvider>
           <ModalProvider>
-            <ThemeProvider
-              value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-            >
-              <Stack>
-                <Stack.Screen name="index" options={{ headerShown: false }} />
-              </Stack>
-              <StatusBar style="auto" />
-            </ThemeProvider>
+            <ChatProvider>
+              {/* <SocketProvider> */}
+              <ThemeProvider
+                value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+              >
+                <Stack>
+                  <Stack.Screen name="index" options={{ headerShown: false }} />
+                </Stack>
+                <StatusBar style="auto" />
+              </ThemeProvider>
+              {/* </SocketProvider> */}
+            </ChatProvider>
           </ModalProvider>
         </LocationProvider>
       </ProductProvider>

@@ -9,7 +9,7 @@ import React from "react";
 import { Stack } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, { FadeInRight } from "react-native-reanimated";
-import SocialLoginBottons from "@/components/SocialLoginBottons";
+import SocialLoginBottons from "@/components/ui/SocialLoginBottons";
 import { Colors } from "@/constants/Colors";
 
 export default function AuthStack({ navigation }: { navigation: any }) {
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
-    color: Colors.tomato,
+    color: Colors.primary,
     fontWeight: "900",
     letterSpacing: 1,
     marginBottom: 5,

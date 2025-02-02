@@ -13,21 +13,23 @@ import Header from "@/components/Header";
 import CategoryCard from "@/components/CategoryCard";
 import HomeProductCard from "@/components/HomeProductCard";
 // import { BASE_URL } from "@env";
-import { Location, Product } from "@/types";
+import { Location, Product, User } from "@/types";
 import { useProducts } from "@/context/ProductContext";
 import { useLocation } from "@/context/LocationContext";
 import { useAuth } from "@/context/AuthContext";
-import ParallaxScrollView from "@/defaultComponents/ParallaxScrollView";
+import ParallaxScrollView from "@/components/ui/ParallaxScrollView";
 import { Colors } from "@/constants/Colors";
 import { homeCategoryData } from "@/constants/Data";
-import { ThemedText } from "@/defaultComponents/ThemedText";
-import { ThemedView } from "@/defaultComponents/ThemedView";
+import { ThemedText } from "@/components/ui/ThemedText";
+import { ThemedView } from "@/components/ui/ThemedView";
 
 import { getUser } from "@/actions";
-import LoadingCard from "@/defaultComponents/LoadingCard";
+import LoadingCard from "@/components/ui/LoadingCard";
+// import { useSocket } from "@/context/SocketContext";
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
 
 export default function HomeScreen() {
+  // const { onlineUsers } = useSocket();
   const [loading, setLoading] = useState(false);
   const {
     allProducts,
@@ -39,7 +41,7 @@ export default function HomeScreen() {
   const [distances, setDistances] = useState<number[]>([]);
   const { location } = useLocation();
   const stringLocation = JSON.stringify(location);
-  const { setUser } = useAuth();
+  const { setUser, user } = useAuth();
 
   const getUserData = async () => {
     const res = await getUser();
@@ -76,9 +78,6 @@ export default function HomeScreen() {
     getUserData();
   }, []);
 
-  const getProductDetails = (productId: string) => {
-    router.push(`/productDetail?productId=${productId}`);
-  };
   const getProductsByCategory = (category: string) => {
     router.push({ pathname: "/categrisProducts", params: { category } });
   };
@@ -87,7 +86,7 @@ export default function HomeScreen() {
     <>
       <Stack.Screen options={{ headerShown: false }} />
       <ParallaxScrollView
-        headerBackgroundColor={{ light: Colors.tomato, dark: Colors.tomato }}
+        headerBackgroundColor={{ light: Colors.primary, dark: Colors.primary }}
       >
         <Header />
         <ThemedView

@@ -1,14 +1,16 @@
 import { Colors } from "@/constants/Colors";
-import { ThemedView } from "@/defaultComponents/ThemedView";
+import { ThemedView } from "@/components/ui/ThemedView";
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, ActivityIndicator, Text } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 
 type Props = {
-  cordinets: { latitude: number; longitude: number };
+  coordinates: { latitude: number; longitude: number };
 };
 
-const UserMap = ({ cordinets }: Props) => {
+const UserMap = ({ coordinates }: Props) => {
+  console.log(coordinates, "cordinets");
+
   const [loading, setLoading] = useState(true);
   const [location, setLocation] = useState<{
     latitude: number;
@@ -16,13 +18,23 @@ const UserMap = ({ cordinets }: Props) => {
   } | null>(null);
 
   useEffect(() => {
-    if (cordinets?.latitude !== 0 && cordinets?.longitude !== 0) {
-      setLocation(cordinets); // Set valid coordinates
+    if (
+      coordinates &&
+      coordinates.latitude !== 0 &&
+      coordinates.longitude !== 0
+    ) {
+      setLocation(coordinates);
       setLoading(false);
     }
-  }, [cordinets]);
+  }, [coordinates]);
+  const centralLatitude = location?.latitude;
+  const centralLongitude = location?.longitude;
+  const rangeInKm = 10;
+  const latitudeDelta = rangeInKm / 110.574;
+  const longitudeDelta =
+    rangeInKm / (111.32 * Math.cos((centralLatitude! * Math.PI) / 180));
 
-  if (loading || !location) {
+  if (loading) {
     return (
       <View style={styles.loaderContainer}>
         <ActivityIndicator size="large" color="blue" />
@@ -36,25 +48,24 @@ const UserMap = ({ cordinets }: Props) => {
       {location && (
         <MapView
           style={styles.map}
-          region={{
+          initialRegion={{
             latitude: location.latitude,
             longitude: location.longitude,
-            latitudeDelta: 0.01, // Smaller values zoom in closer
-            longitudeDelta: 0.01,
+            latitudeDelta: 0.0922, // Use standard delta values
+            longitudeDelta: 0.0421,
           }}
-          scrollEnabled={false} // Disable dragging
-          rotateEnabled={false} // Disable rotation
-          zoomEnabled={false} // Disable zoom
-          pitchEnabled={false} // Disable tilt
+          showsUserLocation={true}
+          showsMyLocationButton={true}
         >
           <Marker
+            key={Math.random() * 1000}
             coordinate={{
-              latitude: location.latitude,
-              longitude: location.longitude,
+              latitude: location?.latitude,
+              longitude: location?.longitude,
             }}
-            pinColor="red"
-            title="Your Location"
-            description="You are here"
+            title={"Location"}
+            description={"User location"}
+            pinColor={Colors.primary}
           />
         </MapView>
       )}
@@ -68,7 +79,7 @@ const styles = StyleSheet.create({
     margin: 10,
     paddingBottom: 50,
     borderWidth: 1,
-    borderColor: Colors.tomato,
+    borderColor: Colors.primary,
   },
   map: {
     flex: 1,

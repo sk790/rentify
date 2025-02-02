@@ -1,8 +1,8 @@
 import { StyleSheet, Text, useColorScheme, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import React, { useState } from "react";
-import { ThemedView } from "@/defaultComponents/ThemedView";
-import { ThemedText } from "@/defaultComponents/ThemedText";
+import { ThemedView } from "@/components/ui/ThemedView";
+import { ThemedText } from "@/components/ui/ThemedText";
 import { Colors } from "@/constants/Colors";
 
 type Props = {

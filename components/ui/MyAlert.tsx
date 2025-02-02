@@ -1,7 +1,7 @@
 import { Colors } from "@/constants/Colors";
 import { useModal } from "@/context/ModalContext";
-import { ThemedText } from "@/defaultComponents/ThemedText";
-import { ThemedView } from "@/defaultComponents/ThemedView";
+import { ThemedText } from "@/components/ui/ThemedText";
+import { ThemedView } from "@/components/ui/ThemedView";
 import React, { useEffect, useState } from "react";
 import {
   View,

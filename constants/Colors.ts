@@ -2,7 +2,6 @@ const tintColorLight = "#0a7ea4";
 const tintColorDark = "#fff";
 
 export const Colors = {
-  primary: "#572fff",
   black: "black",
   gray: "#666",
   lightGray: "#999",
@@ -33,6 +32,6 @@ export const Colors = {
     cardColor: "#272a29",
     background: "#100f0f",
   },
-  tomato: "#2f95dc",
+  primary: "#2f95dc",
   lightTomato: "#FF7F70",
 };

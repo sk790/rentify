@@ -6,15 +6,15 @@ import {
   View,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import ParallaxScrollView from "@/defaultComponents/ParallaxScrollView";
+import ParallaxScrollView from "@/components/ui/ParallaxScrollView";
 import React, { useState } from "react";
-import ProfileCard from "@/components/ProfileCard";
+import ProfileCard from "@/components/ui/ProfileCard";
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "@/context/AuthContext";
-import { ThemedView } from "@/defaultComponents/ThemedView";
-import { ThemedText } from "@/defaultComponents/ThemedText";
-import { ThemedButton } from "@/defaultComponents/ThemedButton";
+import { ThemedView } from "@/components/ui/ThemedView";
+import { ThemedText } from "@/components/ui/ThemedText";
+import { ThemedButton } from "@/components/ui/ThemedButton";
 import { router } from "expo-router";
 import { logout } from "@/actions";
 
@@ -113,6 +113,7 @@ const ProfileContent = ({
         flexDirection: "row",
         alignItems: "center",
         marginHorizontal: 10,
+        marginTop: 10,
       }}
     >
       <TouchableOpacity
@@ -124,10 +125,10 @@ const ProfileContent = ({
         }}
         onPress={onPress}
       >
-        <Ionicons name={rightIcon} size={32} color={Colors.tomato} />
+        <Ionicons name={rightIcon} size={32} color={Colors.primary} />
         <ThemedText type="defaultSemiBold">{label}</ThemedText>
       </TouchableOpacity>
-      <Ionicons name={leftIcon} size={25} color={Colors.tomato} />
+      <Ionicons name={leftIcon} size={25} color={Colors.primary} />
     </ThemedView>
   );
 };
