@@ -1,8 +1,6 @@
 import {
-  FlatList,
   ScrollView,
   StyleSheet,
-  Text,
   TextInput,
   TouchableOpacity,
   useColorScheme,
@@ -14,14 +12,11 @@ import ChatHeader from "@/components/ui/ChatHeader";
 import Divider from "@/components/ui/Divider";
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
-import { ThemedText } from "@/components/ui/ThemedText";
 import { useChat } from "@/context/ChatContext";
 import { useAuth } from "@/context/AuthContext";
 import { sendMessage, getMessages } from "@/actions";
 import { useSocket } from "@/context/SocketContext";
-import { useFocusEffect } from "@react-navigation/native";
-import { Message } from "@/types";
-import LoadingCard from "@/components/ui/LoadingCard";
+
 import ChatMessage from "@/components/ui/ChatMessage";
 
 export default function userChat() {
@@ -34,6 +29,7 @@ export default function userChat() {
   const { updateConversation } = useChat();
   const [messages, setMessages] = useState<any>([]);
   const [loading, setLoading] = useState(false);
+  const [msgToSendSender, setMsgToSendSender] = useState<any>(null);
 
   useEffect(() => {
     socket?.on("newMessage", (msg: any) => {
@@ -42,14 +38,12 @@ export default function userChat() {
         ...prev,
         { text: msg.text, sender: msg.sender },
       ]);
-      // console.log(msg.sender, msg.receiver);
-      // if (msg.receiver !== loggedInUser?._id) {
-      //   setMessages((prev: any) => [
-      //     ...prev,
-      //     { text: "bubbb", sender: msg.sender },
-      //   ]);
-      // }
+      setMsgToSendSender(msg);
     });
+    if (msgToSendSender?.status === "delivered") {
+      socket?.emit("messageRead", msgToSendSender);
+    }
+
     socket?.on("messageDelivered", (message: any) => {
       setMessages((prev: any) =>
         prev.map((msg: any) =>
@@ -57,12 +51,22 @@ export default function userChat() {
         )
       );
     });
+    socket?.on("messageReadConfirm", (message: any) => {
+      if (message.status === "read") {
+        console.log(message, "message");
+        setMessages((prev: any) =>
+          prev.map((msg: any) =>
+            msg._id === message._id ? { ...msg, status: message.status } : msg
+          )
+        );
+      }
+    });
     return () => {
       socket?.off("newMessage");
+      socket?.off("messageReadConfirm");
       socket?.off("messageDelivered");
-      socket?.off("messageRead");
     };
-  }, [socket]);
+  }, [socket, msgToSendSender]);
 
   const send = async () => {
     if (!message) return;
@@ -132,11 +136,21 @@ export default function userChat() {
       >
         <ThemedView style={{ flex: 1, marginHorizontal: 10 }}>
           <ThemedView style={{ flexDirection: "column", gap: 10 }}>
-            <FlatList
-              keyExtractor={(item) => item._id}
-              data={messages}
-              renderItem={({ item }) => <ChatMessage {...item} />}
-            />
+            {messages.map((msg: any, index: number) => (
+              <ThemedView
+                key={index}
+                darkColor={Colors.dark.cardColor}
+                lightColor={Colors.light.cardColor}
+                style={{
+                  alignSelf:
+                    msg.sender !== loggedInUser?._id
+                      ? "flex-start"
+                      : "flex-end",
+                }}
+              >
+                <ChatMessage message={msg} />
+              </ThemedView>
+            ))}
           </ThemedView>
         </ThemedView>
       </ScrollView>

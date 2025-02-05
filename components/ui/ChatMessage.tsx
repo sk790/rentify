@@ -5,37 +5,61 @@ import { ThemedView } from "./ThemedView";
 import { ThemedText } from "./ThemedText";
 import { Ionicons } from "@expo/vector-icons";
 import { useFormateTime } from "@/hooks/useFormateDate";
+import { useAuth } from "@/context/AuthContext";
+import { Colors } from "@/constants/Colors";
 
 type Props = {
-  message: string;
-  time: string;
-  icon?: keyof typeof Ionicons.glyphMap;
-  postion?: "left" | "right";
+  message: {
+    text: string;
+    createdAt: string;
+    icon?: keyof typeof Ionicons.glyphMap | "";
+    postion?: string;
+    me?: boolean;
+    status: string;
+    sender: any;
+  };
 };
-const ChatMessage = ({ message, time, icon, postion }: Props) => {
+const ChatMessage = ({ message }: Props) => {
+  const { user } = useAuth();
   return (
     <ThemedView
       style={[
         styles.container,
-        postion === "left" ? styles.senderContainer : styles.receiverContainer,
+        message.sender === user?._id
+          ? styles.senderContainer
+          : styles.receiverContainer,
       ]}
     >
       <ThemedView
         style={[
           styles.messageBox,
-          postion === "left" ? styles.senderMessage : styles.receiverMessage,
+          message.sender === user?._id
+            ? styles.senderMessage
+            : styles.receiverMessage,
         ]}
       >
-        <ThemedText style={styles.messageText}>{message}</ThemedText>
+        <ThemedText style={styles.messageText}>{message.text}</ThemedText>
         <View style={styles.footer}>
-          <Text style={styles.timestamp}>{useFormateTime(time)}</Text>
-
-          <Icon
-            name={icon || ""}
-            size={16}
-            color={"white"}
-            style={styles.doubleTick}
-          />
+          <Text style={styles.timestamp}>
+            {useFormateTime(message.createdAt)}
+          </Text>
+          {message.sender === user?._id && (
+            <Ionicons
+              name={
+                message.status === "read"
+                  ? "checkmark-done"
+                  : message.status === "delivered"
+                  ? "checkmark-done"
+                  : message.status === "sent"
+                  ? "checkmark"
+                  : message.status === "pending"
+                  ? "time-outline"
+                  : "accessibility"
+              }
+              size={18}
+              color={message.status === "read" ? Colors.primary : "gray"}
+            />
+          )}
         </View>
       </ThemedView>
     </ThemedView>
