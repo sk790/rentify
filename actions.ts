@@ -105,7 +105,6 @@ export const logout = async () => {
   console.log(BASE_URL);
   try {
     const res = await fetch(`${BASE_URL}/api/auth/logout`);
-    console.log(res, "res");
     return res;
   } catch (error) {
     console.error("Error logging out:", error);

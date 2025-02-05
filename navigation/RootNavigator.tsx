@@ -74,11 +74,11 @@ function AppTabs() {
         options={{ headerShown: false }}
         component={HomeScreen}
       />
-      {/* <Tab.Screen
+      <Tab.Screen
         name="Chat"
         options={{ headerShown: false }}
         component={Convarsations}
-      /> */}
+      />
       <Tab.Screen
         name="Create"
         options={{ headerShown: false }}

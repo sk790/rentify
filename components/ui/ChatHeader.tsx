@@ -9,6 +9,7 @@ import Divider from "./Divider";
 import { User } from "@/types";
 import { router } from "expo-router";
 import { useSocket } from "@/context/SocketContext";
+import { useFormateTime } from "@/hooks/useFormateDate";
 
 export default function ChatHeader({ user }: { user: User }) {
   const { onlineUsers } = useSocket();
@@ -53,7 +54,7 @@ export default function ChatHeader({ user }: { user: User }) {
                 { fontSize: 12, color: isOnline ? "green" : Colors.gray },
               ]}
             >
-              {isOnline ? "Online" : "Offline"}
+              {isOnline ? "Online" : useFormateTime(user?.lastSeen)}
             </ThemedText>
           </View>
         </View>

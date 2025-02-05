@@ -1,8 +1,10 @@
 import {
-  ActivityIndicator,
+  FlatList,
   ScrollView,
   StyleSheet,
+  Text,
   TextInput,
+  TouchableOpacity,
   useColorScheme,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
@@ -16,33 +18,54 @@ import { ThemedText } from "@/components/ui/ThemedText";
 import { useChat } from "@/context/ChatContext";
 import { useAuth } from "@/context/AuthContext";
 import { sendMessage, getMessages } from "@/actions";
-// import { useSocket } from "@/context/SocketContext";
-import { useFormateTime } from "@/hooks/useFormateDate";
+import { useSocket } from "@/context/SocketContext";
+import { useFocusEffect } from "@react-navigation/native";
+import { Message } from "@/types";
+import LoadingCard from "@/components/ui/LoadingCard";
+import ChatMessage from "@/components/ui/ChatMessage";
 
 export default function userChat() {
-  // const { onlineUsers } = useSocket();
+  const { socket } = useSocket();
   const { chatUser } = useLocalSearchParams();
   const parsedChatUser = JSON.parse(chatUser as string);
   const theme = useColorScheme();
   const { user: loggedInUser } = useAuth();
   const [message, setMessage] = useState<string>("");
   const { updateConversation } = useChat();
-
   const [messages, setMessages] = useState<any>([]);
   const [loading, setLoading] = useState(false);
-  // const { socket } = useSocket();
-  const { user } = useAuth();
 
-  // Function to fetch messages of a specific user
-  const fetchMessages = async () => {
-    const res = await getMessages({ chatUserId: parsedChatUser._id });
-    const data = await res?.json();
-    setMessages((prev: any) => [...prev, ...data.messages]);
-  };
+  useEffect(() => {
+    socket?.on("newMessage", (msg: any) => {
+      if (!msg) return;
+      setMessages((prev: any) => [
+        ...prev,
+        { text: msg.text, sender: msg.sender },
+      ]);
+      // console.log(msg.sender, msg.receiver);
+      // if (msg.receiver !== loggedInUser?._id) {
+      //   setMessages((prev: any) => [
+      //     ...prev,
+      //     { text: "bubbb", sender: msg.sender },
+      //   ]);
+      // }
+    });
+    socket?.on("messageDelivered", (message: any) => {
+      setMessages((prev: any) =>
+        prev.map((msg: any) =>
+          msg._id === message._id ? { ...msg, status: message.status } : msg
+        )
+      );
+    });
+    return () => {
+      socket?.off("newMessage");
+      socket?.off("messageDelivered");
+      socket?.off("messageRead");
+    };
+  }, [socket]);
 
   const send = async () => {
     if (!message) return;
-    // Create temporary message with CLIENT-generated ID
     const tempId = `temp-${Date.now()}`;
     const newMessage = {
       _id: tempId, // Use temporary ID
@@ -51,7 +74,6 @@ export default function userChat() {
       status: "pending",
       createdAt: new Date(),
     };
-    // Add only the temporary message
     setMessages((prev: any) => [...prev, newMessage]);
     setMessage("");
 
@@ -65,39 +87,18 @@ export default function userChat() {
 
     if (res?.ok) {
       const data = await res.json();
+      // console.log(data);
+
       setMessages((prev: any) =>
         prev.map((msg: any) =>
-          msg._id === tempId ? { ...data.message, status: "sent" } : msg
+          msg._id === tempId
+            ? { ...data.message, status: data.message.status }
+            : msg
         )
       );
-      // socket.emit("sendMessage", data.message);
-      // socket.emit("readMessage", data.message);
+      socket.emit("sendMessage", data.message);
     }
   };
-  // useEffect(() => {
-  //   fetchMessages();
-  //   // Listen for new message event
-  //   socket?.on("newMessage", (msg: any) => {
-  //     if (!msg) return;
-  //     // Add the new message to the state
-  //     setMessages((prev: any) => [
-  //       ...prev,
-  //       { text: msg.text, sender: msg.sender },
-  //     ]);
-  //   });
-  //   socket?.on("messageDelivered", (message: any) => {
-  //     setMessages((prev: any) =>
-  //       prev.map((msg: any) =>
-  //         msg._id === message._id ? { ...msg, status: "delivered" } : msg
-  //       )
-  //     );
-  //   });
-  //   return () => {
-  //     socket?.off("newMessage");
-  //     socket?.off("messageDelivered");
-  //     socket?.off("messageReadConfirmation");
-  //   };
-  // }, [socket]);
 
   const scrollViewRef = useRef<ScrollView>(null);
   useEffect(() => {
@@ -105,6 +106,16 @@ export default function userChat() {
       scrollViewRef.current.scrollToEnd({ animated: true });
     }
   }, [messages, scrollViewRef]);
+  useEffect(() => {
+    const fetchMessages = async () => {
+      setLoading(true);
+      const res = await getMessages({ chatUserId: parsedChatUser._id });
+      setLoading(false);
+      const data = await res?.json();
+      setMessages((prev: any) => [...prev, ...data.messages]);
+    };
+    fetchMessages();
+  }, [chatUser]);
 
   return (
     <ThemedView style={{ flex: 1 }}>
@@ -121,52 +132,11 @@ export default function userChat() {
       >
         <ThemedView style={{ flex: 1, marginHorizontal: 10 }}>
           <ThemedView style={{ flexDirection: "column", gap: 10 }}>
-            {messages.map((msg: any, index: number) => (
-              <ThemedView
-                key={index}
-                darkColor={Colors.dark.cardColor}
-                lightColor={Colors.light.cardColor}
-                style={{
-                  borderRadius: 5,
-                  width: "50%",
-                  borderColor: Colors.gray,
-                  borderWidth: StyleSheet.hairlineWidth,
-                  alignSelf:
-                    msg.sender !== loggedInUser?._id
-                      ? "flex-start"
-                      : "flex-end",
-                }}
-              >
-                <ThemedText
-                  type="default"
-                  style={{
-                    width: "100%",
-                    textAlign: "left",
-                    lineHeight: 20,
-                    paddingHorizontal: 5,
-                    fontSize: 14,
-                  }}
-                >
-                  {msg.text}
-                  <ThemedText
-                    style={{ position: "absolute", bottom: 0, right: 0 }}
-                  >
-                    {msg.sender === loggedInUser?._id
-                      ? msg.status === "read"
-                        ? "READ"
-                        : msg.status === "delivered"
-                        ? "DELIVERED"
-                        : msg.status === "sent"
-                        ? "SENT"
-                        : msg.status === "pending"
-                        ? "PENDING"
-                        : ""
-                      : ""}
-                  </ThemedText>
-                  {/* <ThemedText>{useFormateTime(msg?.createdAt)}</ThemedText> */}
-                </ThemedText>
-              </ThemedView>
-            ))}
+            <FlatList
+              keyExtractor={(item) => item._id}
+              data={messages}
+              renderItem={({ item }) => <ChatMessage {...item} />}
+            />
           </ThemedView>
         </ThemedView>
       </ScrollView>
@@ -201,17 +171,10 @@ export default function userChat() {
           value={message}
           onChangeText={(msg) => setMessage(msg)}
         />
-        {loading ? (
-          <ActivityIndicator color={Colors.primary} size={"large"} />
-        ) : (
-          <Ionicons
-            name="send"
-            size={28}
-            color={Colors.primary}
-            onPress={send}
-            disabled={loading}
-          />
-        )}
+
+        <TouchableOpacity onPress={send}>
+          <Ionicons name="send" size={28} color={Colors.primary} />
+        </TouchableOpacity>
       </ThemedView>
     </ThemedView>
   );

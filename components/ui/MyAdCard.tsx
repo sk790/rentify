@@ -141,10 +141,9 @@ export default function MyAdCard({ product, myAds }: Props) {
                   : "Available"
               }
               style={{ flex: 1 }}
-              variant="outline"
               color={
                 myProductsOnRent.some((p) => p._id === product._id)
-                  ? "red"
+                  ? "white"
                   : "green"
               }
               onPress={() => handleUpdateStatus(product)}
@@ -157,7 +156,7 @@ export default function MyAdCard({ product, myAds }: Props) {
           </View>
         )}
         <MyAlert
-          message="Are you sure you want to delete this product"
+          message="Are you sure you want to delete this product ?"
           title="Delete"
           onCancel={closeAlertModal}
           onConfirm={() => handleDelete(product)}

@@ -11,6 +11,7 @@ export interface User {
   updatedAt: string;
   description: string;
   address: string;
+  lastSeen: string;
   favorites: Product[];
   __v: number;
 }

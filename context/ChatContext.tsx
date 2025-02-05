@@ -3,6 +3,8 @@ import { Conv } from "@/types";
 
 interface ChatContextType {
   allConversations: Conv[];
+  messages: any[];
+  setMessages: (messages: any[]) => void;
   setAllConversations: (conve: Conv[]) => void;
 
   updateConversation: (conv: Conv, action: "update" | "delete") => void;
@@ -12,6 +14,11 @@ const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
 export const ChatProvider = ({ children }: { children: ReactNode }) => {
   const [allConversations, setAllConversationsState] = useState<Conv[]>([]);
+  const [messages, setMessagesState] = useState<any>([]);
+
+  const setMessages = (messages: any[]) => {
+    setMessagesState(messages);
+  };
 
   const setAllConversations = (conve: Conv[]) => {
     setAllConversationsState(conve);
@@ -21,7 +28,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
       case "delete":
         break;
       case "update":
-        console.log(allConversations, "allConversations");
+        // console.log(allConversations, "allConversations");
 
         setAllConversations(
           allConversations.map((c) => (c._id === conv._id ? conv : c))
@@ -35,6 +42,8 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
         allConversations,
         setAllConversations,
         updateConversation,
+        setMessages,
+        messages,
       }}
     >
       {children}

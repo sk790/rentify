@@ -46,10 +46,11 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
       const res = await login(formData.phone, formData.password);
       setIsLoading(false);
       const data = await res?.json();
-      alert(data.msg);
       if (res?.ok) {
         await AsyncStorage.setItem("token", data.token);
         setAuth(true);
+      } else {
+        alert(data.msg);
       }
     } catch (error) {
       setIsLoading(false);
