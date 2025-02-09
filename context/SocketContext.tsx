@@ -24,8 +24,11 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (!user?._id) return;
     const socketInstance = io(`${BASE_URL}`, {
+      transports: ["polling"], // Ensures WebSocket is used instead of polling
+      reconnection: true, // Enables automatic reconnection
+      reconnectionAttempts: 5, // Retry up to 5 times
+      timeout: 10000, // Connection timeout (10s)
       query: { userId: user._id },
-      transports: ["websocket"], // Force WebSocket transport
     });
     socketInstance.on("connect", () => {
       console.log("Connected to socket server with id:", socketInstance.id);

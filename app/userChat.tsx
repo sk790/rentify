@@ -34,6 +34,10 @@ export default function userChat() {
   useEffect(() => {
     socket?.on("newMessage", (msg: any) => {
       if (!msg) return;
+      if (msg.sender === loggedInUser?._id) {
+        setMsgToSendSender(msg);
+        return;
+      }
       setMessages((prev: any) => [
         ...prev,
         { text: msg.text, sender: msg.sender },
@@ -165,7 +169,6 @@ export default function userChat() {
           position: "absolute",
           bottom: 0,
           left: 0,
-          right: 0,
         }}
       >
         <Ionicons name="attach-outline" size={28} color={Colors.primary} />
